@@ -1,15 +1,16 @@
 
 package org.usfirst.frc.team3482.robot;
 
+import org.usfirst.frc.team3482.robot.commands.Drive;
+import org.usfirst.frc.team3482.robot.subsystems.Chassis;
+import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.usfirst.frc.team3482.robot.commands.ExampleCommand;
-import org.usfirst.frc.team3482.robot.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,9 +21,11 @@ import org.usfirst.frc.team3482.robot.subsystems.ExampleSubsystem;
  */
 public class Robot extends IterativeRobot {
 
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	public static Chassis chassis;
+	public static Rangefinder rangefinder;
 	public static OI oi;
-
+	
+	Command teleopCommand;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -32,10 +35,18 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		RobotMap.init();
+		rangefinder = new Rangefinder();
+		chassis = new Chassis();
 		oi = new OI();
-		chooser.addDefault("Default Auto", new ExampleCommand());
+		chooser.addDefault("Default Auto", new Drive());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
+		teleopCommand = new Drive();
+		
+		
+		//RobotMap.rangefinder.setAverageBits (6);
+		//RobotMap.rangefinder.setOversampleBits (4);
 	}
 
 	/**
@@ -104,6 +115,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
+		Robot.chassis.drive( Robot.oi.getxboxController() );
 	}
 
 	/**

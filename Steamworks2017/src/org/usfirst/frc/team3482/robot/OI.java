@@ -1,14 +1,26 @@
 package org.usfirst.frc.team3482.robot;
 
-import edu.wpi.first.wpilibj.buttons.Button;
+import org.usfirst.frc.team3482.robot.commands.Spin;
 
-import org.usfirst.frc.team3482.robot.commands.ExampleCommand;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	public Joystick xboxController;
+	public JoystickButton spinMotor;
+	
+	public OI () {
+		xboxController = new Joystick ( 0 );
+		spinMotor = new JoystickButton ( xboxController, 1 );
+		spinMotor.whileHeld(new Spin());
+		
+		
+	}
+	
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
 	//// joystick.
@@ -36,4 +48,7 @@ public class OI {
 	// Start the command when the button is released and let it run the command
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
+	public Joystick getxboxController () {
+		return xboxController;
+	}
 }
