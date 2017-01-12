@@ -2,8 +2,9 @@ package org.usfirst.frc.team3482.robot;
 
 import com.ctre.CANTalon;
 
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.AnalogOutput;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -16,7 +17,7 @@ public class RobotMap {
 	public static CANTalon backLeft;
 	public static CANTalon backRight;
 	
-	public static AnalogOutput rangefinder;
+	public static AnalogInput rangefinder;
 	
 	public static RobotDrive driveRobot;
 	
@@ -30,10 +31,10 @@ public class RobotMap {
 		backLeft = new CANTalon ( 2 );
 		backRight = new CANTalon ( 3 );
 		
-		rangefinder = new AnalogOutput ( 1 );
+		rangefinder = new AnalogInput ( 1 );
 		
 		
-		driveRobot = new RobotDrive ( frontLeft, frontRight, backLeft, backRight);
+		driveRobot = new RobotDrive ( frontLeft, frontRight, backLeft, backRight );
 		
 		
 		

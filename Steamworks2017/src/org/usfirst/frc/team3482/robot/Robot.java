@@ -1,10 +1,16 @@
 
 package org.usfirst.frc.team3482.robot;
 
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -35,8 +41,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		
 		RobotMap.init();
 		rangefinder = new Rangefinder();
+		
 		chassis = new Chassis();
 		oi = new OI();
 		chooser.addDefault("Default Auto", new Drive());
@@ -44,7 +52,23 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto mode", chooser);
 		teleopCommand = new Drive();
 		
-		
+		new Thread(() -> {
+			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+			camera.setResolution(640,  480);
+			
+			CvSink cvSink = CameraServer.getInstance().getVideo();
+			CvSource outputStream = CameraServer.getInstance().putVideo ( "Blur", 640, 480 );
+			
+			Mat source = new Mat();
+			Mat output = new Mat();
+			
+			while(true) {
+				cvSink.grabFrame(source);
+				Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
+				outputStream.putFrame(output);
+			}
+		});
+		//CameraServer.getInstance().startAutomaticCapture();
 		//RobotMap.rangefinder.setAverageBits (6);
 		//RobotMap.rangefinder.setOversampleBits (4);
 	}
