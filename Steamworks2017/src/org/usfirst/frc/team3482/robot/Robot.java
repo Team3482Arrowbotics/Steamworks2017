@@ -54,7 +54,7 @@ public class Robot extends IterativeRobot {
 		
 		new Thread(() -> {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setResolution(640,  480);
+			camera.setResolution(640, 480);
 			
 			CvSink cvSink = CameraServer.getInstance().getVideo();
 			CvSource outputStream = CameraServer.getInstance().putVideo ( "Blur", 640, 480 );
@@ -67,7 +67,7 @@ public class Robot extends IterativeRobot {
 				Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
 				outputStream.putFrame(output);
 			}
-		});
+		}).start();
 		//CameraServer.getInstance().startAutomaticCapture();
 		//RobotMap.rangefinder.setAverageBits (6);
 		//RobotMap.rangefinder.setOversampleBits (4);
