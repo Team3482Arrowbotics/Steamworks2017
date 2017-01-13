@@ -71,6 +71,11 @@ public class Robot extends IterativeRobot {
 		//CameraServer.getInstance().startAutomaticCapture();
 		RobotMap.rangefinder.setAverageBits (6);
 		RobotMap.rangefinder.setOversampleBits (4);
+		
+		//Gyro calibration
+		RobotMap.gyro.reset();
+		RobotMap.gyro.calibrate();
+		
 	}
 
 	/**
