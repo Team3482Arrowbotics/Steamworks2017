@@ -23,6 +23,7 @@ public class Chassis extends Subsystem {
 		double deadZone = 0.1;
 		double leftY = s.getRawAxis ( 1 );
 		double rightX = s.getRawAxis ( 4 );
+		double lt = s.getRawAxis ( 2 );
 		
 		if ( leftY < deadZone && leftY > -deadZone ) {
 			leftY = 0;
@@ -35,7 +36,7 @@ public class Chassis extends Subsystem {
 		if ( leftY == 0 && rightX == 0) {
 			return;
 		}
-		if ( Robot.oi.xboxController.getRawAxis(2) != 0) {
+		if ( lt != 0) {
 			robotDrive.arcadeDrive ( -(leftY) * 0.5, rightX * turnSpeed * 0.75 );
 		} else {
 			robotDrive.arcadeDrive ( -(leftY), rightX * turnSpeed );
