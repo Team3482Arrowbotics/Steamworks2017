@@ -2,12 +2,13 @@ package org.usfirst.frc.team3482.robot;
 
 import com.ctre.CANTalon;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotDrive;
 /**
- * The RobotMap is a mapping from the ports sensors and actuators are wired into
+ * The RobotMap is a mapping from the ports. Sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
  * the wiring easier and significantly reduces the number of magic numbers
  * floating around.
@@ -20,6 +21,7 @@ public class RobotMap {
 	public static CANTalon backRight;
 	
 	public static AnalogInput rangefinder;
+	public static AnalogGyro gyro;
 	
 	public static RobotDrive driveRobot;
 	
@@ -35,6 +37,7 @@ public class RobotMap {
 		backRight = new CANTalon ( 3 );
 		
 		rangefinder = new AnalogInput ( 0 );
+		gyro = new AnalogGyro ( 1 );
 		
 		limitSwitch = new DigitalInput ( 2 );
 		counter = new Counter ( limitSwitch );

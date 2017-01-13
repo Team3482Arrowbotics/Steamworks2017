@@ -55,6 +55,12 @@ public class Chassis extends Subsystem {
 	public void initializeCounter() {
 		RobotMap.counter.reset();
 	}
+	
+	public double getChassisAngle() {
+		double angle = 0;
+		angle = RobotMap.gyro.getAngle();
+		return angle;
+	}
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub
