@@ -69,8 +69,8 @@ public class Robot extends IterativeRobot {
 			}
 		}).start();
 		//CameraServer.getInstance().startAutomaticCapture();
-		//RobotMap.rangefinder.setAverageBits (6);
-		//RobotMap.rangefinder.setOversampleBits (4);
+		RobotMap.rangefinder.setAverageBits (6);
+		RobotMap.rangefinder.setOversampleBits (4);
 	}
 
 	/**
@@ -140,6 +140,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
+		System.out.println( "Current limit switch value: " + Robot.chassis.getLimitSwitch() );
 		Robot.chassis.drive( Robot.oi.getxboxController() );
 	}
 

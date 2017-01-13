@@ -10,7 +10,7 @@ public class Rangefinder extends Subsystem {
 	private final AnalogInput rangeFinder = RobotMap.rangefinder;
 	
 	public double getDistance() {
-		double range = rangeFinder.getVoltage();
+		double range = rangeFinder.getAverageVoltage();
 		return range;
 	}
 	@Override

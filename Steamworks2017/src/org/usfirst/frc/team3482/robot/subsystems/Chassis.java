@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Chassis extends Subsystem {
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
+	
 	private final RobotDrive robotDrive = RobotMap.driveRobot;
 	double turnSpeed = -0.75;
 
@@ -42,10 +43,18 @@ public class Chassis extends Subsystem {
 		}
 	}
 	
+	
 	public void stop () {
 		robotDrive.stopMotor ();
 	}
-
+	
+	public boolean getLimitSwitch() {
+		return RobotMap.counter.get() > 0;
+	}
+	
+	public void initializeCounter() {
+		RobotMap.counter.reset();
+	}
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub

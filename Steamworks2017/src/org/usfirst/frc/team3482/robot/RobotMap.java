@@ -3,7 +3,8 @@ package org.usfirst.frc.team3482.robot;
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotDrive;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
  * floating around.
  */
 public class RobotMap {
+	public static DigitalInput limitSwitch;
 	public static CANTalon frontLeft;
 	public static CANTalon frontRight;
 	public static CANTalon backLeft;
@@ -21,6 +23,7 @@ public class RobotMap {
 	
 	public static RobotDrive driveRobot;
 	
+	public static Counter counter;
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
 	// public static int leftMotor = 1;
@@ -31,8 +34,10 @@ public class RobotMap {
 		backLeft = new CANTalon ( 2 );
 		backRight = new CANTalon ( 3 );
 		
-		rangefinder = new AnalogInput ( 1 );
+		rangefinder = new AnalogInput ( 0 );
 		
+		limitSwitch = new DigitalInput ( 2 );
+		counter = new Counter ( limitSwitch );
 		
 		driveRobot = new RobotDrive ( frontLeft, frontRight, backLeft, backRight );
 		
