@@ -139,8 +139,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
-		System.out.println( "Current limit switch value: " + Robot.chassis.getLimitSwitch() );
+		//System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
+		//System.out.println( "Current limit switch value: " + Robot.chassis.getLimitSwitch() );
+		System.out.println( "Gyro: " + Robot.chassis.getChassisAngle() );
 		Robot.chassis.drive( Robot.oi.getxboxController() );
 	}
 

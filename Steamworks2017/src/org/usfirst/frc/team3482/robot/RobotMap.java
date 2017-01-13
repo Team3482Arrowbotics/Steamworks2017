@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 /**
  * The RobotMap is a mapping from the ports. Sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -21,7 +22,7 @@ public class RobotMap {
 	public static CANTalon backRight;
 	
 	public static AnalogInput rangefinder;
-	public static AnalogGyro gyro;
+	public static Gyro gyro;
 	
 	public static RobotDrive driveRobot;
 	
