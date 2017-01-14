@@ -74,9 +74,9 @@ public class Robot extends IterativeRobot {
 		
 		//Gyro calibration
 		
-		RobotMap.gyro.initGyro();
-		RobotMap.gyro.calibrate();
 		RobotMap.gyro.reset();
+		RobotMap.gyro.calibrate();
+		
 	}
 
 	/**

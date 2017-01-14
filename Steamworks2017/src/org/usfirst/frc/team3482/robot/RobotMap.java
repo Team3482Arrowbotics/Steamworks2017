@@ -2,7 +2,7 @@ package org.usfirst.frc.team3482.robot;
 
 import com.ctre.CANTalon;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -22,7 +22,7 @@ public class RobotMap {
 	public static CANTalon backRight;
 	
 	public static AnalogInput rangefinder;
-	public static AnalogGyro gyro;
+	public static Gyro gyro;
 	
 	public static RobotDrive driveRobot;
 	
@@ -38,7 +38,7 @@ public class RobotMap {
 		backRight = new CANTalon ( 3 );
 		
 		rangefinder = new AnalogInput ( 0 );
-		gyro = new AnalogGyro ( 1 );
+		gyro = new ADXRS450_Gyro ();
 		
 		limitSwitch = new DigitalInput ( 1 );
 		counter = new Counter ( limitSwitch );
