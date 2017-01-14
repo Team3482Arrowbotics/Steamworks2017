@@ -2,8 +2,10 @@ package org.usfirst.frc.team3482.robot;
 
 import com.ctre.CANTalon;
 
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.AnalogOutput;
+import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotDrive;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -15,10 +17,13 @@ public class RobotMap {
 	public static CANTalon frontRight;
 	public static CANTalon backLeft;
 	public static CANTalon backRight;
+	public static DigitalInput limitswitch;
+	public static CANTalon actualShooter;
 	
 	public static AnalogOutput rangefinder;
 	
 	public static RobotDrive driveRobot;
+	public static Counter counter;
 	
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -31,7 +36,9 @@ public class RobotMap {
 		backRight = new CANTalon ( 3 );
 		
 		rangefinder = new AnalogOutput ( 1 );
-		
+		limitswitch = new DigitalInput(2);
+		counter = new Counter(limitswitch);
+		actualShooter = new CANTalon(4);
 		
 		driveRobot = new RobotDrive ( frontLeft, frontRight, backLeft, backRight);
 		

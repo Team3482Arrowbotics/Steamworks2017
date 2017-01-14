@@ -4,6 +4,7 @@ package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
+import org.usfirst.frc.team3482.robot.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -24,6 +25,7 @@ public class Robot extends IterativeRobot {
 	public static Chassis chassis;
 	public static Rangefinder rangefinder;
 	public static OI oi;
+	public static Shooter shooter;
 	
 	Command teleopCommand;
 	Command autonomousCommand;
@@ -117,6 +119,8 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
 		Robot.chassis.drive( Robot.oi.getxboxController() );
+		System.out.println(Robot.chassis.isSwitchOn());
+
 	}
 
 	/**

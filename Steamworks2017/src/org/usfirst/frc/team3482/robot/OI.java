@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3482.robot;
 
+import org.usfirst.frc.team3482.robot.commands.Shoot;
 import org.usfirst.frc.team3482.robot.commands.Spin;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -12,13 +13,15 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 public class OI {
 	public Joystick xboxController;
 	public JoystickButton spinMotor;
+	public JoystickButton startShooterButton;
 	
 	public OI () {
 		xboxController = new Joystick ( 0 );
 		spinMotor = new JoystickButton ( xboxController, 1 );
 		spinMotor.whileHeld(new Spin());
 		
-		
+		startShooterButton = new JoystickButton(xboxController,6);
+		startShooterButton.whileHeld(new Shoot());
 	}
 	
 	//// CREATING BUTTONS
