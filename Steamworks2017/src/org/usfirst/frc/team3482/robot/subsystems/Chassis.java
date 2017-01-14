@@ -20,6 +20,10 @@ public class Chassis extends Subsystem {
 		RobotMap.backRight.set(0.5);
 	}
 	
+	public void stop3() {
+		RobotMap.backRight.set(0.0);
+	}
+	
 	public void drive ( Joystick s ) {
 		double deadZone = 0.1;
 		double leftY = s.getRawAxis ( 1 );
@@ -49,18 +53,22 @@ public class Chassis extends Subsystem {
 	}
 	
 	public boolean getLimitSwitch() {
-		return RobotMap.counter.get() > 0;
+		boolean isOn = RobotMap.limitSwitch.get();
+		return isOn;
 	}
 	
-	public void initializeCounter() {
-		RobotMap.counter.reset();
+	public void initializePhotoElectricCounter() {
+		
 	}
 	
 	public double getChassisAngle() {
-		double angle = 0;
-		angle = RobotMap.gyro.getAngle();
-		return angle;
+		return RobotMap.gyro.getAngle();
 	}
+	
+	public double getChassisTurnRate(){
+		return RobotMap.gyro.getRate();
+	}
+	
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub

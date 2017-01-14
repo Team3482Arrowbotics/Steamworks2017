@@ -73,8 +73,9 @@ public class Robot extends IterativeRobot {
 		RobotMap.rangefinder.setOversampleBits (4);
 		
 		//Gyro calibration
-		RobotMap.gyro.reset();
+		
 		RobotMap.gyro.calibrate();
+		RobotMap.gyro.reset();
 		
 	}
 
@@ -141,13 +142,21 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during operator control
 	 */
+	int loop = 0;
+	
 	@Override
 	public void teleopPeriodic() {
+		loop ++;
 		Scheduler.getInstance().run();
 		//System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
-		//System.out.println( "Current limit switch value: " + Robot.chassis.getLimitSwitch() );
-		System.out.println( "Gyro: " + Robot.chassis.getChassisAngle() );
-		Robot.chassis.drive( Robot.oi.getxboxController() );
+//		System.out.println( "Current limit switch value: " + Robot.chassis.getLimitSwitch() );
+		System.out.println( "Gyro: " + RobotMap.gyro.getAngle() );
+//		System.out.println( "Gyro rate: " + Robot.chassis.getChassisTurnRate() );
+		RobotMap.frontRight.set( 0.5 );
+		RobotMap.backRight.set( 0.5 );
+		RobotMap.frontLeft.set( 0.5 );
+		RobotMap.backLeft.set( 0.5 );
+		//Robot.chassis.drive( Robot.oi.getxboxController() );
 	}
 
 	/**
