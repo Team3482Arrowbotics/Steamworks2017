@@ -2,8 +2,8 @@
 package org.usfirst.frc.team3482.robot;
 
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team3482.robot.commands.Drive;
+import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	public static Chassis chassis;
+	public static Camera camera;
 	public static Rangefinder rangefinder;
 	public static OI oi;
 	
@@ -44,7 +45,7 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.init();
 		rangefinder = new Rangefinder();
-		
+		camera = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
 		chooser.addDefault("Default Auto", new Drive());
@@ -54,19 +55,25 @@ public class Robot extends IterativeRobot {
 		
 		new Thread(() -> {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setResolution(640, 480);
+//			camera.setResolution(640, 480);
 			
 			CvSink cvSink = CameraServer.getInstance().getVideo();
 			CvSource outputStream = CameraServer.getInstance().putVideo ( "Blur", 640, 480 );
 			
 			Mat source = new Mat();
+			Mat hsv = new Mat();
 			Mat output = new Mat();
 			
 			while(true) {
+				//get input image
 				cvSink.grabFrame(source);
-				Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-				outputStream.putFrame(output);
+				
+				Robot.camera.process(source);
+				outputStream.putFrame(Robot.camera.maskOutput());
+
 			}
+			
+			
 		}).start();
 		//CameraServer.getInstance().startAutomaticCapture();
 		RobotMap.rangefinder.setAverageBits (6);
@@ -74,8 +81,8 @@ public class Robot extends IterativeRobot {
 		
 		//Gyro calibration
 		
-		RobotMap.gyro.reset();
-		RobotMap.gyro.calibrate();
+		//RobotMap.gyro.reset();
+		//RobotMap.gyro.calibrate();
 		
 	}
 
@@ -150,12 +157,12 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		//System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
 //		System.out.println( "Current limit switch value: " + Robot.chassis.getLimitSwitch() );
-		System.out.println( "Gyro: " + RobotMap.gyro.getAngle() );
+		//System.out.println( "Gyro: " + RobotMap.gyro.getAngle() );
 		
-//		RobotMap.frontRight.set( 0.5 );
-//		RobotMap.backRight.set( 0.5 );
-//		RobotMap.frontLeft.set( 0.5 );
-//		RobotMap.backLeft.set( 0.5 );
+		//RobotMap.frontRight.set( -0.5 );
+		RobotMap.backRight.set( -0.5 );
+		RobotMap.frontLeft.set( 0.75 );
+		//RobotMap.backLeft.set( 0.5 );
 		//Robot.chassis.drive( Robot.oi.getxboxController() );
 	}
 
