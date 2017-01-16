@@ -12,15 +12,17 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class OI {
 	public Joystick xboxController;
+	public Joystick joystick;
 	public JoystickButton spinMotor;
 	public JoystickButton startShooterButton;
 	
 	public OI () {
 		xboxController = new Joystick ( 0 );
-		spinMotor = new JoystickButton ( xboxController, 1 );
-		spinMotor.whileHeld(new Spin());
+		joystick = new Joystick(1);
+		/*spinMotor = new JoystickButton ( xboxController, 1 );
+		spinMotor.whileHeld(new Spin());*/
 		
-		startShooterButton = new JoystickButton(xboxController,6);
+		startShooterButton = new JoystickButton(joystick,5);
 		startShooterButton.whileHeld(new Shoot());
 	}
 	

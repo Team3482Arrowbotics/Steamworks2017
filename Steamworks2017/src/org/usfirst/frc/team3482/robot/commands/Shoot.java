@@ -15,14 +15,19 @@ public class Shoot extends Command{
 		Robot.shooter.testShooter();
 	}
 	@Override
+	protected boolean isFinished() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	protected void end() {
 		Robot.shooter.stopShooter();
 		//Robot.shooter.stopRumble();
 		
 }
-	protected boolean isFinished() {
+	/*protected boolean isFinished() {
 		// TODO Auto-generated method stub
 		return false;
-	}
+	}*/
 
 }

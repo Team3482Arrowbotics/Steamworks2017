@@ -40,6 +40,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.init();
 		rangefinder = new Rangefinder();
 		chassis = new Chassis();
+		shooter = new Shooter();
 		oi = new OI();
 		chooser.addDefault("Default Auto", new Drive());
 		// chooser.addObject("My Auto", new MyAutoCommand());
@@ -120,6 +121,7 @@ public class Robot extends IterativeRobot {
 		System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
 		Robot.chassis.drive( Robot.oi.getxboxController() );
 		System.out.println(Robot.chassis.isSwitchOn());
+		//System.out.println("code test 1");
 
 	}
 
