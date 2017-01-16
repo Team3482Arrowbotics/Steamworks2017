@@ -3,6 +3,7 @@ package org.usfirst.frc.team3482.robot;
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -24,7 +25,6 @@ public class RobotMap {
 	public static AnalogInput rangefinder;
 	
 	public static AHRS ahrs;
-	
 	public static RobotDrive driveRobot;
 	
 	public static Counter counter;
@@ -39,7 +39,7 @@ public class RobotMap {
 		backRight = new CANTalon ( 3 );
 		
 		rangefinder = new AnalogInput ( 0 );
-		
+	
 		ahrs = new AHRS(I2C.Port.kMXP);
 		
 		limitSwitch = new DigitalInput ( 1 );
