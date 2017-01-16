@@ -38,23 +38,23 @@ public class Camera extends Subsystem implements VisionPipeline {
 		// Step CV_resize0:
 		Mat cvResizeSrc = source0;
 		Size cvResizeDsize = new Size(0, 0);
-		double cvResizeFx = 0.25;
-		double cvResizeFy = 0.25;
+		double cvResizeFx = 0.5;
+		double cvResizeFy = 0.5;
 		int cvResizeInterpolation = Imgproc.INTER_LINEAR;
 		cvResize(cvResizeSrc, cvResizeDsize, cvResizeFx, cvResizeFy, cvResizeInterpolation, cvResizeOutput);
 
 		// Step HSV_Threshold0:
 		Mat hsvThresholdInput = cvResizeOutput;
-		double[] hsvThresholdHue = {0.0, 85.703071672354966};
-		double[] hsvThresholdSaturation = {0.0, 79.18088737201364};
-		double[] hsvThresholdValue = {0.0, 192.53924914675767};
+		double[] hsvThresholdHue = {0.0, 53.703071672354966};
+		double[] hsvThresholdSaturation = {0.0, 11.18088737201364};
+		double[] hsvThresholdValue = {218.1324, 255.53924914675767};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step CV_erode0:
 		Mat cvErodeSrc = hsvThresholdOutput;
 		Mat cvErodeKernel = new Mat();
 		Point cvErodeAnchor = new Point(-1, -1);
-		double cvErodeIterations = 2;
+		double cvErodeIterations = 0;
 		int cvErodeBordertype = Core.BORDER_CONSTANT;
 		Scalar cvErodeBordervalue = new Scalar(-1);
 		cvErode(cvErodeSrc, cvErodeKernel, cvErodeAnchor, cvErodeIterations, cvErodeBordertype, cvErodeBordervalue, cvErodeOutput);
@@ -63,7 +63,7 @@ public class Camera extends Subsystem implements VisionPipeline {
 		Mat cvDilateSrc = cvErodeOutput;
 		Mat cvDilateKernel = new Mat();
 		Point cvDilateAnchor = new Point(-1,-1);
-		double cvDilateIterations = 2;
+		double cvDilateIterations = 3;
 		int cvDilateBordertype = Core.BORDER_CONSTANT;
 		Scalar cvDilateBordervalue = new Scalar(-1);
 		cvDilate(cvDilateSrc, cvDilateKernel, cvDilateAnchor, cvDilateIterations, cvDilateBordertype, cvDilateBordervalue, cvDilateOutput);

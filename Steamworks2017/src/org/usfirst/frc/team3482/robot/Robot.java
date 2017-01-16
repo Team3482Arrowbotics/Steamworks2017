@@ -69,11 +69,11 @@ public class Robot extends IterativeRobot {
 	
 		new Thread(() -> {
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-//			camera.setResolution(640, 480);
+			camera.setExposureManual(20);
+			camera.setResolution(640, 480);
 			
 			CvSink cvSink = CameraServer.getInstance().getVideo();
 			CvSource outputStream = CameraServer.getInstance().putVideo ( "Blur", 640, 480 );
-			
 			Mat source = new Mat();
 			Mat hsv = new Mat();
 			Mat output = new Mat();
@@ -170,15 +170,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		//System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
-//		System.out.println( "Current limit switch value: " + Robot.chassis.getLimitSwitch() );
-		//System.out.println( "Gyro: " + RobotMap.gyro.getAngle() );
 		
-		//RobotMap.frontRight.set( -0.5 );
-		RobotMap.backRight.set( -0.5 );
-		RobotMap.frontLeft.set( 0.75 );
-		//RobotMap.backLeft.set( 0.5 );
-		//Robot.chassis.drive( Robot.oi.getxboxController() );
 	}
 
 	/**
