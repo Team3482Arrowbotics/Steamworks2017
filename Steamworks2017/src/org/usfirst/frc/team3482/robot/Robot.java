@@ -5,6 +5,7 @@ import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
+import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
 import edu.wpi.cscore.CvSink;
@@ -29,6 +30,7 @@ public class Robot extends IterativeRobot {
 
 	public static Chassis chassis;
 	public static Rangefinder rangefinder;
+	public static NavXChip nav;
 	public static OI oi;
 	
 	Command teleopCommand;
@@ -44,12 +46,14 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.init();
 		rangefinder = new Rangefinder();
-		
+		nav = new NavXChip(RobotMap.ahrs);
 		chassis = new Chassis();
+		
 		oi = new OI();
 		chooser.addDefault("Default Auto", new Drive());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
+		nav.putValuesToDashboard();
 		teleopCommand = new Drive();
 		
 		new Thread(() -> {
@@ -74,8 +78,8 @@ public class Robot extends IterativeRobot {
 		
 		//Gyro calibration
 		
-		RobotMap.gyro.calibrate();
-		RobotMap.gyro.reset();
+		//RobotMap.gyro.calibrate();
+		//RobotMap.gyro.reset();
 		
 	}
 
@@ -152,10 +156,11 @@ public class Robot extends IterativeRobot {
 //		System.out.println( "Current limit switch value: " + Robot.chassis.getLimitSwitch() );
 		System.out.println( "Gyro: " + RobotMap.gyro.getAngle() );
 //		System.out.println( "Gyro rate: " + Robot.chassis.getChassisTurnRate() );
-		RobotMap.frontRight.set( 0.5 );
-		RobotMap.backRight.set( 0.5 );
-		RobotMap.frontLeft.set( 0.5 );
-		RobotMap.backLeft.set( 0.5 );
+		RobotMap.frontRight.set( 0.95 );
+		RobotMap.backRight.set( -0.95 );
+		RobotMap.frontLeft.set( 0.95 );
+		RobotMap.backLeft.set( 0.95 );
+		
 		//Robot.chassis.drive( Robot.oi.getxboxController() );
 	}
 

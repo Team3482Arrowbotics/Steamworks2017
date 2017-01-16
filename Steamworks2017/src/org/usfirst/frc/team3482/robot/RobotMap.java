@@ -1,11 +1,13 @@
 package org.usfirst.frc.team3482.robot;
 
 import com.ctre.CANTalon;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
 /**
@@ -23,6 +25,7 @@ public class RobotMap {
 	
 	public static AnalogInput rangefinder;
 	public static ADXRS450_Gyro gyro;
+	public static AHRS ahrs;
 	
 	public static RobotDrive driveRobot;
 	
@@ -38,6 +41,8 @@ public class RobotMap {
 		backRight = new CANTalon ( 3 );
 		
 		rangefinder = new AnalogInput ( 0 );
+		
+		ahrs = new AHRS(I2C.Port.kMXP);
 		gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
 		
 		limitSwitch = new DigitalInput ( 1 );
