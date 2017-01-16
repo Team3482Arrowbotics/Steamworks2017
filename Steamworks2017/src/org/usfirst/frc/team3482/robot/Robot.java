@@ -52,9 +52,11 @@ public class Robot extends IterativeRobot {
 		chassis = new Chassis();
 		
 		oi = new OI();
-		
+		////disabled
 		chooser.addDefault("Default Auto", new Drive());
 		teleopChooser.addDefault("Protoshooter 0.5 speed", new Protoshooter(0.5));
+		teleopChooser.addObject("Protoshooter 0.75 speed", new Protoshooter(0.75));
+		teleopChooser.addObject("Protoshooter 0.9 speed", new Protoshooter(0.9));
 		teleopChooser.addObject("Protoshooter 0.6 speed", new Protoshooter(0.6));
 		teleopChooser.addObject("Protoshooter 0.7 speed", new Protoshooter(0.7));
 		teleopChooser.addObject("Protoshooter 0.8 speed", new Protoshooter(0.8));
