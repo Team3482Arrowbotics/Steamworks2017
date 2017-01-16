@@ -4,6 +4,7 @@ package org.usfirst.frc.team3482.robot;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team3482.robot.commands.Drive;
+import org.usfirst.frc.team3482.robot.commands.Protoshooter;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
@@ -31,6 +32,7 @@ public class Robot extends IterativeRobot {
 	public static Chassis chassis;
 	public static Rangefinder rangefinder;
 	public static NavXChip nav;
+	SendableChooser<Command> teleopChooser = new SendableChooser<>();;
 	public static OI oi;
 	
 	Command teleopCommand;
@@ -50,36 +52,17 @@ public class Robot extends IterativeRobot {
 		chassis = new Chassis();
 		
 		oi = new OI();
+		
 		chooser.addDefault("Default Auto", new Drive());
-		// chooser.addObject("My Auto", new MyAutoCommand());
+		teleopChooser.addDefault("Protoshooter 0.5 speed", new Protoshooter(0.5));
+		teleopChooser.addObject("Protoshooter 0.6 speed", new Protoshooter(0.6));
+		teleopChooser.addObject("Protoshooter 0.7 speed", new Protoshooter(0.7));
+		teleopChooser.addObject("Protoshooter 0.8 speed", new Protoshooter(0.8));
+		
+		SmartDashboard.putData("Teleop mode", teleopChooser);
 		SmartDashboard.putData("Auto mode", chooser);
-		nav.putValuesToDashboard();
-		teleopCommand = new Drive();
+		//nav.putValuesToDashboard();
 		
-		new Thread(() -> {
-			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setResolution(640, 480);
-			
-			CvSink cvSink = CameraServer.getInstance().getVideo();
-			CvSource outputStream = CameraServer.getInstance().putVideo ( "Blur", 640, 480 );
-			
-			Mat source = new Mat();
-			Mat output = new Mat();
-			
-			while(true) {
-				cvSink.grabFrame(source);
-				Imgproc.cvtColor(source, output, Imgproc.COLOR_BGR2GRAY);
-				outputStream.putFrame(output);
-			}
-		}).start();
-		//CameraServer.getInstance().startAutomaticCapture();
-		RobotMap.rangefinder.setAverageBits (6);
-		RobotMap.rangefinder.setOversampleBits (4);
-		
-		//Gyro calibration
-		
-		//RobotMap.gyro.calibrate();
-		//RobotMap.gyro.reset();
 		
 	}
 
@@ -135,12 +118,14 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
+		teleopCommand = (Command) teleopChooser.getSelected();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+			teleopCommand.start();
 	}
 
 	/**
@@ -150,18 +135,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void teleopPeriodic() {
-		loop ++;
 		Scheduler.getInstance().run();
-		//System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
-//		System.out.println( "Current limit switch value: " + Robot.chassis.getLimitSwitch() );
-		System.out.println( "Gyro: " + RobotMap.gyro.getAngle() );
-//		System.out.println( "Gyro rate: " + Robot.chassis.getChassisTurnRate() );
-		RobotMap.frontRight.set( 0.95 );
-		RobotMap.backRight.set( -0.95 );
-		RobotMap.frontLeft.set( 0.95 );
-		RobotMap.backLeft.set( 0.95 );
-		
-		//Robot.chassis.drive( Robot.oi.getxboxController() );
 	}
 
 	/**

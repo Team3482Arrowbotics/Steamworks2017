@@ -57,18 +57,6 @@ public class Chassis extends Subsystem {
 		return isOn;
 	}
 	
-	public void initializePhotoElectricCounter() {
-		
-	}
-	
-	public double getChassisAngle() {
-		return RobotMap.gyro.getAngle();
-	}
-	
-	public double getChassisTurnRate(){
-		return RobotMap.gyro.getRate();
-	}
-	
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub
