@@ -3,6 +3,7 @@ package org.usfirst.frc.team3482.robot;
 
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
+import org.usfirst.frc.team3482.robot.subsystems.LearnPID;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 import org.usfirst.frc.team3482.robot.subsystems.Shooter;
 
@@ -26,6 +27,7 @@ public class Robot extends IterativeRobot {
 	public static Rangefinder rangefinder;
 	public static OI oi;
 	public static Shooter shooter;
+	public static LearnPID LearnPID;
 	
 	Command teleopCommand;
 	Command autonomousCommand;
@@ -41,6 +43,7 @@ public class Robot extends IterativeRobot {
 		rangefinder = new Rangefinder();
 		chassis = new Chassis();
 		shooter = new Shooter();
+		LearnPID = new LearnPID();
 		oi = new OI();
 		chooser.addDefault("Default Auto", new Drive());
 		// chooser.addObject("My Auto", new MyAutoCommand());
@@ -121,8 +124,8 @@ public class Robot extends IterativeRobot {
 		System.out.println( "Rangefinder value: " + Robot.rangefinder.getDistance());
 		Robot.chassis.drive( Robot.oi.getxboxController() );
 		System.out.println(Robot.chassis.isSwitchOn());
+		System.out.println(Robot.shooter.getSpeed());
 		//System.out.println("code test 1");
-
 	}
 
 	/**

@@ -22,8 +22,8 @@ public class OI {
 		/*spinMotor = new JoystickButton ( xboxController, 1 );
 		spinMotor.whileHeld(new Spin());*/
 		
-		startShooterButton = new JoystickButton(joystick,5);
-		startShooterButton.whileHeld(new Shoot());
+		//startShooterButton = new JoystickButton(joystick,5);
+		//startShooterButton.whileHeld(new Shoot());
 	}
 	
 	//// CREATING BUTTONS

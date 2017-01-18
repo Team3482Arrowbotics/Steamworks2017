@@ -23,11 +23,6 @@ public class Shoot extends Command{
 	protected void end() {
 		Robot.shooter.stopShooter();
 		//Robot.shooter.stopRumble();
-		
+	}
 }
-	/*protected boolean isFinished() {
-		// TODO Auto-generated method stub
-		return false;
-	}*/
-
-}
+	

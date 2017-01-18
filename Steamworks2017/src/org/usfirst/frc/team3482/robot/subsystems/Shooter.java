@@ -18,5 +18,10 @@ public class Shooter extends RobotMap {
 	{
 		objectShooter.set(0.0);
 	}
+	public double getSpeed()
+	{
+		double speed = objectShooter.getSpeed();
+		return speed;
+	}
 	
 }

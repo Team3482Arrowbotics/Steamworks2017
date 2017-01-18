@@ -5,6 +5,7 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.AnalogOutput;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -19,7 +20,7 @@ public class RobotMap {
 	public static CANTalon backRight;
 	public static DigitalInput limitswitch;
 	public static CANTalon actualShooter;
-	
+	public static PIDController testPID;
 	public static AnalogOutput rangefinder;
 	
 	public static RobotDrive driveRobot;
@@ -39,11 +40,11 @@ public class RobotMap {
 		limitswitch = new DigitalInput(2);
 		counter = new Counter(limitswitch);
 		actualShooter = new CANTalon(4);
-		
-		driveRobot = new RobotDrive ( frontLeft, frontRight, backLeft, backRight);
-		
+		//testPID = new PIDController(0.0, 0.0, 0.0, Robot.LearnPID(),Robot.LearnPID.usePIDOutput());
 		
 		
+		
+		driveRobot = new RobotDrive ( frontLeft, frontRight, backLeft, backRight);	
 	}
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:
