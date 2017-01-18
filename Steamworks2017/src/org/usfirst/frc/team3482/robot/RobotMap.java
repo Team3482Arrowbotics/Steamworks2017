@@ -3,12 +3,12 @@ package org.usfirst.frc.team3482.robot;
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 /**
  * The RobotMap is a mapping from the ports. Sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -46,8 +46,6 @@ public class RobotMap {
 		counter = new Counter ( limitSwitch );
 		
 		driveRobot = new RobotDrive ( frontLeft, frontRight, backLeft, backRight );
-		
-		
 		
 	}
 	// If you are using multiple modules, make sure to define both the port

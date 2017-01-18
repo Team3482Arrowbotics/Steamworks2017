@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -29,6 +30,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+	NetworkTable cameraTable;
+	
 	public static Chassis chassis;
 	public static Camera camera;
 	public static Rangefinder rangefinder;
@@ -47,7 +50,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		
+		
+		
 		RobotMap.init();
+	
 		rangefinder = new Rangefinder();
 		nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
@@ -68,6 +74,7 @@ public class Robot extends IterativeRobot {
 		//nav.putValuesToDashboard();
 	
 		new Thread(() -> {
+			cameraTable = NetworkTable.getTable("camera");
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			camera.setExposureManual(20);
 			camera.setResolution(640, 480);
@@ -78,17 +85,30 @@ public class Robot extends IterativeRobot {
 			Mat hsv = new Mat();
 			Mat output = new Mat();
 			
+			System.out.println(cameraTable.getKeys(0));
+			
 			while(true) {
 				//get input image
 				cvSink.grabFrame(source);
 				
+				
+				
+				Boolean imageFound = cameraTable.getBoolean("found", false);
+				Double imageOffset = cameraTable.getDouble("offset", -1.0);
+				Double imageDistance = cameraTable.getDouble("distance", -1.0);
+				
+				//System.out.println("found = " + imageFound);
+				
 				Robot.camera.process(source);
 				outputStream.putFrame(Robot.camera.maskOutput());
+				cameraTable.putValue("Image", Robot.camera.maskOutput());
 
 			}
-			
-			
 		}).start();
+		
+		
+		
+		
 		//CameraServer.getInstance().startAutomaticCapture();
 		RobotMap.rangefinder.setAverageBits (6);
 		RobotMap.rangefinder.setOversampleBits (4);
