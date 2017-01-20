@@ -38,7 +38,7 @@ public class RobotMap {
 	public static void init() {
 		frontLeft = new CANTalon ( 1 );
 		frontRight = new CANTalon ( 4 );
-		backLeft = new CANTalon ( 12 );
+		backLeft = new CANTalon ( 6 );
 		backRight = new CANTalon ( 3 );
 		motorPID = new CANTalon ( 8 );
 		
