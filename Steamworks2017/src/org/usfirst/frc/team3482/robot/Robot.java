@@ -4,6 +4,7 @@ package org.usfirst.frc.team3482.robot;
 import org.opencv.core.Mat;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Protoshooter;
+import org.usfirst.frc.team3482.robot.commands.Rotate;
 import org.usfirst.frc.team3482.robot.networks.ImageListener;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
@@ -72,6 +73,9 @@ public class Robot extends IterativeRobot {
 		teleopChooser.addObject("Protoshooter 0.7 speed", new Protoshooter(0.7));
 		teleopChooser.addObject("Protoshooter 0.8 speed", new Protoshooter(0.8));
 		teleopChooser.addObject("Protoshooter 0.2 speed", new Protoshooter(0.2));
+		
+		teleopChooser.addObject("PID test", new Rotate(90.0f));
+
 		
 		SmartDashboard.putData("Teleop mode", teleopChooser);
 		SmartDashboard.putData("Auto mode", chooser);
