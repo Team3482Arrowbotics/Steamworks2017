@@ -22,7 +22,7 @@ public class RobotMap {
 	public static CANTalon backLeft;
 	public static CANTalon backRight;
 	public static CANTalon motorPID;
-	
+	public static PIDController stopController; 
 	public static PIDController turnController;
 	
 	public static AnalogInput rangefinder;
@@ -50,7 +50,14 @@ public class RobotMap {
         turnController.setOutputRange( -1.0, 1.0 );
         turnController.setAbsoluteTolerance( 2.0f );
         turnController.setContinuous( true );
-        
+        /*
+         * PID motor controller with the range sensor
+        stopController = new PIDController (0.003, 0.00, 0.00, 0.00, rangefinder, motorPID);
+        stopController.setInputRange(0.0, 5.0);
+        stopController.setOutputRange(7.0, 12.0);
+        stopController.setAbsoluteTolerance(0.01);
+        stopController.setContinuous( true );
+        */
 		limitSwitch = new DigitalInput ( 1 );
 		counter = new Counter ( limitSwitch );
 		

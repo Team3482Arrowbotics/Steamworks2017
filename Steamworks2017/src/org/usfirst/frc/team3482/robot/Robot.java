@@ -79,7 +79,8 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putData("Teleop mode", teleopChooser);
 		SmartDashboard.putData("Auto mode", chooser);
-		nav.putValuesToDashboard();
+		SmartDashboard.putNumber("Range", Robot.rangefinder.getDistance());
+		//nav.putValuesToDashboard();
 		
 		new Thread(() -> {
 			cameraTable = NetworkTable.getTable("camera");
@@ -206,6 +207,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		/*
 	    boolean rotateToAngle = false;
         if ( Robot.oi.getxboxController().getRawButton(1)) {
             RobotMap.ahrs.reset();
@@ -229,6 +231,7 @@ public class Robot extends IterativeRobot {
             RobotMap.turnController.enable();
             currentRotationRate = rotateToAngleRate;
         }
+        */
     }
 
 	/**
