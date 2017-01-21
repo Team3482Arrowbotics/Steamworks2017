@@ -207,7 +207,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		/*
+		
 	    boolean rotateToAngle = false;
         if ( Robot.oi.getxboxController().getRawButton(1)) {
             RobotMap.ahrs.reset();
@@ -231,7 +231,7 @@ public class Robot extends IterativeRobot {
             RobotMap.turnController.enable();
             currentRotationRate = rotateToAngleRate;
         }
-        */
+        
     }
 
 	/**
