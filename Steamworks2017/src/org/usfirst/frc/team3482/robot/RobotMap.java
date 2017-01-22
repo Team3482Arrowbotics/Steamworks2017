@@ -17,12 +17,13 @@ import edu.wpi.first.wpilibj.SPI;
  */
 public class RobotMap {
 	public static DigitalInput limitSwitch;
-	public static CANTalon frontLeft;
-	public static CANTalon frontRight;
-	public static CANTalon backLeft;
-	public static CANTalon backRight;
-	public static CANTalon motorPID;
-	
+	public static CANTalon talon1;
+	public static CANTalon talon4;
+	public static CANTalon talon6;
+	public static CANTalon talon3;
+	public static CANTalon talon8;
+	public static CANTalon talon2;
+	public static CANTalon talon5;
 	public static PIDController turnController;
 	
 	public static AnalogInput rangefinder;
@@ -36,16 +37,19 @@ public class RobotMap {
 	// public static int leftMotor = 1;
 	// public static int rightMotor = 2;
 	public static void init() {
-		frontLeft = new CANTalon ( 1 );
-		frontRight = new CANTalon ( 4 );
-		backLeft = new CANTalon ( 6 );
-		backRight = new CANTalon ( 3 );
-		motorPID = new CANTalon ( 8 );
+		talon1 = new CANTalon ( 1 );
+		talon4 = new CANTalon ( 4 );
+		talon6 = new CANTalon ( 6 );
+		talon3 = new CANTalon ( 3 );
+		talon2 = new CANTalon ( 2 );
+		talon8 = new CANTalon ( 8 );
+		talon5 = new CANTalon ( 5 );
+		
 		
 		rangefinder = new AnalogInput ( 0 );
 	
 		ahrs = new AHRS( SPI.Port.kMXP );
-		turnController = new PIDController ( 0.03, 0.00, 0.00, 0.00, ahrs, motorPID );
+		turnController = new PIDController ( 0.03, 0.00, 0.00, 0.00, ahrs, talon8 );
 		turnController.setInputRange( -180.0f,  180.0f );
         turnController.setOutputRange( -1.0, 1.0 );
         turnController.setAbsoluteTolerance( 2.0f );
@@ -54,7 +58,7 @@ public class RobotMap {
 		limitSwitch = new DigitalInput ( 1 );
 		counter = new Counter ( limitSwitch );
 		
-		driveRobot = new RobotDrive ( frontLeft, frontRight, backLeft, backRight );
+		driveRobot = new RobotDrive ( talon1, talon4, talon6, talon3 );
 		
 	}
 	// If you are using multiple modules, make sure to define both the port

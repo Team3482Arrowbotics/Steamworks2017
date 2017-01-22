@@ -3,10 +3,12 @@ package org.usfirst.frc.team3482.robot;
 
 import org.opencv.core.Mat;
 import org.usfirst.frc.team3482.robot.commands.Drive;
+import org.usfirst.frc.team3482.robot.commands.ProtoIntake;
 import org.usfirst.frc.team3482.robot.commands.Protoshooter;
 import org.usfirst.frc.team3482.robot.networks.ImageListener;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
+import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
@@ -41,7 +43,7 @@ public class Robot extends IterativeRobot {
 	public static NavXChip nav;
 	SendableChooser<Command> teleopChooser = new SendableChooser<>();;
 	public static OI oi;
-	
+	public static GearManipulator manipulator;
 	Command teleopCommand;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -61,21 +63,23 @@ public class Robot extends IterativeRobot {
 		nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
 		chassis = new Chassis();
-		
+		manipulator = new GearManipulator();
 		oi = new OI();
 		////disabled
 		chooser.addDefault("Default Auto", new Drive());
-		teleopChooser.addDefault("Protoshooter 0.5 speed", new Protoshooter(0.5));
+		teleopChooser.addObject("Protoshooter 0.5 speed", new Protoshooter(0.5));
 		teleopChooser.addObject("Protoshooter 0.75 speed", new Protoshooter(0.75));
 		teleopChooser.addObject("Protoshooter 0.9 speed", new Protoshooter(0.9));
 		teleopChooser.addObject("Protoshooter 0.6 speed", new Protoshooter(0.6));
 		teleopChooser.addObject("Protoshooter 0.7 speed", new Protoshooter(0.7));
 		teleopChooser.addObject("Protoshooter 0.8 speed", new Protoshooter(0.8));
 		teleopChooser.addObject("Protoshooter 0.2 speed", new Protoshooter(0.2));
+		teleopChooser.addObject("ProtoIntake 0.5 speed", new ProtoIntake(0.5));
+		teleopChooser.addDefault("None", new ProtoIntake(0.0));
 		
 		SmartDashboard.putData("Teleop mode", teleopChooser);
 		SmartDashboard.putData("Auto mode", chooser);
-		nav.putValuesToDashboard();
+		/*nav.putValuesToDashboard();*/
 		
 		new Thread(() -> {
 			cameraTable = NetworkTable.getTable("camera");
@@ -202,7 +206,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-	    boolean rotateToAngle = false;
+		
+		Robot.manipulator.maintainPosition();
+	    /*boolean rotateToAngle = false;
         if ( Robot.oi.getxboxController().getRawButton(1)) {
             RobotMap.ahrs.reset();
         }
@@ -224,7 +230,7 @@ public class Robot extends IterativeRobot {
         if ( rotateToAngle ) {
             RobotMap.turnController.enable();
             currentRotationRate = rotateToAngleRate;
-        }
+        }*/
     }
 
 	/**

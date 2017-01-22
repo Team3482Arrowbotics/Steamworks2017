@@ -17,11 +17,11 @@ public class Chassis extends Subsystem {
 	double turnSpeed = -0.75;
 
 	public void drive3 () {
-		RobotMap.backRight.set(0.5);
+		RobotMap.talon3.set(0.5);
 	}
 	
 	public void stop3() {
-		RobotMap.backRight.set(0.0);
+		RobotMap.talon3.set(0.0);
 	}
 	
 	public void drive ( Joystick s ) {
