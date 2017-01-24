@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class GearManipulator  extends Subsystem{
 
-	private final CANTalon moveAxel = RobotMap.talon1;
+	private final CANTalon moveAxel = RobotMap.talon2;
 	
 	private double startPosition; //.703
 	private double lowerPosition; //-34.196
@@ -34,7 +34,7 @@ public class GearManipulator  extends Subsystem{
         moveAxel.setProfile(0);
         //moveIntake.setPID
         moveAxel.setF(0.0);
-        //moveIntake.setP(0.02);
+        moveAxel.setP(0.04);
         moveAxel.setI(0.0);
         moveAxel.setD(0.0);
         
@@ -61,7 +61,9 @@ public class GearManipulator  extends Subsystem{
 	public void raiseIntake() {
 		this.stopPID();
 		System.out.println("Intake set to upper position.");
-		setRestPosition(getStartPosition());
+//		setRestPosition(getStartPosition());
+		moveAxel.changeControlMode(TalonControlMode.Position);
+		moveAxel.set(getStartPosition());
 		this.startPID();
 	}
 	
@@ -70,6 +72,7 @@ public class GearManipulator  extends Subsystem{
 		System.out.println("Intake set to middle position.");
 		moveAxel.changeControlMode(TalonControlMode.Position);
 		setRestPosition(lowerPosition);
+//		moveAxel.set(getLowerPosition());
 		this.startPID();
 	}
 	

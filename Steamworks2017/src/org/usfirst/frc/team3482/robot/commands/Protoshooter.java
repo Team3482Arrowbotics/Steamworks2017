@@ -18,7 +18,7 @@ public class Protoshooter extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		RobotMap.talon1.set(spode);
+		RobotMap.talon4.set(spode);
 		//RobotMap.talon3.set(-spode);
 	}
 
