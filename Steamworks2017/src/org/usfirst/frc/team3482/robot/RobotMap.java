@@ -42,7 +42,7 @@ public class RobotMap {
 		backRight = new CANTalon ( 3 );
 		motorPID = new CANTalon ( 8 );
 		
-		rangefinder = new AnalogInput ( 0 );
+		rangefinder = new AnalogInput ( 1 );
 	
 		ahrs = new AHRS( SPI.Port.kMXP );
 		turnController = new PIDController ( 0.03, 0.00, 0.00, 0.00, ahrs, motorPID );
@@ -50,14 +50,14 @@ public class RobotMap {
         turnController.setOutputRange( -1.0, 1.0 );
         turnController.setAbsoluteTolerance( 2.0f );
         turnController.setContinuous( true );
-        /*
-         * PID motor controller with the range sensor
-        stopController = new PIDController (0.003, 0.00, 0.00, 0.00, rangefinder, motorPID);
+        
+       // PID motor controller with the range sensor
+        /*stopController = new PIDController (0.003, 0.00, 0.00, 0.00, rangefinder, frontRight);
         stopController.setInputRange(0.0, 5.0);
         stopController.setOutputRange(7.0, 12.0);
         stopController.setAbsoluteTolerance(0.01);
-        stopController.setContinuous( true );
-        */
+        stopController.setContinuous( true );*/
+        
 		limitSwitch = new DigitalInput ( 1 );
 		counter = new Counter ( limitSwitch );
 		

@@ -12,7 +12,7 @@ public class StopBeforeWall extends Command{
 	}
 	protected void execute()
 	{
-		RobotMap.stopController.setSetpoint(4.0);	
+		RobotMap.stopController.setSetpoint(2.0);
 	}
 	
 	@Override

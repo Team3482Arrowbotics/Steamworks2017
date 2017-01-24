@@ -22,7 +22,7 @@ public class OI {
 		spinMotor.whileHeld(new Spin());
 		
 		JoystickButton rotateAround = new JoystickButton(joystick,5);
-		rotateAround.whenPressed(new Rotate(90.0f));
+		rotateAround.whenPressed(new Rotate(20.0f));
 	}
 	
 	//// CREATING BUTTONS
