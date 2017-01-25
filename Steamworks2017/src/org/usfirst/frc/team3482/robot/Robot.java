@@ -183,8 +183,9 @@ public class Robot extends IterativeRobot {
 	}
 
 	@Override
+	
 	public void teleopInit() {
-		teleopCommand = (Command) teleopChooser.getSelected();
+		teleopCommand = new Drive();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -211,21 +212,26 @@ public class Robot extends IterativeRobot {
         }
         if ( Robot.oi.getxboxController().getRawButton(2)) {
             RobotMap.turnController.setSetpoint(0.0f);
+            RobotMap.turnController2.setSetpoint(0.0f);
             rotateToAngle = true;
         } else if ( Robot.oi.getxboxController().getRawButton(3)) {
             RobotMap.turnController.setSetpoint(90.0f);
+            RobotMap.turnController2.setSetpoint(90.0f);
             rotateToAngle = true;
         } else if ( Robot.oi.getxboxController().getRawButton(4)) {
             RobotMap.turnController.setSetpoint(179.9f);
+            RobotMap.turnController2.setSetpoint(179.9f);
             rotateToAngle = true;
         } else if ( Robot.oi.getxboxController().getRawButton(5)) {
-            RobotMap.turnController.setSetpoint(-90.0f);
+            RobotMap.turnController.setSetpoint(90.0f);
+            RobotMap.turnController2.setSetpoint(90.0f);
             rotateToAngle = true;
         }
         
         double currentRotationRate;
         if ( rotateToAngle ) {
             RobotMap.turnController.enable();
+            RobotMap.turnController2.enable();
             currentRotationRate = rotateToAngleRate;
         }
     }
