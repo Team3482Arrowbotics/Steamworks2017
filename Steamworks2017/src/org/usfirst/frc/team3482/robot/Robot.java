@@ -40,7 +40,7 @@ public class Robot extends IterativeRobot {
 	public static Chassis chassis;
 	public static Camera camera;
 	public static Rangefinder rangefinder;
-	//public static NavXChip nav;
+	public static NavXChip nav;
 	SendableChooser<Command> teleopChooser = new SendableChooser<>();;
 	public static OI oi;
 	public static GearManipulator manipulator;
@@ -60,7 +60,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.init();
 	
 		rangefinder = new Rangefinder();
-		//nav = new NavXChip(RobotMap.ahrs);
+		nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
 		chassis = new Chassis();
 		manipulator = new GearManipulator();
@@ -79,7 +79,7 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putData("Teleop mode", teleopChooser);
 		SmartDashboard.putData("Auto mode", chooser);
-		/*nav.putValuesToDashboard();*/
+		nav.putValuesToDashboard();
 		
 		new Thread(() -> {
 			cameraTable = NetworkTable.getTable("camera");
@@ -205,7 +205,7 @@ public class Robot extends IterativeRobot {
 		
 		Robot.manipulator.maintainPosition();
 		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon2.getPosition());
-	    /*boolean rotateToAngle = false;
+	    boolean rotateToAngle = false;
         if ( Robot.oi.getxboxController().getRawButton(1)) {
             RobotMap.ahrs.reset();
         }
@@ -227,7 +227,7 @@ public class Robot extends IterativeRobot {
         if ( rotateToAngle ) {
             RobotMap.turnController.enable();
             currentRotationRate = rotateToAngleRate;
-        }*/
+        }
     }
 
 	/**

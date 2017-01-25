@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class GearManipulator  extends Subsystem{
 
-	private final CANTalon moveAxel = RobotMap.talon2;
+	private final CANTalon moveAxel = RobotMap.talon4;
 	
 	private double startPosition; //.703
 	private double lowerPosition; //-34.196

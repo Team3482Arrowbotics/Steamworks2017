@@ -12,20 +12,22 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class OI {
 	public Joystick xboxController;
-	public JoystickButton spinMotor;
-	public JoystickButton raiseManipulator;
-	public JoystickButton lowerManipulator;
-	
+//	public JoystickButton spinMotor;
+//	public JoystickButton raiseManipulator;
+//	public JoystickButton lowerManipulator;
+//	public JoystickButton rotate90;
+//	
 	public OI () {
 		xboxController = new Joystick ( 0 );
-		spinMotor = new JoystickButton ( xboxController, 1 );
-		spinMotor.whileHeld(new Spin());
+//		spinMotor = new JoystickButton ( xboxController, 1 );
+//		spinMotor.whileHeld(new Spin());
 		
-		raiseManipulator = new JoystickButton(xboxController, 2);
-		raiseManipulator.whileHeld(new RotateManipulator(0));
+//		raiseManipulator = new JoystickButton(xboxController, 2);
+//		raiseManipulator.whileHeld(new RotateManipulator(0));
+//		
+//		lowerManipulator = new JoystickButton(xboxController, 3);
+//		lowerManipulator.whileHeld(new RotateManipulator(1));
 		
-		lowerManipulator = new JoystickButton(xboxController, 3);
-		lowerManipulator.whileHeld(new RotateManipulator(1));
 	}
 	
 	//// CREATING BUTTONS
