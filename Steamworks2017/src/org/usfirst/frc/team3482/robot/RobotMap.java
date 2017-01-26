@@ -29,7 +29,6 @@ public class RobotMap {
 	public static CANTalon talon5;
 	public static CANTalon talon7;
 	public static PIDController turnController;
-	public static PIDController turnController2;
 
 	public static AnalogInput rangefinder;
 
@@ -55,17 +54,11 @@ public class RobotMap {
 
 		ahrs = new AHRS(SPI.Port.kMXP);
 		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TwoTalon(talon8, talon3));
-		//turnController2 = new PIDController(0.01, 0.01, 0.00, 0.00, ahrs, talon3);
 		
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(0.5f);
 		turnController.setContinuous(true);
-
-//		turnController2.setInputRange(-180.0f, 180.0f);
-//		turnController2.setOutputRange(-1.0, 1.0);
-//		turnController2.setAbsoluteTolerance(0.5f);
-//		turnController2.setContinuous(true);
 
 		limitSwitch = new DigitalInput(1);
 		counter = new Counter(limitSwitch);

@@ -8,7 +8,6 @@ import org.usfirst.frc.team3482.robot.commands.Protoshooter;
 import org.usfirst.frc.team3482.robot.networks.ImageListener;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
-import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
@@ -34,16 +33,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	NetworkTable cameraTable;
-	
+
 	double rotateToAngleRate;
-	
+
 	public static Chassis chassis;
 	public static Camera camera;
 	public static Rangefinder rangefinder;
 	public static NavXChip nav;
 	SendableChooser<Command> teleopChooser = new SendableChooser<>();;
 	public static OI oi;
-	public static GearManipulator manipulator;
 	Command teleopCommand;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -54,18 +52,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		
-		
-		
+
 		RobotMap.init();
-	
+
 		rangefinder = new Rangefinder();
 		nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
 		chassis = new Chassis();
-		manipulator = new GearManipulator();
 		oi = new OI();
-		////disabled
+		//// disabled
 		chooser.addDefault("Default Auto", new Drive());
 		teleopChooser.addObject("Protoshooter 0.5 speed", new Protoshooter(0.5));
 		teleopChooser.addObject("Protoshooter 0.75 speed", new Protoshooter(0.75));
@@ -76,66 +71,57 @@ public class Robot extends IterativeRobot {
 		teleopChooser.addObject("Protoshooter 0.2 speed", new Protoshooter(0.2));
 		teleopChooser.addObject("ProtoIntake 0.5 speed", new ProtoIntake(0.5));
 		teleopChooser.addDefault("None", new ProtoIntake(0.0));
-		
+
 		SmartDashboard.putData("Teleop mode", teleopChooser);
 		SmartDashboard.putData("Auto mode", chooser);
-		
+
 		SmartDashboard.putNumber("TurnP", .01);
 		SmartDashboard.putNumber("TurnI", 0);
 		SmartDashboard.putNumber("TurnD", 0);
-		
+
 		nav.putValuesToDashboard();
-		
+
 		new Thread(() -> {
 			cameraTable = NetworkTable.getTable("camera");
 			cameraTable.addTableListener(new ImageListener(), true);
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			camera.setExposureManual(20);
 			camera.setResolution(640, 480);
-			
+
 			CvSink cvSink = CameraServer.getInstance().getVideo();
-			CvSource outputStream = CameraServer.getInstance().putVideo ( "Blur", 640, 480 );
+			CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
 			Mat source = new Mat();
-			
+
 			cameraTable.putNumberArray("ImgArray", new double[1]);
 			cameraTable.putBoolean("TF", true);
-			
-			while(true) {
-				//get input image
+
+			while (true) {
+				// get input image
 				cvSink.grabFrame(source);
-				
-				
-				double[] imgToDoubles = new double[source.rows()*source.cols()*3];
+
+				double[] imgToDoubles = new double[source.rows() * source.cols() * 3];
 				int counter = 0;
-				for(int i = 0; i < source.rows(); i++){
-					for(int j = 0; j < source.cols(); j++){
-						for(int k = 0; k < 3; k++){
-							imgToDoubles[counter+k] = source.get(i, j)[k];
+				for (int i = 0; i < source.rows(); i++) {
+					for (int j = 0; j < source.cols(); j++) {
+						for (int k = 0; k < 3; k++) {
+							imgToDoubles[counter + k] = source.get(i, j)[k];
 						}
 						counter += 3;
-						
+
 					}
-				}				
+				}
 				Robot.camera.process(source);
 				outputStream.putFrame(Robot.camera.maskOutput());
-				
-				cameraTable.putNumberArray("ImgArray", source.get(0,(int)(Math.random()*10)));
+
+				cameraTable.putNumberArray("ImgArray", source.get(0, (int) (Math.random() * 10)));
 			}
 		}).start();
-		
-		
-		
-		
-		//CameraServer.getInstance().startAutomaticCapture();
-		RobotMap.rangefinder.setAverageBits (6);
-		RobotMap.rangefinder.setOversampleBits (4);
-		
-		//Gyro calibration
-		
+
+		RobotMap.rangefinder.setAverageBits(6);
+		RobotMap.rangefinder.setOversampleBits(4);
+
 		RobotMap.ahrs.reset();
-		
-		//RobotMap.gyro.calibrate();
-		
+
 	}
 
 	/**
@@ -189,7 +175,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	@Override
-	
+
 	public void teleopInit() {
 		teleopCommand = new Drive();
 		// This makes sure that the autonomous stops running when
@@ -198,51 +184,19 @@ public class Robot extends IterativeRobot {
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-			teleopCommand.start();
+		teleopCommand.start();
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	int loop = 0;
-	
+
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		
-		Robot.manipulator.maintainPosition();
-		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon2.getPosition());
-	    boolean rotateToAngle = false;
-        if ( Robot.oi.getxboxController().getRawButton(1)) {
-        	RobotMap.turnController.disable();
-        	RobotMap.turnController2.disable();
-        }
-        if ( Robot.oi.getxboxController().getRawButton(2)) {
-            RobotMap.turnController.setSetpoint(0.0f);
-//            RobotMap.turnController2.setSetpoint(0.0f);
-            rotateToAngle = true;
-        } else if ( Robot.oi.getxboxController().getRawButton(3)) {
-            RobotMap.turnController.setSetpoint(.0f);
-//            RobotMap.turnController2.setSetpoint(5.0f);
-            rotateToAngle = true;
-        } else if ( Robot.oi.getxboxController().getRawButton(4)) {
-            RobotMap.turnController.setSetpoint(179.9f);
-//            RobotMap.turnController2.setSetpoint(179.9f);
-            rotateToAngle = true;
-        } else if ( Robot.oi.getxboxController().getRawButton(5)) {
-            RobotMap.turnController.setSetpoint(90.0f);
-//            RobotMap.turnController2.setSetpoint(90.0f);
-            rotateToAngle = true;
-        }
-        SmartDashboard.putNumber("gyro angle", RobotMap.ahrs.getAngle());
-        double currentRotationRate;
-        if ( rotateToAngle ) {
-            RobotMap.turnController.enable();
-            
-            currentRotationRate = rotateToAngleRate;
-        }
-        
-    }
+
+	}
 
 	/**
 	 * This function is called periodically during test mode

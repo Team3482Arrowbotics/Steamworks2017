@@ -1,7 +1,6 @@
 package org.usfirst.frc.team3482.robot;
 
-import org.usfirst.frc.team3482.robot.commands.RotateManipulator;
-import org.usfirst.frc.team3482.robot.commands.Spin;
+import org.usfirst.frc.team3482.robot.commands.Rotate;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -12,21 +11,12 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class OI {
 	public Joystick xboxController;
-//	public JoystickButton spinMotor;
-//	public JoystickButton raiseManipulator;
-//	public JoystickButton lowerManipulator;
-//	public JoystickButton rotate90;
 //	
 	public OI () {
 		xboxController = new Joystick ( 0 );
-//		spinMotor = new JoystickButton ( xboxController, 1 );
-//		spinMotor.whileHeld(new Spin());
-		
-//		raiseManipulator = new JoystickButton(xboxController, 2);
-//		raiseManipulator.whileHeld(new RotateManipulator(0));
-//		
-//		lowerManipulator = new JoystickButton(xboxController, 3);
-//		lowerManipulator.whileHeld(new RotateManipulator(1));
+	
+		JoystickButton rotate90 = new JoystickButton(xboxController,3);
+		rotate90.whenPressed(new Rotate(90.0f));
 		
 	}
 	
