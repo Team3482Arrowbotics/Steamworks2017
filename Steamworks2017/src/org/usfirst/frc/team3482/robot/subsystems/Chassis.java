@@ -61,6 +61,10 @@ public class Chassis extends Subsystem {
 		
 	}
 	
+	public void rotate(){
+		
+	}
+	
 	//public double getChassisAngle() {
 		//return RobotMap.gyro.getAngle();
 	//}

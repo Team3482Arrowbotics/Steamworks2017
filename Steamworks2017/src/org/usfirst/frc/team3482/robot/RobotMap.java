@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3482.robot;
 
+import org.usfirst.frc.team3482.robot.subsystems.TwoTalon;
+
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -9,6 +11,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The RobotMap is a mapping from the ports. Sensors and actuators are wired
@@ -51,18 +54,18 @@ public class RobotMap {
 		rangefinder = new AnalogInput(0);
 
 		ahrs = new AHRS(SPI.Port.kMXP);
-		turnController = new PIDController(0.02, 0.00, 0.00, 0.00, ahrs, talon8);
-		turnController2 = new PIDController(0.02, 0.00, 0.00, 0.00, ahrs, talon3);
+		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TwoTalon(talon8, talon3));
+		//turnController2 = new PIDController(0.01, 0.01, 0.00, 0.00, ahrs, talon3);
 		
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
-		turnController.setAbsoluteTolerance(2.0f);
+		turnController.setAbsoluteTolerance(0.5f);
 		turnController.setContinuous(true);
 
-		turnController2.setInputRange(-180.0f, 180.0f);
-		turnController2.setOutputRange(-1.0, 1.0);
-		turnController2.setAbsoluteTolerance(2.0f);
-		turnController2.setContinuous(true);
+//		turnController2.setInputRange(-180.0f, 180.0f);
+//		turnController2.setOutputRange(-1.0, 1.0);
+//		turnController2.setAbsoluteTolerance(0.5f);
+//		turnController2.setContinuous(true);
 
 		limitSwitch = new DigitalInput(1);
 		counter = new Counter(limitSwitch);

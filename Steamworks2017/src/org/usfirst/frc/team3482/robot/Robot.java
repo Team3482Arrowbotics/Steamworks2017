@@ -79,11 +79,16 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putData("Teleop mode", teleopChooser);
 		SmartDashboard.putData("Auto mode", chooser);
+		
+		SmartDashboard.putNumber("TurnP", .01);
+		SmartDashboard.putNumber("TurnI", 0);
+		SmartDashboard.putNumber("TurnD", 0);
+		
 		nav.putValuesToDashboard();
 		
 		new Thread(() -> {
 			cameraTable = NetworkTable.getTable("camera");
-			cameraTable.addTableListener(new ImageListener(), true);;
+			cameraTable.addTableListener(new ImageListener(), true);
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			camera.setExposureManual(20);
 			camera.setResolution(640, 480);
@@ -127,7 +132,8 @@ public class Robot extends IterativeRobot {
 		
 		//Gyro calibration
 		
-		//RobotMap.gyro.reset();
+		RobotMap.ahrs.reset();
+		
 		//RobotMap.gyro.calibrate();
 		
 	}
@@ -208,32 +214,34 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon2.getPosition());
 	    boolean rotateToAngle = false;
         if ( Robot.oi.getxboxController().getRawButton(1)) {
-            RobotMap.ahrs.reset();
+        	RobotMap.turnController.disable();
+        	RobotMap.turnController2.disable();
         }
         if ( Robot.oi.getxboxController().getRawButton(2)) {
             RobotMap.turnController.setSetpoint(0.0f);
-            RobotMap.turnController2.setSetpoint(0.0f);
+//            RobotMap.turnController2.setSetpoint(0.0f);
             rotateToAngle = true;
         } else if ( Robot.oi.getxboxController().getRawButton(3)) {
-            RobotMap.turnController.setSetpoint(90.0f);
-            RobotMap.turnController2.setSetpoint(90.0f);
+            RobotMap.turnController.setSetpoint(.0f);
+//            RobotMap.turnController2.setSetpoint(5.0f);
             rotateToAngle = true;
         } else if ( Robot.oi.getxboxController().getRawButton(4)) {
             RobotMap.turnController.setSetpoint(179.9f);
-            RobotMap.turnController2.setSetpoint(179.9f);
+//            RobotMap.turnController2.setSetpoint(179.9f);
             rotateToAngle = true;
         } else if ( Robot.oi.getxboxController().getRawButton(5)) {
             RobotMap.turnController.setSetpoint(90.0f);
-            RobotMap.turnController2.setSetpoint(90.0f);
+//            RobotMap.turnController2.setSetpoint(90.0f);
             rotateToAngle = true;
         }
-        
+        SmartDashboard.putNumber("gyro angle", RobotMap.ahrs.getAngle());
         double currentRotationRate;
         if ( rotateToAngle ) {
             RobotMap.turnController.enable();
-            RobotMap.turnController2.enable();
+            
             currentRotationRate = rotateToAngleRate;
         }
+        
     }
 
 	/**
