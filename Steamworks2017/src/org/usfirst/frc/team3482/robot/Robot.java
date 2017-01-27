@@ -4,7 +4,8 @@ package org.usfirst.frc.team3482.robot;
 import org.opencv.core.Mat;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.ProtoIntake;
-import org.usfirst.frc.team3482.robot.commands.Protoshooter;
+import org.usfirst.frc.team3482.robot.commands.Rotate;
+import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
 import org.usfirst.frc.team3482.robot.networks.ImageListener;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
@@ -35,7 +36,7 @@ public class Robot extends IterativeRobot {
 	NetworkTable cameraTable;
 
 	double rotateToAngleRate;
-
+	int autoLoop;
 	public static Chassis chassis;
 	public static Camera camera;
 	public static Rangefinder rangefinder;
@@ -62,14 +63,6 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		//// disabled
 		chooser.addDefault("Default Auto", new Drive());
-		teleopChooser.addObject("Protoshooter 0.5 speed", new Protoshooter(0.5));
-		teleopChooser.addObject("Protoshooter 0.75 speed", new Protoshooter(0.75));
-		teleopChooser.addObject("Protoshooter 0.9 speed", new Protoshooter(0.9));
-		teleopChooser.addObject("Protoshooter 0.6 speed", new Protoshooter(0.6));
-		teleopChooser.addObject("Protoshooter 0.7 speed", new Protoshooter(0.7));
-		teleopChooser.addObject("Protoshooter 0.8 speed", new Protoshooter(0.8));
-		teleopChooser.addObject("Protoshooter 0.2 speed", new Protoshooter(0.2));
-		teleopChooser.addObject("ProtoIntake 0.5 speed", new ProtoIntake(0.5));
 		teleopChooser.addDefault("None", new ProtoIntake(0.0));
 
 		SmartDashboard.putData("Teleop mode", teleopChooser);
@@ -78,6 +71,11 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("TurnP", .01);
 		SmartDashboard.putNumber("TurnI", 0);
 		SmartDashboard.putNumber("TurnD", 0);
+		SmartDashboard.putNumber("shooter speed", 0.0);
+		//SmartDashboard.putNumber("Intake Spin Speed", 0.0);
+		
+		chooser.addObject("Rotate 90", new Rotate(90));
+		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
 
 		nav.putValuesToDashboard();
 
@@ -153,7 +151,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
-
+		autoLoop = 0;
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -172,6 +170,23 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+//		autoLoop ++;
+//		SmartDashboard.putNumber("AutoLoop: ", autoLoop);
+//		//Robot.intake.middleIntake();
+//		if (autoLoop < 500) {
+//			
+//			RobotMap.talon0.set(-0.2); 
+//			SmartDashboard.putNumber("Talon 0 spode", RobotMap.talon0.get());
+//			RobotMap.talon3.set(0.2);
+//			RobotMap.talon2.set(-0.2);
+//			RobotMap.talon8.set(0.2);
+//		}
+//		else if (autoLoop >= 500){
+//			RobotMap.talon0.set(0.0);
+//			RobotMap.talon3.set(0.0);
+//			RobotMap.talon2.set(0.0);
+//			RobotMap.talon8.set(0.0);
+//		}
 	}
 
 	@Override
@@ -195,7 +210,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-
+		
+		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
+		//RobotMap.talon7.set(SmartDashboard.getNumber("Intake Spin Speed", 0.0));
 	}
 
 	/**
