@@ -3,7 +3,6 @@ package org.usfirst.frc.team3482.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class NavXChip extends Subsystem{
 	

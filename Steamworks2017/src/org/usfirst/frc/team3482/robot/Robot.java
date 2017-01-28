@@ -8,8 +8,6 @@ import org.usfirst.frc.team3482.robot.commands.Protoshooter;
 import org.usfirst.frc.team3482.robot.networks.ImageListener;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
-import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
-import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
 import edu.wpi.cscore.CvSink;
@@ -43,7 +41,6 @@ public class Robot extends IterativeRobot {
 	//public static NavXChip nav;
 	SendableChooser<Command> teleopChooser = new SendableChooser<>();;
 	public static OI oi;
-	public static GearManipulator manipulator;
 	Command teleopCommand;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
@@ -63,7 +60,6 @@ public class Robot extends IterativeRobot {
 		//nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
 		chassis = new Chassis();
-		manipulator = new GearManipulator();
 		oi = new OI();
 		////disabled
 		chooser.addDefault("Default Auto", new Drive());
@@ -203,7 +199,6 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		
-		Robot.manipulator.maintainPosition();
 		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon2.getPosition());
 	    /*boolean rotateToAngle = false;
         if ( Robot.oi.getxboxController().getRawButton(1)) {
