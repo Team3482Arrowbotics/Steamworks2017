@@ -17,7 +17,7 @@ public class ProtoIntake extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		RobotMap.talon2.set(spode);
+		RobotMap.talon4.set(spode);
 		
 	}
 

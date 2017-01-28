@@ -4,10 +4,12 @@ package org.usfirst.frc.team3482.robot;
 import org.opencv.core.Mat;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.ProtoIntake;
-import org.usfirst.frc.team3482.robot.commands.Protoshooter;
+import org.usfirst.frc.team3482.robot.commands.Rotate;
+import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
 import org.usfirst.frc.team3482.robot.networks.ImageListener;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
+import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
 import edu.wpi.cscore.CvSink;
@@ -32,13 +34,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	NetworkTable cameraTable;
-	
+
 	double rotateToAngleRate;
-	
+	int autoLoop;
 	public static Chassis chassis;
 	public static Camera camera;
 	public static Rangefinder rangefinder;
-	//public static NavXChip nav;
+	public static NavXChip nav;
 	SendableChooser<Command> teleopChooser = new SendableChooser<>();;
 	public static OI oi;
 	Command teleopCommand;
@@ -51,81 +53,73 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		
-		
-		
+
 		RobotMap.init();
-	
+
 		rangefinder = new Rangefinder();
-		//nav = new NavXChip(RobotMap.ahrs);
+		nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
-		////disabled
+		//// disabled
 		chooser.addDefault("Default Auto", new Drive());
-		teleopChooser.addObject("Protoshooter 0.5 speed", new Protoshooter(0.5));
-		teleopChooser.addObject("Protoshooter 0.75 speed", new Protoshooter(0.75));
-		teleopChooser.addObject("Protoshooter 0.9 speed", new Protoshooter(0.9));
-		teleopChooser.addObject("Protoshooter 0.6 speed", new Protoshooter(0.6));
-		teleopChooser.addObject("Protoshooter 0.7 speed", new Protoshooter(0.7));
-		teleopChooser.addObject("Protoshooter 0.8 speed", new Protoshooter(0.8));
-		teleopChooser.addObject("Protoshooter 0.2 speed", new Protoshooter(0.2));
-		teleopChooser.addObject("ProtoIntake 0.5 speed", new ProtoIntake(0.5));
 		teleopChooser.addDefault("None", new ProtoIntake(0.0));
-		
+
 		SmartDashboard.putData("Teleop mode", teleopChooser);
 		SmartDashboard.putData("Auto mode", chooser);
-		/*nav.putValuesToDashboard();*/
+
+		SmartDashboard.putNumber("TurnP", .01);
+		SmartDashboard.putNumber("TurnI", 0);
+		SmartDashboard.putNumber("TurnD", 0);
+		SmartDashboard.putNumber("shooter speed", 0.0);
+		//SmartDashboard.putNumber("Intake Spin Speed", 0.0);
 		
+		chooser.addObject("Rotate 90", new Rotate(90));
+		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
+
+		nav.putValuesToDashboard();
+
 		new Thread(() -> {
 			cameraTable = NetworkTable.getTable("camera");
-			cameraTable.addTableListener(new ImageListener(), true);;
+			cameraTable.addTableListener(new ImageListener(), true);
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			camera.setExposureManual(20);
 			camera.setResolution(640, 480);
-			
+
 			CvSink cvSink = CameraServer.getInstance().getVideo();
-			CvSource outputStream = CameraServer.getInstance().putVideo ( "Blur", 640, 480 );
+			CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
 			Mat source = new Mat();
-			
+
 			cameraTable.putNumberArray("ImgArray", new double[1]);
 			cameraTable.putBoolean("TF", true);
-			
-			while(true) {
-				//get input image
+
+			while (true) {
+				// get input image
 				cvSink.grabFrame(source);
-				
-				
-				double[] imgToDoubles = new double[source.rows()*source.cols()*3];
+
+				double[] imgToDoubles = new double[source.rows() * source.cols() * 3];
 				int counter = 0;
-				for(int i = 0; i < source.rows(); i++){
-					for(int j = 0; j < source.cols(); j++){
-						for(int k = 0; k < 3; k++){
-							imgToDoubles[counter+k] = source.get(i, j)[k];
+				for (int i = 0; i < source.rows(); i++) {
+					for (int j = 0; j < source.cols(); j++) {
+						for (int k = 0; k < 3; k++) {
+							imgToDoubles[counter + k] = source.get(i, j)[k];
 						}
 						counter += 3;
-						
+
 					}
-				}				
+				}
 				Robot.camera.process(source);
 				outputStream.putFrame(Robot.camera.maskOutput());
-				
-				cameraTable.putNumberArray("ImgArray", source.get(0,(int)(Math.random()*10)));
+
+				cameraTable.putNumberArray("ImgArray", source.get(0, (int) (Math.random() * 10)));
 			}
 		}).start();
-		
-		
-		
-		
-		//CameraServer.getInstance().startAutomaticCapture();
-		RobotMap.rangefinder.setAverageBits (6);
-		RobotMap.rangefinder.setOversampleBits (4);
-		
-		//Gyro calibration
-		
-		//RobotMap.gyro.reset();
-		//RobotMap.gyro.calibrate();
-		
+
+		RobotMap.rangefinder.setAverageBits(6);
+		RobotMap.rangefinder.setOversampleBits(4);
+
+		RobotMap.ahrs.reset();
+
 	}
 
 	/**
@@ -157,7 +151,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
-
+		autoLoop = 0;
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -176,25 +170,43 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+//		autoLoop ++;
+//		SmartDashboard.putNumber("AutoLoop: ", autoLoop);
+//		//Robot.intake.middleIntake();
+//		if (autoLoop < 500) {
+//			
+//			RobotMap.talon0.set(-0.2); 
+//			SmartDashboard.putNumber("Talon 0 spode", RobotMap.talon0.get());
+//			RobotMap.talon3.set(0.2);
+//			RobotMap.talon2.set(-0.2);
+//			RobotMap.talon8.set(0.2);
+//		}
+//		else if (autoLoop >= 500){
+//			RobotMap.talon0.set(0.0);
+//			RobotMap.talon3.set(0.0);
+//			RobotMap.talon2.set(0.0);
+//			RobotMap.talon8.set(0.0);
+//		}
 	}
 
 	@Override
+
 	public void teleopInit() {
-		teleopCommand = (Command) teleopChooser.getSelected();
+		teleopCommand = new Drive();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-			teleopCommand.start();
+		teleopCommand.start();
 	}
 
 	/**
 	 * This function is called periodically during operator control
 	 */
 	int loop = 0;
-	
+
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();

@@ -18,7 +18,6 @@ public class Protoshooter extends Command {
 	@Override
 	protected void execute() {
 		RobotMap.talon4.set(spode);
-		//RobotMap.talon3.set(-spode);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
