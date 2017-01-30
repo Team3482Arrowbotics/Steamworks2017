@@ -34,19 +34,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	NetworkTable cameraTable;
-
+	public static final double RADIUS = 3.66056;
+	public static final double CIR = 23.0;
+//	wheel radius: 3.66056 inches
+//  wheel circumference: 23	inches
 	double rotateToAngleRate;
 	int autoLoop;
 	public static Chassis chassis;
 	public static Camera camera;
 	public static Rangefinder rangefinder;
 	public static NavXChip nav;
-	SendableChooser<Command> teleopChooser = new SendableChooser<>();;
 	public static OI oi;
+	double initialPosition;
 	Command teleopCommand;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
-
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -55,7 +57,6 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		RobotMap.init();
-
 		rangefinder = new Rangefinder();
 		nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
@@ -63,16 +64,21 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		//// disabled
 		chooser.addDefault("Default Auto", new Drive());
-		teleopChooser.addDefault("None", new ProtoIntake(0.0));
 
-		SmartDashboard.putData("Teleop mode", teleopChooser);
+
 		SmartDashboard.putData("Auto mode", chooser);
 
 		SmartDashboard.putNumber("TurnP", .01);
 		SmartDashboard.putNumber("TurnI", 0);
 		SmartDashboard.putNumber("TurnD", 0);
 		SmartDashboard.putNumber("shooter speed", 0.0);
-		//SmartDashboard.putNumber("Intake Spin Speed", 0.0);
+		SmartDashboard.putNumber("left motor speed 1", 0.0);
+		SmartDashboard.putNumber("left motor speed 2", 0.0);
+		SmartDashboard.putNumber("right motor speed 1", 0.0);
+		SmartDashboard.putNumber("right motor speed 2", 0.0);
+		SmartDashboard.putNumber("intake speed", 0.0);
+		SmartDashboard.putNumber("gear manipulator speed", 0.0);
+		
 		
 		chooser.addObject("Rotate 90", new Rotate(90));
 		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
@@ -119,7 +125,6 @@ public class Robot extends IterativeRobot {
 		RobotMap.rangefinder.setOversampleBits(4);
 
 		RobotMap.ahrs.reset();
-
 	}
 
 	/**
@@ -151,7 +156,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
-		autoLoop = 0;
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -162,6 +166,7 @@ public class Robot extends IterativeRobot {
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
+		initialPosition = RobotMap.talon8.getEncPosition();
 	}
 
 	/**
@@ -170,23 +175,15 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-//		autoLoop ++;
-//		SmartDashboard.putNumber("AutoLoop: ", autoLoop);
-//		//Robot.intake.middleIntake();
-//		if (autoLoop < 500) {
-//			
-//			RobotMap.talon0.set(-0.2); 
-//			SmartDashboard.putNumber("Talon 0 spode", RobotMap.talon0.get());
-//			RobotMap.talon3.set(0.2);
-//			RobotMap.talon2.set(-0.2);
-//			RobotMap.talon8.set(0.2);
-//		}
-//		else if (autoLoop >= 500){
-//			RobotMap.talon0.set(0.0);
-//			RobotMap.talon3.set(0.0);
-//			RobotMap.talon2.set(0.0);
-//			RobotMap.talon8.set(0.0);
-//		}
+		
+		SmartDashboard.putNumber("AutoLoop: ", autoLoop);
+		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()-initialPosition);
+		if (RobotMap.talon8.getEncPosition()- initialPosition < 1000) {
+			//do not call the four motors separately
+			RobotMap.driveRobot.tankDrive(1,1);		
+		} else {
+			RobotMap.driveRobot.stopMotor();
+		}
 	}
 
 	@Override
@@ -210,9 +207,14 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		
+		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition());
 		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
-		//RobotMap.talon7.set(SmartDashboard.getNumber("Intake Spin Speed", 0.0));
+		RobotMap.talon0.set(SmartDashboard.getNumber("left motor speed 1", 0.0));
+		RobotMap.talon2.set(SmartDashboard.getNumber("left motor speed 2", 0.0));
+		RobotMap.talon3.set(SmartDashboard.getNumber("right motor speed 1", 0.0));
+		RobotMap.talon8.set(SmartDashboard.getNumber("right motor speed 2", 0.0));
+		RobotMap.talon7.set(SmartDashboard.getNumber("intake speed", 0.0));
+		RobotMap.talon2.set(SmartDashboard.getNumber("gear manipulator speed", 0.0));
 	}
 
 	/**
