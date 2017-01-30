@@ -9,14 +9,19 @@ import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
 import org.usfirst.frc.team3482.robot.networks.ImageListener;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
+import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
+
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -37,7 +42,10 @@ public class Robot extends IterativeRobot {
 
 	double rotateToAngleRate;
 	int autoLoop;
+	boolean PIDOne = false;
+	boolean PIDTwo = false;
 	public static Chassis chassis;
+	public static GearManipulator gearManipulator;
 	public static Camera camera;
 	public static Rangefinder rangefinder;
 	public static NavXChip nav;
@@ -46,6 +54,7 @@ public class Robot extends IterativeRobot {
 	Command teleopCommand;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
+	double startPos;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -57,6 +66,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.init();
 
 		rangefinder = new Rangefinder();
+		gearManipulator = new GearManipulator();
 		nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
 		chassis = new Chassis();
@@ -72,13 +82,15 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("TurnI", 0);
 		SmartDashboard.putNumber("TurnD", 0);
 		SmartDashboard.putNumber("shooter speed", 0.0);
+		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon5.get());
+
 		//SmartDashboard.putNumber("Intake Spin Speed", 0.0);
 		
 		chooser.addObject("Rotate 90", new Rotate(90));
 		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
 
 		nav.putValuesToDashboard();
-
+		
 		new Thread(() -> {
 			cameraTable = NetworkTable.getTable("camera");
 			cameraTable.addTableListener(new ImageListener(), true);
@@ -197,6 +209,13 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		int absolutePosition = RobotMap.talon2.getPulseWidthPosition() & 0xFFF;
+		RobotMap.talon2.setEncPosition(absolutePosition);
+        RobotMap.talon2.reverseSensor(false);
+        RobotMap.talon2.setP(0.4);
+		RobotMap.talon2.changeControlMode(TalonControlMode.Position);
+		RobotMap.talon2.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		startPos  = RobotMap.talon2.get();
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		teleopCommand.start();
@@ -211,30 +230,15 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		
-		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon2.getPosition());
-	    /*boolean rotateToAngle = false;
-        if ( Robot.oi.getxboxController().getRawButton(1)) {
-            RobotMap.ahrs.reset();
-        }
-        if ( Robot.oi.getxboxController().getRawButton(2)) {
-            RobotMap.turnController.setSetpoint(0.0f);
-            rotateToAngle = true;
-        } else if ( Robot.oi.getxboxController().getRawButton(3)) {
-            RobotMap.turnController.setSetpoint(90.0f);
-            rotateToAngle = true;
-        } else if ( Robot.oi.getxboxController().getRawButton(4)) {
-            RobotMap.turnController.setSetpoint(179.9f);
-            rotateToAngle = true;
-        } else if ( Robot.oi.getxboxController().getRawButton(5)) {
-            RobotMap.turnController.setSetpoint(-90.0f);
-            rotateToAngle = true;
-        }
-        
-        double currentRotationRate;
-        if ( rotateToAngle ) {
-            RobotMap.turnController.enable();
-            currentRotationRate = rotateToAngleRate;
-        }*/
+		
+		if ( Robot.oi.getxboxController().getRawButton(1)) {
+			RobotMap.talon2.set(startPos + 20);
+		} else if ( Robot.oi.getxboxController().getRawButton(2)) {
+			RobotMap.talon2.set(startPos);
+		}
+		
+		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon2.get());
+	   
     }
 
 	/**

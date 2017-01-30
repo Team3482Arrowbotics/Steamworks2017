@@ -1,6 +1,10 @@
 package org.usfirst.frc.team3482.robot;
 
+import org.usfirst.frc.team3482.robot.commands.ProtoIntake;
+import org.usfirst.frc.team3482.robot.commands.Protoshooter;
 import org.usfirst.frc.team3482.robot.commands.Rotate;
+import org.usfirst.frc.team3482.robot.commands.RotateManipulator;
+import org.usfirst.frc.team3482.robot.commands.niWoTnipS;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -11,11 +15,30 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class OI {
 	public Joystick xboxController;
-//	
+	public JoystickButton shootButton;
+	public JoystickButton ballIntakeButton;
+	public JoystickButton hehehehHeheheheh;
+	public JoystickButton manipulatorUpButton;
+	public JoystickButton manipulatorDownButton;
 	public OI () {
 		xboxController = new Joystick ( 0 );
 		JoystickButton rotate90 = new JoystickButton(xboxController,3);
 		rotate90.whenPressed(new Rotate(90.0f));
+		
+		shootButton = new JoystickButton(xboxController, 3);
+		shootButton.whileHeld(new Protoshooter(1.0));
+		
+		ballIntakeButton = new JoystickButton(xboxController, 4);
+		ballIntakeButton.whileHeld(new ProtoIntake(1.0));
+		
+		hehehehHeheheheh = new JoystickButton(xboxController, 10);
+		hehehehHeheheheh.whenPressed(new niWoTnipS());
+		
+		//manipulatorUpButton = new JoystickButton(xboxController, 1);
+		//manipulatorUpButton.whenPressed(new RotateManipulator(11));
+		
+		//manipulatorDownButton = new JoystickButton(xboxController, 2);
+		//manipulatorDownButton.whenPressed(new RotateManipulator(0));
 	}
 	
 	//// CREATING BUTTONS
