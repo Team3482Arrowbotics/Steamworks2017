@@ -1,7 +1,6 @@
 
 package org.usfirst.frc.team3482.robot;
 
-import org.opencv.core.Mat;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.ProtoIntake;
 import org.usfirst.frc.team3482.robot.commands.Rotate;
@@ -67,7 +66,7 @@ public class Robot extends IterativeRobot {
 
 		rangefinder = new Rangefinder();
 		gearManipulator = new GearManipulator();
-		nav = new NavXChip(RobotMap.ahrs);
+		//nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
@@ -89,48 +88,12 @@ public class Robot extends IterativeRobot {
 		chooser.addObject("Rotate 90", new Rotate(90));
 		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
 
-		nav.putValuesToDashboard();
+		//nav.putValuesToDashboard();
 		
-		new Thread(() -> {
-			cameraTable = NetworkTable.getTable("camera");
-			cameraTable.addTableListener(new ImageListener(), true);
-			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setExposureManual(20);
-			camera.setResolution(640, 480);
-
-			CvSink cvSink = CameraServer.getInstance().getVideo();
-			CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
-			Mat source = new Mat();
-
-			cameraTable.putNumberArray("ImgArray", new double[1]);
-			cameraTable.putBoolean("TF", true);
-
-			while (true) {
-				// get input image
-				cvSink.grabFrame(source);
-
-				double[] imgToDoubles = new double[source.rows() * source.cols() * 3];
-				int counter = 0;
-				for (int i = 0; i < source.rows(); i++) {
-					for (int j = 0; j < source.cols(); j++) {
-						for (int k = 0; k < 3; k++) {
-							imgToDoubles[counter + k] = source.get(i, j)[k];
-						}
-						counter += 3;
-
-					}
-				}
-				Robot.camera.process(source);
-				outputStream.putFrame(Robot.camera.maskOutput());
-
-				cameraTable.putNumberArray("ImgArray", source.get(0, (int) (Math.random() * 10)));
-			}
-		}).start();
-
 		RobotMap.rangefinder.setAverageBits(6);
 		RobotMap.rangefinder.setOversampleBits(4);
 
-		RobotMap.ahrs.reset();
+		//RobotMap.ahrs.reset();
 
 	}
 
@@ -212,8 +175,14 @@ public class Robot extends IterativeRobot {
 		int absolutePosition = RobotMap.talon2.getPulseWidthPosition() & 0xFFF;
 		RobotMap.talon2.setEncPosition(absolutePosition);
         RobotMap.talon2.reverseSensor(false);
-        RobotMap.talon2.setP(0.4);
+        RobotMap.talon2.setP(0.1);
+        RobotMap.talon2.setI(0.0);
+        RobotMap.talon2.setD(0.0);
+        RobotMap.talon2.setF(0.0);
 		RobotMap.talon2.changeControlMode(TalonControlMode.Position);
+		RobotMap.talon2.setAllowableClosedLoopErr(0);
+		RobotMap.talon2.configNominalOutputVoltage(0, 0);
+		RobotMap.talon2.configPeakOutputVoltage(12, -12);
 		RobotMap.talon2.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		startPos  = RobotMap.talon2.get();
 		if (autonomousCommand != null)
@@ -232,6 +201,7 @@ public class Robot extends IterativeRobot {
 		
 		
 		if ( Robot.oi.getxboxController().getRawButton(1)) {
+			RobotMap.talon2.changeControlMode(TalonControlMode.Position);
 			RobotMap.talon2.set(startPos + 20);
 		} else if ( Robot.oi.getxboxController().getRawButton(2)) {
 			RobotMap.talon2.set(startPos);

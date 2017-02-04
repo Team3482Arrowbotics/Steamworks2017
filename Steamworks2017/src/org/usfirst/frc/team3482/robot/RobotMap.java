@@ -52,18 +52,18 @@ public class RobotMap {
 
 		rangefinder = new AnalogInput(0);
 
-		ahrs = new AHRS(SPI.Port.kMXP);
-		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TwoTalon(talon8, talon3));
+		//ahrs = new AHRS(SPI.Port.kMXP);
+		/*turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TwoTalon(talon8, talon3));
 		
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(0.5f);
-		turnController.setContinuous(true);
+		turnController.setContinuous(true);*/
 
 		limitSwitch = new DigitalInput(1);
 		counter = new Counter(limitSwitch);
 
-		driveRobot = new RobotDrive(talon0, talon8, talon2, talon3);
+		driveRobot = null;//new RobotDrive(talon0, talon8, talon2, talon3);
 
 	}
 	// If you are using multiple modules, make sure to define both the port
