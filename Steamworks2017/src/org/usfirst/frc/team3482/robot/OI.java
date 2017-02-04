@@ -13,10 +13,10 @@ public class OI {
 	public Joystick xboxController;
 //	
 	public OI () {
-		xboxController = new Joystick ( 0 );
+		//xboxController = new Joystick ( 0 );
 	
-		JoystickButton rotate90 = new JoystickButton(xboxController,3);
-		rotate90.whenPressed(new Rotate(90.0f));
+		//JoystickButton rotate90 = new JoystickButton(xboxController,3);
+		//rotate90.whenPressed(new Rotate(90.0f));
 		
 	}
 	

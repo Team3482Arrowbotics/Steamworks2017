@@ -1,16 +1,16 @@
 
 package org.usfirst.frc.team3482.robot;
-
 import org.opencv.core.Mat;
 import org.usfirst.frc.team3482.robot.commands.Drive;
-import org.usfirst.frc.team3482.robot.commands.ProtoIntake;
 import org.usfirst.frc.team3482.robot.commands.Rotate;
 import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
-import org.usfirst.frc.team3482.robot.networks.ImageListener;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
+
+import com.ctre.CANTalon.FeedbackDevice;
+import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
@@ -36,6 +36,7 @@ public class Robot extends IterativeRobot {
 	NetworkTable cameraTable;
 	public static final double RADIUS = 3.66056;
 	public static final double CIR = 23.0;
+	public static boolean isPID = true;
 //	wheel radius: 3.66056 inches
 //  wheel circumference: 23	inches
 	double rotateToAngleRate;
@@ -87,7 +88,7 @@ public class Robot extends IterativeRobot {
 
 		new Thread(() -> {
 			cameraTable = NetworkTable.getTable("camera");
-			cameraTable.addTableListener(new ImageListener(), true);
+			//cameraTable.addTableListener(new ImageListener(), true);
 			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 			camera.setExposureManual(20);
 			camera.setResolution(640, 480);
@@ -155,6 +156,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		RobotMap.ahrs.reset();
 		autonomousCommand = chooser.getSelected();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -162,11 +164,13 @@ public class Robot extends IterativeRobot {
 		 * = new MyAutoCommand(); break; case "Default Auto": default:
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
-
+		RobotMap.talon8.setEncPosition(10);
+		initialPosition = RobotMap.talon8.getEncPosition();
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
-		initialPosition = RobotMap.talon8.getEncPosition();
+		RobotMap.moveController.setSetpoint(1000);
+		RobotMap.moveController.enable();
 	}
 
 	/**
@@ -176,14 +180,29 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 		
-		SmartDashboard.putNumber("AutoLoop: ", autoLoop);
-		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()-initialPosition);
-		if (RobotMap.talon8.getEncPosition()- initialPosition < 1000) {
+		/*
+		 * RobotMap.talon.setFeedbackDevice(Feedback.device.CTRE_Encoder_Relative);
+		 * if ( button A ) {
+		 *    RobotMap.talon.changeControlMode(TalonControlMode.Position);
+		 *    stop PID;
+		 *    RobotMap.talon.set(posA) // 18 units = 90 degrees
+		 *    start PID;
+		 *    }
+		 *    
+		 * if ( PID ) {
+		 *    RobotMap.talon.set(posA);
+		 *   }
+		 */
+		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
+		SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
+		//RobotMap.talon8.setEncPosition(0);
+		//RobotMap.moveController.setSetpoint(1000);
+		/*if (RobotMap.talon8.getEncPosition()- initialPosition < 1000) {
 			//do not call the four motors separately
-			RobotMap.driveRobot.tankDrive(1,1);		
+			RobotMap.driveRobot.tankDrive(0.7,0.7);		
 		} else {
 			RobotMap.driveRobot.stopMotor();
-		}
+		}*/
 	}
 
 	@Override
@@ -194,6 +213,7 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		RobotMap.talon8.setEncPosition(0);
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		teleopCommand.start();
@@ -207,6 +227,19 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
+		SmartDashboard.putNumber("P value", RobotMap.talon8.getP());
+		
+		RobotMap.talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		if (isPID) {
+			RobotMap.talon8.changeControlMode(TalonControlMode.Position);
+			RobotMap.talon8.setSetpoint(-100);
+			//RobotMap.driveRobot.tankDrive(0.3, 0.3);
+			//isPID = false;
+		}
+		//RobotMap.talon8.disable();
+		
+		
 		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition());
 		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
 		RobotMap.talon0.set(SmartDashboard.getNumber("left motor speed 1", 0.0));
@@ -223,5 +256,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
+	
 	}
 }
