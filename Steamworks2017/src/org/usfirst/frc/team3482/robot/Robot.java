@@ -1,6 +1,5 @@
 
 package org.usfirst.frc.team3482.robot;
-import org.opencv.core.Mat;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Rotate;
 import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
@@ -12,10 +11,6 @@ import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -63,9 +58,11 @@ public class Robot extends IterativeRobot {
 		camera = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
-		//// disabled
-		chooser.addDefault("Default Auto", new Drive());
-
+		
+//		chooser.addDefault("Default Auto", new Drive());
+//		chooser.addObject("Rotate 90", new Rotate(90));
+//		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
+		
 
 		SmartDashboard.putData("Auto mode", chooser);
 
@@ -81,46 +78,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("gear manipulator speed", 0.0);
 		
 		
-		chooser.addObject("Rotate 90", new Rotate(90));
-		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
 
 		nav.putValuesToDashboard();
 
-		new Thread(() -> {
-			cameraTable = NetworkTable.getTable("camera");
-			//cameraTable.addTableListener(new ImageListener(), true);
-			UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-			camera.setExposureManual(20);
-			camera.setResolution(640, 480);
-
-			CvSink cvSink = CameraServer.getInstance().getVideo();
-			CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
-			Mat source = new Mat();
-
-			cameraTable.putNumberArray("ImgArray", new double[1]);
-			cameraTable.putBoolean("TF", true);
-
-			while (true) {
-				// get input image
-				cvSink.grabFrame(source);
-
-				double[] imgToDoubles = new double[source.rows() * source.cols() * 3];
-				int counter = 0;
-				for (int i = 0; i < source.rows(); i++) {
-					for (int j = 0; j < source.cols(); j++) {
-						for (int k = 0; k < 3; k++) {
-							imgToDoubles[counter + k] = source.get(i, j)[k];
-						}
-						counter += 3;
-
-					}
-				}
-				Robot.camera.process(source);
-				outputStream.putFrame(Robot.camera.maskOutput());
-
-				cameraTable.putNumberArray("ImgArray", source.get(0, (int) (Math.random() * 10)));
-			}
-		}).start();
+	
 
 		RobotMap.rangefinder.setAverageBits(6);
 		RobotMap.rangefinder.setOversampleBits(4);
@@ -157,20 +118,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		RobotMap.ahrs.reset();
-		autonomousCommand = chooser.getSelected();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
 		 * = new MyAutoCommand(); break; case "Default Auto": default:
 		 * autonomousCommand = new ExampleCommand(); break; }
 		 */
-		RobotMap.talon8.setEncPosition(10);
-		initialPosition = RobotMap.talon8.getEncPosition();
-		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
-		RobotMap.moveController.setSetpoint(1000);
-		RobotMap.moveController.enable();
 	}
 
 	/**
@@ -180,43 +133,27 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 		
-		/*
-		 * RobotMap.talon.setFeedbackDevice(Feedback.device.CTRE_Encoder_Relative);
-		 * if ( button A ) {
-		 *    RobotMap.talon.changeControlMode(TalonControlMode.Position);
-		 *    stop PID;
-		 *    RobotMap.talon.set(posA) // 18 units = 90 degrees
-		 *    start PID;
-		 *    }
-		 *    
-		 * if ( PID ) {
-		 *    RobotMap.talon.set(posA);
-		 *   }
-		 */
 		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
 		SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
-		//RobotMap.talon8.setEncPosition(0);
-		//RobotMap.moveController.setSetpoint(1000);
-		/*if (RobotMap.talon8.getEncPosition()- initialPosition < 1000) {
-			//do not call the four motors separately
-			RobotMap.driveRobot.tankDrive(0.7,0.7);		
-		} else {
-			RobotMap.driveRobot.stopMotor();
-		}*/
+		
+		
 	}
 
 	@Override
 
 	public void teleopInit() {
-		teleopCommand = new Drive();
+		//teleopCommand = new Drive();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		RobotMap.talon8.setEncPosition(0);
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-		teleopCommand.start();
+		
+		RobotMap.talon8.setEncPosition(0);
+		initialPosition = RobotMap.talon8.getEncPosition();
+		
+		//teleopCommand.start();
 	}
 
 	/**
@@ -228,26 +165,11 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
+		SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
 		SmartDashboard.putNumber("P value", RobotMap.talon8.getP());
-		
-		RobotMap.talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		if (isPID) {
-			RobotMap.talon8.changeControlMode(TalonControlMode.Position);
-			RobotMap.talon8.setSetpoint(-100);
-			//RobotMap.driveRobot.tankDrive(0.3, 0.3);
-			//isPID = false;
-		}
-		//RobotMap.talon8.disable();
-		
-		
-		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition());
+				
 		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
-		RobotMap.talon0.set(SmartDashboard.getNumber("left motor speed 1", 0.0));
-		RobotMap.talon2.set(SmartDashboard.getNumber("left motor speed 2", 0.0));
-		RobotMap.talon3.set(SmartDashboard.getNumber("right motor speed 1", 0.0));
-		RobotMap.talon8.set(SmartDashboard.getNumber("right motor speed 2", 0.0));
 		RobotMap.talon7.set(SmartDashboard.getNumber("intake speed", 0.0));
-		RobotMap.talon2.set(SmartDashboard.getNumber("gear manipulator speed", 0.0));
 	}
 
 	/**

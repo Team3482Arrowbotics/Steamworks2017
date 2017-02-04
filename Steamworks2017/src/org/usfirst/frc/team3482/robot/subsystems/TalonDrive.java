@@ -13,8 +13,8 @@ public class TalonDrive implements PIDOutput {
 	}
 	public void pidWrite(double output) {
 		// TODO Auto-generated method stub
-		drive.arcadeDrive(0, output);
-		SmartDashboard.putNumber("PID output", output);
+		drive.tankDrive(output, output);
+		SmartDashboard.putNumber("TalonDrive output", output);
 	}
 	
 

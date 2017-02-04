@@ -25,13 +25,14 @@ public class EncoderInput implements PIDSource {
 	@Override
 	public PIDSourceType getPIDSourceType() {
 		// TODO Auto-generated method stub
-		return null;
+		return PIDSourceType.kDisplacement;
 	}
 
 	@Override
 	public double pidGet() {
 		// TODO Auto-generated method stub
-		SmartDashboard.putNumber("move PID source", talon.getEncPosition());
+		System.out.print("move PID source = ");
+		System.out.println(talon.getEncPosition());
 		return talon.getEncPosition();
 	}
 

@@ -1,6 +1,6 @@
 package org.usfirst.frc.team3482.robot;
 
-import org.usfirst.frc.team3482.robot.commands.Rotate;
+import org.usfirst.frc.team3482.robot.commands.Move;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -13,10 +13,11 @@ public class OI {
 	public Joystick xboxController;
 //	
 	public OI () {
-		//xboxController = new Joystick ( 0 );
+		xboxController = new Joystick ( 0 );
 	
-		//JoystickButton rotate90 = new JoystickButton(xboxController,3);
-		//rotate90.whenPressed(new Rotate(90.0f));
+		JoystickButton moveme = new JoystickButton(xboxController,3);
+		moveme.whenPressed(new Move(200));
+		moveme.whenReleased(new Move(0));
 		
 	}
 	
