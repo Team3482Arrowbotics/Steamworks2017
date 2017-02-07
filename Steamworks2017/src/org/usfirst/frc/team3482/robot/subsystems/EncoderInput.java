@@ -24,7 +24,6 @@ public class EncoderInput implements PIDSource {
 
 	@Override
 	public PIDSourceType getPIDSourceType() {
-		// TODO Auto-generated method stub
 		return PIDSourceType.kDisplacement;
 	}
 

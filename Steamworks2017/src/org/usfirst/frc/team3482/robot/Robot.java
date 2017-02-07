@@ -170,6 +170,7 @@ public class Robot extends IterativeRobot {
 				
 		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
 		RobotMap.talon7.set(SmartDashboard.getNumber("intake speed", 0.0));
+		RobotMap.talon0.set(0.5);
 	}
 
 	/**
@@ -177,6 +178,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition());
 		LiveWindow.run();
 	
 	}

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -73,10 +74,12 @@ public class RobotMap {
 		talon8.setEncPosition(10);
 		moveController = new PIDController(SmartDashboard.getNumber("TurnP", 0.05), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0, new EncoderInput(talon8), new TalonDrive(driveRobot));
 		moveController.setInputRange(-20000, 20000);
-		moveController.setOutputRange(-0.5,0.5);
-		moveController.setAbsoluteTolerance(0.0);
+		moveController.setOutputRange(-1,1);
+		moveController.setAbsoluteTolerance(4);
 		moveController.setContinuous(true);
 
+		LiveWindow.addActuator("Move Controller", "Hello", moveController);
+		LiveWindow.addActuator("Move Controller", "Talon", talon8);
 		limitSwitch = new DigitalInput(1);
 		counter = new Counter(limitSwitch);
 
