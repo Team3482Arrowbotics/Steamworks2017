@@ -4,6 +4,8 @@ import org.usfirst.frc.team3482.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+//command works with joystick button 3
+
 public class Move extends Command 
 {
 	private boolean finished = false;

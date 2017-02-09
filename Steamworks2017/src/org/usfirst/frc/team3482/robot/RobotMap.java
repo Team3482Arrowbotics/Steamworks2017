@@ -2,11 +2,10 @@ package org.usfirst.frc.team3482.robot;
 
 import org.usfirst.frc.team3482.robot.subsystems.EncoderInput;
 import org.usfirst.frc.team3482.robot.subsystems.TalonDrive;
-import org.usfirst.frc.team3482.robot.subsystems.TwoTalon;
+import org.usfirst.frc.team3482.robot.subsystems.TalonDriveTurnCW;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -62,8 +61,10 @@ public class RobotMap {
 		driveRobot.setMaxOutput(0.5);
 		
 		ahrs = new AHRS(SPI.Port.kMXP);
-		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TalonDrive(driveRobot));
 		
+		//P:0,06 I:10^-4  F:500
+		
+		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(0.5f);
@@ -72,7 +73,9 @@ public class RobotMap {
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 //		talon8.changeControlMode(TalonControlMode.PercentVbus);
 		talon8.setEncPosition(10);
-		moveController = new PIDController(SmartDashboard.getNumber("TurnP", 0.05), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0, new EncoderInput(talon8), new TalonDrive(driveRobot));
+		//cant change the PID value from smartdashboard because the object is created in robot map
+		//moveController = new PIDController(SmartDashboard.getNumber("MoveP", 0.0), SmartDashboard.getNumber("MoveI", 0), SmartDashboard.getNumber("MoveD", 0), SmartDashboard.getNumber("MoveF",0), new EncoderInput(talon8), new TalonDrive(driveRobot));
+		moveController = new PIDController(0.0015,0.000001,0,850,new EncoderInput(talon8),new TalonDrive(driveRobot));
 		moveController.setInputRange(-20000, 20000);
 		moveController.setOutputRange(-1,1);
 		moveController.setAbsoluteTolerance(4);
@@ -80,10 +83,9 @@ public class RobotMap {
 
 		LiveWindow.addActuator("Move Controller", "Hello", moveController);
 		LiveWindow.addActuator("Move Controller", "Talon", talon8);
+		LiveWindow.addActuator("Turn Controller", "Test", turnController);
 		limitSwitch = new DigitalInput(1);
 		counter = new Counter(limitSwitch);
-
-
 	}
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:

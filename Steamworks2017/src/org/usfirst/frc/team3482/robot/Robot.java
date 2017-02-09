@@ -1,15 +1,13 @@
 
 package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
+import org.usfirst.frc.team3482.robot.commands.Move;
 import org.usfirst.frc.team3482.robot.commands.Rotate;
 import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
-
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -59,9 +57,10 @@ public class Robot extends IterativeRobot {
 		chassis = new Chassis();
 		oi = new OI();
 		
-//		chooser.addDefault("Default Auto", new Drive());
-//		chooser.addObject("Rotate 90", new Rotate(90));
-//		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
+		chooser.addDefault("Default Auto", new Drive());
+		//chooser.addObject("Rotate 90", new Rotate(90));
+		//chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
+		chooser.addObject("move 2000", new Move(2000));
 		
 
 		SmartDashboard.putData("Auto mode", chooser);
@@ -69,6 +68,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("TurnP", .01);
 		SmartDashboard.putNumber("TurnI", 0);
 		SmartDashboard.putNumber("TurnD", 0);
+		SmartDashboard.putNumber("MoveP",0);
+		SmartDashboard.putNumber("MoveI", 0);
+		SmartDashboard.putNumber("MoveD",0);
+		SmartDashboard.putNumber("MoveF",0);
 		SmartDashboard.putNumber("shooter speed", 0.0);
 		SmartDashboard.putNumber("left motor speed 1", 0.0);
 		SmartDashboard.putNumber("left motor speed 2", 0.0);
@@ -77,15 +80,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("intake speed", 0.0);
 		SmartDashboard.putNumber("gear manipulator speed", 0.0);
 		
-		
-
 		nav.putValuesToDashboard();
-
-	
 
 		RobotMap.rangefinder.setAverageBits(6);
 		RobotMap.rangefinder.setOversampleBits(4);
-
 		RobotMap.ahrs.reset();
 	}
 
@@ -132,17 +130,16 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		
-		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
-		SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
-		
+				
+		SmartDashboard.putNumber("auto encoder position", RobotMap.talon8.getEncPosition()); 
+		//SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
 		
 	}
 
 	@Override
 
 	public void teleopInit() {
-		//teleopCommand = new Drive();
+		teleopCommand = new Drive();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -153,7 +150,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.talon8.setEncPosition(0);
 		initialPosition = RobotMap.talon8.getEncPosition();
 		
-		//teleopCommand.start();
+		teleopCommand.start();
 	}
 
 	/**
@@ -164,13 +161,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
-		SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
-		SmartDashboard.putNumber("P value", RobotMap.talon8.getP());
+		SmartDashboard.putNumber("teleop encoder position", RobotMap.talon8.getEncPosition()); 
+		//SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
+		SmartDashboard.putNumber("move controller P", RobotMap.moveController.getP());
 				
 		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
 		RobotMap.talon7.set(SmartDashboard.getNumber("intake speed", 0.0));
-		RobotMap.talon0.set(0.5);
 	}
 
 	/**
