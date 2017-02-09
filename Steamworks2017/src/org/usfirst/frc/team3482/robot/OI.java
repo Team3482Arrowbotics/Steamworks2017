@@ -16,7 +16,7 @@ public class OI {
 		xboxController = new Joystick ( 0 );
 	
 		JoystickButton moveme = new JoystickButton(xboxController,3);
-		moveme.whenPressed(new Move(200));
+		moveme.whenPressed(new Move(10000));
 		moveme.whenReleased(new Move(0));
 		
 	}

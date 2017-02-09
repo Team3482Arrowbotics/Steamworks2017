@@ -1,16 +1,17 @@
 
 package org.usfirst.frc.team3482.robot;
-import org.usfirst.frc.team3482.robot.commands.Drive;
-import org.usfirst.frc.team3482.robot.commands.Rotate;
-import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
+import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
-import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
-
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -59,6 +60,31 @@ public class Robot extends IterativeRobot {
 		chassis = new Chassis();
 		oi = new OI();
 		
+		SmartDashboard.putNumber("Low Hue Value: ", 0.0);
+		SmartDashboard.putNumber("Low Saturation Value: ", 0.0);
+		SmartDashboard.putNumber("Low Luminance Value: ", 0.0);
+		SmartDashboard.putNumber("High Hue Value: ", 0.0);
+		SmartDashboard.putNumber("High Saturation Value: ", 0.0);
+		SmartDashboard.putNumber("High Luminance Value: ", 0.0);
+		
+		new Thread(() -> {
+            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+            camera.setResolution(640, 480);
+                        
+            CvSink cvSink = CameraServer.getInstance().getVideo();
+            CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+            
+            Mat source = new Mat();
+            Mat output = new Mat();
+           
+            while(!Thread.interrupted()) {
+                cvSink.grabFrame(source);
+                Robot.camera.process(source);
+            }
+        }).start();
+		
+//		SmartDashboard.putNumber("key", value);
+//		RobotMap.talon2.set(SmartDasboard.getNumber("key", 0.0);
 //		chooser.addDefault("Default Auto", new Drive());
 //		chooser.addObject("Rotate 90", new Rotate(90));
 //		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
@@ -150,9 +176,6 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		
-		RobotMap.talon8.setEncPosition(0);
-		initialPosition = RobotMap.talon8.getEncPosition();
-		
 		//teleopCommand.start();
 	}
 
@@ -164,12 +187,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
-		SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
-		SmartDashboard.putNumber("P value", RobotMap.talon8.getP());
-				
-		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
-		RobotMap.talon7.set(SmartDashboard.getNumber("intake speed", 0.0));
 	}
 
 	/**
