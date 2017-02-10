@@ -5,8 +5,7 @@ import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.ProtoIntake;
 import org.usfirst.frc.team3482.robot.commands.Rotate;
 import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
-import org.usfirst.frc.team3482.robot.networks.ImageListener;
-import org.usfirst.frc.team3482.robot.subsystems.Camera;
+//import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
@@ -15,12 +14,7 @@ import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -45,7 +39,7 @@ public class Robot extends IterativeRobot {
 	boolean PIDTwo = false;
 	public static Chassis chassis;
 	public static GearManipulator gearManipulator;
-	public static Camera camera;
+//	public static Camera camera;
 	public static Rangefinder rangefinder;
 	public static NavXChip nav;
 	SendableChooser<Command> teleopChooser = new SendableChooser<>();;
@@ -67,7 +61,7 @@ public class Robot extends IterativeRobot {
 		rangefinder = new Rangefinder();
 		gearManipulator = new GearManipulator();
 		//nav = new NavXChip(RobotMap.ahrs);
-		camera = new Camera();
+	//	camera = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
 		//// disabled
