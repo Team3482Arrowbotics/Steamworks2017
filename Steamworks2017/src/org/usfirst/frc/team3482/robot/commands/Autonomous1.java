@@ -6,16 +6,16 @@ import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class autoMiddle extends CommandGroup {
+public class Autonomous1 extends CommandGroup {
 	private double distance; 
 	private boolean finished = false;
 	
-	public autoMiddle(double d){
+	public Autonomous1(double d){
 		distance = d;
 	}
 	protected void initialize(){
-		RobotMap.moveController.setSetpoint(distance);
 		RobotMap.moveController.enable();
+		RobotMap.talon8.changeControlMode(TalonControlMode.Position);
 	}
 	
 	protected void execute(){
@@ -24,6 +24,8 @@ public class autoMiddle extends CommandGroup {
 		RobotMap.talon8.set(distance);
 		RobotMap.talon3.set(500);*/
 		//RobotMap.moveController.setSetpoint(distance);
+		//\jeffery referee's code above...
+		RobotMap.moveController.setSetpoint(distance);
 		if(RobotMap.moveController.getError()<20)
 		{
 			RobotMap.moveController.disable();

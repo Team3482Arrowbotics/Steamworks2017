@@ -10,8 +10,6 @@ public class TalonDriveTurnCW extends TalonDrive implements PIDOutput{
 		// TODO Auto-generated constructor stub
 	}
 	
-	
-	
 	public void pidWrite(double output){
 		drive.tankDrive(output, -output);
 	}
