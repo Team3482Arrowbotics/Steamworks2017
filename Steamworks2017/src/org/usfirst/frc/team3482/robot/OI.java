@@ -34,11 +34,11 @@ public class OI {
 		hehehehHeheheheh = new JoystickButton(xboxController, 10);
 		hehehehHeheheheh.whenPressed(new niWoTnipS());
 		
-		//manipulatorUpButton = new JoystickButton(xboxController, 1);
-		//manipulatorUpButton.whenPressed(new RotateManipulator(11));
+		manipulatorUpButton = new JoystickButton(xboxController, 1);
+		manipulatorUpButton.whenPressed(new RotateManipulator(20));
 		
-		//manipulatorDownButton = new JoystickButton(xboxController, 2);
-		//manipulatorDownButton.whenPressed(new RotateManipulator(0));
+		manipulatorDownButton = new JoystickButton(xboxController, 2);
+		manipulatorDownButton.whenPressed(new RotateManipulator(0));
 	}
 	
 	//// CREATING BUTTONS

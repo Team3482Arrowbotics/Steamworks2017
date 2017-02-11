@@ -166,19 +166,7 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		int absolutePosition = RobotMap.talon2.getPulseWidthPosition() & 0xFFF;
-		RobotMap.talon2.setEncPosition(absolutePosition);
-        RobotMap.talon2.reverseSensor(false);
-        RobotMap.talon2.setP(0.1);
-        RobotMap.talon2.setI(0.0);
-        RobotMap.talon2.setD(0.0);
-        RobotMap.talon2.setF(0.0);
-		RobotMap.talon2.changeControlMode(TalonControlMode.Position);
-		RobotMap.talon2.setAllowableClosedLoopErr(0);
-		RobotMap.talon2.configNominalOutputVoltage(0, 0);
-		RobotMap.talon2.configPeakOutputVoltage(12, -12);
-		RobotMap.talon2.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		startPos  = RobotMap.talon2.get();
+		
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		teleopCommand.start();
@@ -193,14 +181,14 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		
-		
+		/*
 		if ( Robot.oi.getxboxController().getRawButton(1)) {
 			RobotMap.talon2.changeControlMode(TalonControlMode.Position);
-			RobotMap.talon2.set(startPos + 20);
+			RobotMap.talon2.set(startPos - 20);
 		} else if ( Robot.oi.getxboxController().getRawButton(2)) {
 			RobotMap.talon2.set(startPos);
 		}
-		
+		*/
 		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon2.get());
 	   
     }
