@@ -13,8 +13,10 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.usfirst.frc.team3482.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.vision.VisionPipeline;
 
 /**
@@ -85,6 +87,10 @@ public class Camera extends Subsystem implements VisionPipeline {
 		double filterContoursMinRatio = 0;
 		double filterContoursMaxRatio = 1000;
 		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
+		
+		// Step Put to Table
+		List<MatOfPoint> contours = filterContoursContours;
+		putContourCentersToTable(contours, RobotMap.cameraTable);
 
 	}
 
@@ -262,6 +268,14 @@ public class Camera extends Subsystem implements VisionPipeline {
 			if (ratio < minRatio || ratio > maxRatio) continue;
 			output.add(contour);
 		}
+	}
+	
+	private void putContourCentersToTable(List<MatOfPoint> input, NetworkTable n){
+		for(int i = 0; i < input.size(); i++){
+			Rect bound = Imgproc.boundingRect(input.get(i));
+			n.putNumber("Contour Center X" + i, ((bound.width + bound.x) + bound.x) / 2);
+		}
+		
 	}
 
 	@Override

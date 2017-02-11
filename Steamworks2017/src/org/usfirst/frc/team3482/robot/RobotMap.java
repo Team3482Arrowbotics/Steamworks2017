@@ -2,11 +2,9 @@ package org.usfirst.frc.team3482.robot;
 
 import org.usfirst.frc.team3482.robot.subsystems.EncoderInput;
 import org.usfirst.frc.team3482.robot.subsystems.TalonDrive;
-import org.usfirst.frc.team3482.robot.subsystems.TwoTalon;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -15,6 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -40,8 +39,8 @@ public class RobotMap {
 	public static AHRS ahrs;
 	public static RobotDrive driveRobot;
 
-	public static Counter counter;
-
+	public static NetworkTable cameraTable;
+	
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
 	// public static int leftMotor = 1;
@@ -78,8 +77,8 @@ public class RobotMap {
 		moveController.setContinuous(true);
 
 		limitSwitch = new DigitalInput(1);
-		counter = new Counter(limitSwitch);
 
+		cameraTable = NetworkTable.getTable("camera");
 
 	}
 	// If you are using multiple modules, make sure to define both the port
