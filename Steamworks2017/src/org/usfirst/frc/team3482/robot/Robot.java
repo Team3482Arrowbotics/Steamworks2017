@@ -174,7 +174,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition());
+//		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition());
 		LiveWindow.run();
 	
 	}

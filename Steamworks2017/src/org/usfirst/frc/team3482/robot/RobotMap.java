@@ -62,9 +62,9 @@ public class RobotMap {
 		
 		ahrs = new AHRS(SPI.Port.kMXP);
 		
-		//P:0,06 I:10^-4  F:500
+		//P=0.1,I=0,D=0,F=0
 		
-		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
+		turnController = new PIDController(0.001, 0.0, 0.0, 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(0.5f);
@@ -84,6 +84,7 @@ public class RobotMap {
 		LiveWindow.addActuator("Move Controller", "Hello", moveController);
 		LiveWindow.addActuator("Move Controller", "Talon", talon8);
 		LiveWindow.addActuator("Turn Controller", "Test", turnController);
+		LiveWindow.addSensor("Turn Controller", "Gyro", ahrs);
 		limitSwitch = new DigitalInput(1);
 		counter = new Counter(limitSwitch);
 	}
