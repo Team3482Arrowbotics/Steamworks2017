@@ -23,7 +23,7 @@ public class Move extends Command
 		}
 	}
 	protected boolean isFinished(){
-		return RobotMap.moveController.getError() == 0;
+		return RobotMap.moveController.getAvgError() == 100;
 	}
 	@Override
 	protected void end()
