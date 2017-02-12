@@ -9,6 +9,8 @@ import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
+import com.ctre.CANTalon.TalonControlMode;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -162,11 +164,12 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		SmartDashboard.putNumber("teleop encoder position", RobotMap.talon8.getEncPosition()); 
-		//SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
 		SmartDashboard.putNumber("move controller P", RobotMap.moveController.getP());
+		SmartDashboard.putNumber("Range", Robot.rangefinder.getDistance());
 				
 		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
 		RobotMap.talon7.set(SmartDashboard.getNumber("intake speed", 0.0));
+		
 	}
 
 	/**

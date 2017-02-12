@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class Move extends Command 
 {
-	private boolean finished = false;
 	private double distance;
 	public Move(double a)
 	{
@@ -23,21 +22,13 @@ public class Move extends Command
 			RobotMap.moveController.enable();
 		}
 	}
+	protected boolean isFinished(){
+		return RobotMap.moveController.getError() == 0;
+	}
 	@Override
-	protected void execute()
-	{
-		if(RobotMap.moveController.getError() < 1){
-			System.out.println("Move finish");
-			//RobotMap.moveController.disable();
-			finished = true;
-		}
-	}
-	protected boolean isFinished() {
-		// TODO Auto-generated method stub
-		return finished;
-	}
 	protected void end()
 	{
 		System.out.println("Move end");
+		RobotMap.moveController.disable();
 	}
 }

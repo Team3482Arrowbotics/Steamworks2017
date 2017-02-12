@@ -17,19 +17,12 @@ public class Rotate extends Command
 		RobotMap.turnController.enable();
 	}
 	@Override
-	protected void execute()
-	{
-		if(RobotMap.turnController.getError() < 1){
-			RobotMap.turnController.disable();
-			finished = true;
-		}
-	}
-	protected boolean isFinished() {
-		// TODO Auto-generated method stub
-		return finished;
+	protected boolean isFinished(){
+		return RobotMap.turnController.get() <= 0.01;
 	}
 	protected void end()
 	{
+		System.out.println("rotate finsihed");
 		RobotMap.turnController.disable();
 	}
 }

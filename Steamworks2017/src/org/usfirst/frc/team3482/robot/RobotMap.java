@@ -55,7 +55,7 @@ public class RobotMap {
 		talon7 = new CANTalon(7);
 		talon0 = new CANTalon(0);
 
-		rangefinder = new AnalogInput(0);
+		rangefinder = new AnalogInput(1);
 		driveRobot = new RobotDrive(talon0, talon8, talon2, talon3);
 		driveRobot.setSafetyEnabled(false);
 		driveRobot.setMaxOutput(0.5);
@@ -69,6 +69,7 @@ public class RobotMap {
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(0.5f);
 		turnController.setContinuous(true);
+		//turnController.disable();
 		
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 //		talon8.changeControlMode(TalonControlMode.PercentVbus);
@@ -80,11 +81,13 @@ public class RobotMap {
 		moveController.setOutputRange(-1,1);
 		moveController.setAbsoluteTolerance(4);
 		moveController.setContinuous(true);
+		//moveController.disable();
 
 		LiveWindow.addActuator("Move Controller", "Hello", moveController);
 		LiveWindow.addActuator("Move Controller", "Talon", talon8);
 		LiveWindow.addActuator("Turn Controller", "Test", turnController);
 		LiveWindow.addSensor("Turn Controller", "Gyro", ahrs);
+		LiveWindow.addSensor("Range Finder", "sensor", rangefinder);
 		limitSwitch = new DigitalInput(1);
 		counter = new Counter(limitSwitch);
 	}

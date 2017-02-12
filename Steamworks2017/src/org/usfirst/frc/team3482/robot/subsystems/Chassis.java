@@ -6,6 +6,7 @@ import org.usfirst.frc.team3482.robot.RobotMap;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -29,6 +30,11 @@ public class Chassis extends Subsystem {
 		double deadZone = 0.1;
 		double leftY = s.getRawAxis(1);
 		double rightX = s.getRawAxis(4);
+		double distance = Robot.rangefinder.getDistance();
+
+		while (distance < 4.0 && leftY < 0) {
+			leftY = .7;
+		} 
 
 		if (leftY < deadZone && leftY > -deadZone) {
 			leftY = 0;
@@ -37,15 +43,12 @@ public class Chassis extends Subsystem {
 		if (rightX < deadZone && rightX > -deadZone) {
 			rightX = 0;
 		}
-
-		if (leftY == 0 && rightX == 0) {
-			return;
-		}
 		if (Robot.oi.xboxController.getRawAxis(2) != 0) {
-			robotDrive.arcadeDrive(-(leftY) * 0.5, rightX * turnSpeed * 0.75);
-		} else {
-			robotDrive.arcadeDrive(-(leftY), rightX * turnSpeed);
+			leftY *= 0.5;
 		}
+		SmartDashboard.putNumber("leftY", leftY);
+		SmartDashboard.putNumber("RightX", rightX);
+		robotDrive.arcadeDrive(-(leftY), rightX);
 	}
 
 	public void stop() {
@@ -56,8 +59,6 @@ public class Chassis extends Subsystem {
 		boolean isOn = RobotMap.limitSwitch.get();
 		return isOn;
 	}
-
-
 
 	// public double getChassisAngle() {
 	// return RobotMap.gyro.getAngle();
