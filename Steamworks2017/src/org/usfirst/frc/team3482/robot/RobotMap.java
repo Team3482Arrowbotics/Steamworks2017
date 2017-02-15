@@ -36,7 +36,7 @@ public class RobotMap {
 
 	public static AnalogInput rangefinder;
 
-	public static AHRS ahrs;
+	//public static AHRS ahrs;
 	public static RobotDrive driveRobot;
 
 	public static NetworkTable cameraTable;
@@ -59,13 +59,13 @@ public class RobotMap {
 		driveRobot.setSafetyEnabled(false);
 		driveRobot.setMaxOutput(0.5);
 		
-		ahrs = new AHRS(SPI.Port.kMXP);
+		/*ahrs = new AHRS(SPI.Port.kMXP);
 		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TalonDrive(driveRobot));
 		
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(0.5f);
-		turnController.setContinuous(true);
+		turnController.setContinuous(true);*/
 		
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 //		talon8.changeControlMode(TalonControlMode.PercentVbus);

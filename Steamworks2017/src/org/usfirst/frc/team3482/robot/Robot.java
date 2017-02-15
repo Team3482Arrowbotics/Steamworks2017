@@ -1,15 +1,13 @@
 
 package org.usfirst.frc.team3482.robot;
 import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
+import org.opencv.core.Rect;
 import org.opencv.imgproc.Imgproc;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
-import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
 import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -19,6 +17,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.VisionRunner;
+import edu.wpi.first.wpilibj.vision.VisionThread;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,17 +30,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	NetworkTable cameraTable;
+	private int counter;
+	private boolean testVisionThread = false;
 	public static final double RADIUS = 3.66056;
+	private VisionThread visionThread;
 	public static final double CIR = 23.0;
 	public static boolean isPID = true;
+	private double centerX = 0.0;
+	private final Object imgLock = new Object();
 //	wheel radius: 3.66056 inches
 //  wheel circumference: 23	inches
 	double rotateToAngleRate;
 	int autoLoop;
+	private VisionRunner visionRunner;
+	//private RobotDrive drive;
 	public static Chassis chassis;
 	public static Camera camera;
+	private int nContours;
 	public static Rangefinder rangefinder;
-	public static NavXChip nav;
+	private Rect r = new Rect();
 	public static OI oi;
 	double initialPosition;
 	Command teleopCommand;
@@ -55,7 +63,6 @@ public class Robot extends IterativeRobot {
 
 		RobotMap.init();
 		rangefinder = new Rangefinder();
-		nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
@@ -67,29 +74,54 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("High Saturation Value: ", 0.0);
 		SmartDashboard.putNumber("High Luminance Value: ", 0.0);
 		
-		new Thread(() -> {
-            UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-            camera.setResolution(640, 480);
-                        
-            CvSink cvSink = CameraServer.getInstance().getVideo();
-            CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
-            
-            Mat source = new Mat();
-            Mat output = new Mat();
-           
-            while(!Thread.interrupted()) {
-                cvSink.grabFrame(source);
-                Robot.camera.process(source);
-            }
-        }).start();
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+        camera.setResolution(640, 480);
+        
+       /*new Thread(() -> {
+            //UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+            //camera.setResolution(640, 480);
+	                        
+	    	CvSink cvSink = CameraServer.getInstance().getVideo();
+	        CvSource outputStream = CameraServer.getInstance().putVideo("Blur", 640, 480);
+	           
+	        Mat source = new Mat();
+	        Mat output = new Mat();
+	
+	        int loop = 0;
+	        while(loop < 600) {
+	         cvSink.grabFrame(source);
+	         Robot.camera.process(source);
+	         loop ++;
+	         outputStream.putFrame(Robot.camera.cvErodeOutput());
+	        }
+        }).start();*/
+        
+         /*new Thread(() -> {
+        	 while(true) {
+        		 outputStream.putFrame(Robot.camera.cvErodeOutput());
+        	 }
+         }).start();*/
+        
+        visionThread = new VisionThread(camera, Robot.camera, pipeline -> {
+        	//testVisionThread = true;
+        	CvSink cvSink = CameraServer.getInstance().getVideo();
+        	//CvSource outputStream = CameraServer.getInstance().putVideo("HSVCam", 640, 480);
+        	Mat source = new Mat();
+        	cvSink.grabFrame(source);
+        	Robot.camera.process(source);
+    		//outputStream.putFrame(Robot.camera.hsvThresholdOutput());
+        	if (!Robot.camera.filterContoursOutput().isEmpty()) {
+        		testVisionThread = true;
+        		nContours = pipeline.filterContoursOutput().size();
+        		r = Imgproc.boundingRect(Robot.camera.filterContoursOutput().get(0));
+        		synchronized (imgLock) {
+        			centerX = r.x + (r.width /2);
+        		}
+        	}
+        });
+        visionThread.start();
+        //drive = new RobotDrive(0, 8, 2, 3);
 		
-//		SmartDashboard.putNumber("key", value);
-//		RobotMap.talon2.set(SmartDasboard.getNumber("key", 0.0);
-//		chooser.addDefault("Default Auto", new Drive());
-//		chooser.addObject("Rotate 90", new Rotate(90));
-//		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
-		
-
 		SmartDashboard.putData("Auto mode", chooser);
 
 		SmartDashboard.putNumber("TurnP", .01);
@@ -102,17 +134,11 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("right motor speed 2", 0.0);
 		SmartDashboard.putNumber("intake speed", 0.0);
 		SmartDashboard.putNumber("gear manipulator speed", 0.0);
-		
-		
-
-		nav.putValuesToDashboard();
-
-	
 
 		RobotMap.rangefinder.setAverageBits(6);
 		RobotMap.rangefinder.setOversampleBits(4);
 
-		RobotMap.ahrs.reset();
+		//RobotMap.ahrs.reset();
 	}
 
 	/**
@@ -143,7 +169,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		RobotMap.ahrs.reset();
+		//RobotMap.ahrs.reset();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
 		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -157,10 +183,26 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		counter ++;
+		int loop = 0;
 		Scheduler.getInstance().run();
-		
-		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
-		SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
+		//System.out.println(r);
+		double centerX;
+		synchronized (imgLock) {
+			centerX = this.centerX;
+		}
+		double turnPixels = centerX - (640 / 2);
+		System.out.println("TURN IS :                                                  " + turnPixels);
+		//System.out.println("TESTVISIONTHREAD IS :                                        " + testVisionThread);
+		//RobotMap.driveRobot.arcadeDrive(0.0, turn * 0.005); 
+		//RobotMap.driveRobot.arcadeDrive(0.0, 0.4);
+		double degrees = turnPixels / 7;
+		int seconds = (int)(1.361 * degrees);
+		System.out.println("NUMBER OF CONTOURS :                                             " + nContours);
+		System.out.println("COUNTER :                      " + counter);
+		System.out.println("DEGREES :                      " + degrees);
+		//SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
+		//SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
 		
 		
 	}
