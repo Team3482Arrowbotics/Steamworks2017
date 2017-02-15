@@ -113,7 +113,7 @@ public class Robot extends IterativeRobot {
         	if (!Robot.camera.filterContoursOutput().isEmpty()) {
         		testVisionThread = true;
         		nContours = pipeline.filterContoursOutput().size();
-        		r = Imgproc.boundingRect(Robot.camera.filterContoursOutput().get(0));
+        		r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
         		synchronized (imgLock) {
         			centerX = r.x + (r.width /2);
         		}
@@ -183,24 +183,24 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		counter ++;
-		int loop = 0;
+//		counter ++;
+//		int loop = 0;
 		Scheduler.getInstance().run();
 		//System.out.println(r);
-		double centerX;
-		synchronized (imgLock) {
-			centerX = this.centerX;
-		}
-		double turnPixels = centerX - (640 / 2);
-		System.out.println("TURN IS :                                                  " + turnPixels);
+//		double centerX;
+//		synchronized (imgLock) {
+//			centerX = this.centerX;
+//		}
+//		double turnPixels = centerX - (640 / 2);
+//		System.out.println("TURN IS :                                                  " + turnPixels);
 		//System.out.println("TESTVISIONTHREAD IS :                                        " + testVisionThread);
 		//RobotMap.driveRobot.arcadeDrive(0.0, turn * 0.005); 
 		//RobotMap.driveRobot.arcadeDrive(0.0, 0.4);
-		double degrees = turnPixels / 7;
-		int seconds = (int)(1.361 * degrees);
-		System.out.println("NUMBER OF CONTOURS :                                             " + nContours);
-		System.out.println("COUNTER :                      " + counter);
-		System.out.println("DEGREES :                      " + degrees);
+//		double degrees = turnPixels / 7;
+//		int seconds = (int)(1.361 * degrees);
+//		System.out.println("NUMBER OF CONTOURS :                                             " + nContours);
+//		System.out.println("COUNTER :                      " + counter);
+//		System.out.println("DEGREES :                      " + degrees);
 		//SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
 		//SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
 		
