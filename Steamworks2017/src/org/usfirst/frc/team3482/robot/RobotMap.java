@@ -62,17 +62,15 @@ public class RobotMap {
 		
 		ahrs = new AHRS(SPI.Port.kMXP);
 		
-		//P=0.1,I=0,D=0,F=0
+		//P=0.15,I=0,D=0,F=0
 		
-		turnController = new PIDController(0.001, 0.0, 0.0, 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
+		turnController = new PIDController(0.15, 0.0, 0.0, 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(0.5f);
 		turnController.setContinuous(true);
-		//turnController.disable();
 		
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
-//		talon8.changeControlMode(TalonControlMode.PercentVbus);
 		talon8.setEncPosition(10);
 		//cant change the PID value from smartdashboard because the object is created in robot map
 		//moveController = new PIDController(SmartDashboard.getNumber("MoveP", 0.0), SmartDashboard.getNumber("MoveI", 0), SmartDashboard.getNumber("MoveD", 0), SmartDashboard.getNumber("MoveF",0), new EncoderInput(talon8), new TalonDrive(driveRobot));
@@ -81,7 +79,6 @@ public class RobotMap {
 		moveController.setOutputRange(-1,1);
 		moveController.setAbsoluteTolerance(4);
 		moveController.setContinuous(true);
-		//moveController.disable();
 
 		LiveWindow.addActuator("Move Controller", "Hello", moveController);
 		LiveWindow.addActuator("Move Controller", "Talon", talon8);

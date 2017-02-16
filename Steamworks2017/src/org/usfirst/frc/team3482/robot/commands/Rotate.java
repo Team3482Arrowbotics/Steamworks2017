@@ -13,12 +13,22 @@ public class Rotate extends Command
 		angle=a;
 	}
 	protected void initialize(){
-		RobotMap.turnController.setSetpoint(angle);
+		System.out.println("init rotate error: "+RobotMap.turnController.getError());
 		RobotMap.turnController.enable();
+		RobotMap.turnController.setSetpoint(angle);
+		//RobotMap.turnController.enable();
+		System.out.println("is rotate enabled: "+RobotMap.turnController.isEnabled());
 	}
 	@Override
+	protected void execute()
+	{
+		if(RobotMap.turnController.getError() < 1){
+			RobotMap.turnController.disable();
+			finished = true;
+		}
+	}
 	protected boolean isFinished(){
-		return RobotMap.turnController.get() <= 0.01;
+		return finished;
 	}
 	protected void end()
 	{

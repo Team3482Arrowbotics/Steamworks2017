@@ -30,8 +30,8 @@ public class EncoderInput implements PIDSource {
 	@Override
 	public double pidGet() {
 		// TODO Auto-generated method stub
-		System.out.print("move PID source = ");
-		System.out.println(talon.getEncPosition());
+		//System.out.print("move PID source = ");
+		//System.out.println(talon.getEncPosition());
 		return talon.getEncPosition();
 	}
 

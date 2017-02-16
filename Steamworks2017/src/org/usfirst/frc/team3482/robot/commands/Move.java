@@ -9,21 +9,31 @@ import edu.wpi.first.wpilibj.command.Command;
 public class Move extends Command 
 {
 	private double distance;
+	private boolean finished = false;
 	public Move(double a)
 	{
 		distance=a;
 	}
 	protected void initialize(){
-		System.out.println("Move init");
-		if (distance == 0) {
-			RobotMap.moveController.disable();
-		} else {
-			RobotMap.moveController.setSetpoint(distance);
+		System.out.println("init error: "+RobotMap.moveController.getError());
+		//if (distance > 0){
 			RobotMap.moveController.enable();
+			RobotMap.moveController.setSetpoint(distance);
+		//} else {
+			//RobotMap.moveController.disable();
+		//}
+		System.out.println("is move enabled: "+RobotMap.moveController.isEnable());
+	}
+	protected void execute()
+	{
+		if(RobotMap.moveController.getError()<70)
+		{
+			RobotMap.moveController.disable();
+			finished = true;
 		}
 	}
 	protected boolean isFinished(){
-		return RobotMap.moveController.getAvgError() == 100;
+		return finished;
 	}
 	@Override
 	protected void end()

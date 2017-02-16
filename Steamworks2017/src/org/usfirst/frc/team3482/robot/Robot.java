@@ -2,14 +2,11 @@
 package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Move;
-import org.usfirst.frc.team3482.robot.commands.Rotate;
-import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
+import org.usfirst.frc.team3482.robot.commands.moveSquare;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
-
-import com.ctre.CANTalon.TalonControlMode;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -44,7 +41,8 @@ public class Robot extends IterativeRobot {
 	double initialPosition;
 	Command teleopCommand;
 	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
+	SendableChooser<Command> teleopchooser;
+	SendableChooser<Command> autoChooser;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -53,37 +51,32 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		RobotMap.init();
+		teleopchooser = new SendableChooser<>();
+		autoChooser = new SendableChooser<>();
 		rangefinder = new Rangefinder();
 		nav = new NavXChip(RobotMap.ahrs);
 		camera = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
+		teleopchooser.addDefault("Default Auto", new Drive());
+		teleopchooser.addObject("move 2000", new Move(2000));
+		autoChooser.addDefault("Default Auto", new Drive());
+		autoChooser.addObject("Move Square", new moveSquare());
 		
-		chooser.addDefault("Default Auto", new Drive());
-		//chooser.addObject("Rotate 90", new Rotate(90));
-		//chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
-		chooser.addObject("move 2000", new Move(2000));
-		
-
-		SmartDashboard.putData("Auto mode", chooser);
-
-		SmartDashboard.putNumber("TurnP", .01);
-		SmartDashboard.putNumber("TurnI", 0);
-		SmartDashboard.putNumber("TurnD", 0);
-		SmartDashboard.putNumber("MoveP",0);
-		SmartDashboard.putNumber("MoveI", 0);
-		SmartDashboard.putNumber("MoveD",0);
-		SmartDashboard.putNumber("MoveF",0);
-		SmartDashboard.putNumber("shooter speed", 0.0);
+		RobotMap.talon8.setEncPosition(0);
+		RobotMap.talon2.setEncPosition(0);
+	
+		SmartDashboard.putData("Auto mode", teleopchooser);
+		SmartDashboard.putData("Auto mode", autoChooser);
+	/*	SmartDashboard.putNumber("shooter speed", 0.0);
 		SmartDashboard.putNumber("left motor speed 1", 0.0);
 		SmartDashboard.putNumber("left motor speed 2", 0.0);
 		SmartDashboard.putNumber("right motor speed 1", 0.0);
 		SmartDashboard.putNumber("right motor speed 2", 0.0);
 		SmartDashboard.putNumber("intake speed", 0.0);
-		SmartDashboard.putNumber("gear manipulator speed", 0.0);
-		
+		SmartDashboard.putNumber("gear manipulator speed", 0.0);*/
+	
 		nav.putValuesToDashboard();
-
 		RobotMap.rangefinder.setAverageBits(6);
 		RobotMap.rangefinder.setOversampleBits(4);
 		RobotMap.ahrs.reset();
@@ -116,14 +109,17 @@ public class Robot extends IterativeRobot {
 	 * to the switch structure below with additional strings & commands.
 	 */
 	@Override
+
+	//PID actuator not working smoothly in autonomous mode, smooth in test mode
+	
 	public void autonomousInit() {
-		RobotMap.ahrs.reset();
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
+		//RobotMap.ahrs.reset();
+		RobotMap.turnController.enable();
+		//RobotMap.moveController.enable();
+		//RobotMap.turnController.setSetpoint(180);
+		autonomousCommand = (Command) autoChooser.getSelected();
+		if (autonomousCommand != null)
+			autonomousCommand.start();
 	}
 
 	/**
@@ -132,26 +128,20 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-				
-		SmartDashboard.putNumber("auto encoder position", RobotMap.talon8.getEncPosition()); 
-		//SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
-		
+		RobotMap.turnController.setSetpoint(180);
+		//RobotMap.moveController.setSetpoint(1000);
+		System.out.println(RobotMap.turnController.getError());
+		//System.out.println(RobotMap.moveController.getError());
 	}
 
 	@Override
 
 	public void teleopInit() {
 		teleopCommand = new Drive();
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		if (autonomousCommand != null)
+		System.out.println("talon 8 position: "+RobotMap.talon8.getEncPosition());
+		if (autonomousCommand != null){
 			autonomousCommand.cancel();
-		
-		RobotMap.talon8.setEncPosition(0);
-		initialPosition = RobotMap.talon8.getEncPosition();
-		
+		}
 		teleopCommand.start();
 	}
 
@@ -163,13 +153,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("teleop encoder position", RobotMap.talon8.getEncPosition()); 
+		/*SmartDashboard.putNumber("teleop encoder position", RobotMap.talon8.getEncPosition()); 
 		SmartDashboard.putNumber("move controller P", RobotMap.moveController.getP());
 		SmartDashboard.putNumber("Range", Robot.rangefinder.getDistance());
-				
 		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
-		RobotMap.talon7.set(SmartDashboard.getNumber("intake speed", 0.0));
-		
+		RobotMap.talon7.set(SmartDashboard.getNumber("intake speed", 0.0));*/
+		Robot.chassis.drive(Robot.oi.getxboxController());
 	}
 
 	/**
@@ -177,7 +166,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-//		SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition());
 		LiveWindow.run();
 	
 	}

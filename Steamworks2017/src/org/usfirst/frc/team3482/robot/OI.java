@@ -2,6 +2,8 @@ package org.usfirst.frc.team3482.robot;
 
 import org.usfirst.frc.team3482.robot.commands.Move;
 import org.usfirst.frc.team3482.robot.commands.Rotate;
+import org.usfirst.frc.team3482.robot.commands.SetGear;
+import org.usfirst.frc.team3482.robot.commands.moveSquare;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -17,11 +19,15 @@ public class OI {
 		xboxController = new Joystick ( 0 );
 	
 		JoystickButton moveme = new JoystickButton(xboxController,3);
-		moveme.whenPressed(new Move(-3000));
-		moveme.whenReleased(new Move(0));
+		moveme.whenPressed(new Move(3000));
 		JoystickButton rotate90 = new JoystickButton(xboxController,1);
 		rotate90.whenPressed(new Rotate(90));
 		
+		JoystickButton moveSquare = new JoystickButton(xboxController,5);
+		moveSquare.whenPressed(new moveSquare());
+	
+		JoystickButton testSetGear = new JoystickButton(xboxController,2);
+		testSetGear.whenPressed(new SetGear(20));
 	}
 	
 	//// CREATING BUTTONS
