@@ -8,6 +8,7 @@ import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
 import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -17,7 +18,6 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.VisionRunner;
 import edu.wpi.first.wpilibj.vision.VisionThread;
 
 /**
@@ -42,11 +42,10 @@ public class Robot extends IterativeRobot {
 //  wheel circumference: 23	inches
 	double rotateToAngleRate;
 	int autoLoop;
-	private VisionRunner visionRunner;
 	//private RobotDrive drive;
 	public static Chassis chassis;
-	public static Camera camera;
-	private int nContours;
+	public static Camera cameraSubsystem;
+	private int nContours = 0;
 	public static Rangefinder rangefinder;
 	private Rect r = new Rect();
 	public static OI oi;
@@ -63,7 +62,7 @@ public class Robot extends IterativeRobot {
 
 		RobotMap.init();
 		rangefinder = new Rangefinder();
-		camera = new Camera();
+		cameraSubsystem = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
 		
@@ -90,9 +89,9 @@ public class Robot extends IterativeRobot {
 	        int loop = 0;
 	        while(loop < 600) {
 	         cvSink.grabFrame(source);
-	         Robot.camera.process(source);
+	         Robot.cameraSubsystem.process(source);
 	         loop ++;
-	         outputStream.putFrame(Robot.camera.cvErodeOutput());
+	         outputStream.putFrame(Robot.cameraSubsystem.cvErodeOutput());
 	        }
         }).start();*/
         
@@ -102,22 +101,19 @@ public class Robot extends IterativeRobot {
         	 }
          }).start();*/
         
-        visionThread = new VisionThread(camera, Robot.camera, pipeline -> {
-        	//testVisionThread = true;
-        	CvSink cvSink = CameraServer.getInstance().getVideo();
-        	//CvSource outputStream = CameraServer.getInstance().putVideo("HSVCam", 640, 480);
+        visionThread = new VisionThread(camera, Robot.cameraSubsystem, pipeline -> {
+        	CvSink cvSink = CameraServer.getInstance().getVideo();    
         	Mat source = new Mat();
         	cvSink.grabFrame(source);
-        	Robot.camera.process(source);
-    		//outputStream.putFrame(Robot.camera.hsvThresholdOutput());
-        	if (!Robot.camera.filterContoursOutput().isEmpty()) {
+        	pipeline.process(source);
+        	if (!pipeline.filterContoursOutput().isEmpty()) {
         		testVisionThread = true;
         		nContours = pipeline.filterContoursOutput().size();
         		r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
         		synchronized (imgLock) {
         			centerX = r.x + (r.width /2);
         		}
-        	}
+        	} 
         });
         visionThread.start();
         //drive = new RobotDrive(0, 8, 2, 3);
@@ -187,20 +183,20 @@ public class Robot extends IterativeRobot {
 //		int loop = 0;
 		Scheduler.getInstance().run();
 		//System.out.println(r);
-//		double centerX;
-//		synchronized (imgLock) {
-//			centerX = this.centerX;
-//		}
-//		double turnPixels = centerX - (640 / 2);
-//		System.out.println("TURN IS :                                                  " + turnPixels);
-		//System.out.println("TESTVISIONTHREAD IS :                                        " + testVisionThread);
+		double centerX;
+		synchronized (imgLock) {
+			centerX = this.centerX;
+		}
+		double turnPixels = centerX - (640 / 2);
+		System.out.println("TURN IS :                                                  " + turnPixels);
+		System.out.println("TESTVISIONTHREAD IS :                                        " + testVisionThread);
 		//RobotMap.driveRobot.arcadeDrive(0.0, turn * 0.005); 
 		//RobotMap.driveRobot.arcadeDrive(0.0, 0.4);
-//		double degrees = turnPixels / 7;
-//		int seconds = (int)(1.361 * degrees);
-//		System.out.println("NUMBER OF CONTOURS :                                             " + nContours);
-//		System.out.println("COUNTER :                      " + counter);
-//		System.out.println("DEGREES :                      " + degrees);
+		double degrees = turnPixels / 7;
+		int seconds = (int)(1.361 * degrees);
+		System.out.println("NUMBER OF CONTOURS :                                             " + nContours);
+		//System.out.println("COUNTER :                      " + counter);
+		System.out.println("DEGREES :                      " + degrees);
 		//SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
 		//SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
 		
@@ -237,6 +233,5 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
-	
 	}
 }
