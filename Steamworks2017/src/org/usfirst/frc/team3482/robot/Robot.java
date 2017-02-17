@@ -31,6 +31,8 @@ public class Robot extends IterativeRobot {
 
 	NetworkTable cameraTable;
 	private int counter;
+	private int sum = 0;
+	private int loop = 0;
 	private boolean testVisionThread = false;
 	public static final double RADIUS = 3.66056;
 	private VisionThread visionThread;
@@ -197,10 +199,6 @@ public class Robot extends IterativeRobot {
 		System.out.println("NUMBER OF CONTOURS :                                             " + nContours);
 		//System.out.println("COUNTER :                      " + counter);
 		System.out.println("DEGREES :                      " + degrees);
-		//SmartDashboard.putNumber("encoder position", RobotMap.talon8.getEncPosition()); 
-		//SmartDashboard.putNumber("delta encoder position", RobotMap.talon8.getEncPosition()-initialPosition); 
-		
-		
 	}
 
 	@Override
@@ -220,7 +218,6 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during operator control
 	 */
-	int loop = 0;
 
 	@Override
 	public void teleopPeriodic() {

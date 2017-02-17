@@ -2,6 +2,7 @@ package org.usfirst.frc.team3482.robot;
 
 import org.usfirst.frc.team3482.robot.subsystems.EncoderInput;
 import org.usfirst.frc.team3482.robot.subsystems.TalonDrive;
+import org.usfirst.frc.team3482.robot.subsystems.TalonDriveTurnCW;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -60,7 +61,7 @@ public class RobotMap {
 		driveRobot.setMaxOutput(0.5);
 		
 		ahrs = new AHRS(SPI.Port.kMXP);
-		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TalonDrive(driveRobot));
+		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
 		
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);

@@ -45,7 +45,7 @@ public class Camera extends Subsystem implements VisionPipeline {
 		Mat hsvThresholdInput = source0;
 		double[] hsvThresholdHue = {32.37410071942446, 81.70648464163823};
 		double[] hsvThresholdSaturation = {0.0, 46.12627986348124};
-		double[] hsvThresholdValue = {185.74640287769782, 255.0};
+		double[] hsvThresholdValue = {252.0, 255.0};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
 		// Step CV_erode0:
@@ -64,15 +64,15 @@ public class Camera extends Subsystem implements VisionPipeline {
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 2500.0;
+		double filterContoursMinArea = 250.0;
 		double filterContoursMinPerimeter = 0;
 		double filterContoursMinWidth = 0;
 		double filterContoursMaxWidth = 1000;
 		double filterContoursMinHeight = 0;
 		double filterContoursMaxHeight = 1000;
-		double[] filterContoursSolidity = {78.23741007194245, 100.0};
-		double filterContoursMaxVertices = 1000.0;
-		double filterContoursMinVertices = 0.0;
+		double[] filterContoursSolidity = {0.0, 100.0};
+		double filterContoursMaxVertices = 150.0;
+		double filterContoursMinVertices = 25.0;
 		double filterContoursMinRatio = 2.0;
 		double filterContoursMaxRatio = 5.0;
 		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
