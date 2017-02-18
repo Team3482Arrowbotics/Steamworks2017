@@ -8,7 +8,6 @@ import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
 import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -52,9 +51,12 @@ public class Robot extends IterativeRobot {
 	private Rect r = new Rect();
 	public static OI oi;
 	double initialPosition;
+	public static double degreesToTurn;
 	Command teleopCommand;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
+	
+	NetworkTable table;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -67,6 +69,7 @@ public class Robot extends IterativeRobot {
 		cameraSubsystem = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
+		table = NetworkTable.getTable("Vision");
 		
 		SmartDashboard.putNumber("Low Hue Value: ", 0.0);
 		SmartDashboard.putNumber("Low Saturation Value: ", 0.0);
@@ -222,6 +225,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		
 	}
 
 	/**
@@ -232,3 +236,4 @@ public class Robot extends IterativeRobot {
 		LiveWindow.run();
 	}
 }
+ 

@@ -32,7 +32,7 @@ public class ProcessFrameAndRotate extends Command{
     		//RobotMap.driveRobot.arcadeDrive(0.0, 0.4);
     		double degrees = turnPixels / 7;
     		System.out.println(degrees);
-    		int seconds = (int)(1.361 * degrees);
+    		Robot.degreesToTurn = degrees;
     		System.out.println("NUMBER OF CONTOURS :                                             " + nContours);
     		System.out.println("DEGREES :                      " + degrees);
     		RobotMap.turnController.setSetpoint(RobotMap.turnController.getSetpoint() + degrees);
