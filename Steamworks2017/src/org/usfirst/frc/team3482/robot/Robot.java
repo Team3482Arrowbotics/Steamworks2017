@@ -1,4 +1,3 @@
-
 package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Move;
@@ -8,6 +7,7 @@ import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -39,7 +39,7 @@ public class Robot extends IterativeRobot {
 	public static NavXChip nav;
 	public static OI oi;
 	double initialPosition;
-	Command teleopCommand;
+	public Command teleopCommand;
 	Command autonomousCommand;
 	SendableChooser<Command> teleopchooser;
 	SendableChooser<Command> autoChooser;
@@ -60,22 +60,13 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		teleopchooser.addDefault("Default Auto", new Drive());
 		teleopchooser.addObject("move 2000", new Move(2000));
-		autoChooser.addDefault("Default Auto", new Drive());
-		autoChooser.addObject("Move Square", new moveSquare());
 		
 		RobotMap.talon8.setEncPosition(0);
 		RobotMap.talon2.setEncPosition(0);
 	
 		SmartDashboard.putData("Auto mode", teleopchooser);
 		SmartDashboard.putData("Auto mode", autoChooser);
-	/*	SmartDashboard.putNumber("shooter speed", 0.0);
-		SmartDashboard.putNumber("left motor speed 1", 0.0);
-		SmartDashboard.putNumber("left motor speed 2", 0.0);
-		SmartDashboard.putNumber("right motor speed 1", 0.0);
-		SmartDashboard.putNumber("right motor speed 2", 0.0);
-		SmartDashboard.putNumber("intake speed", 0.0);
-		SmartDashboard.putNumber("gear manipulator speed", 0.0);*/
-	
+		
 		nav.putValuesToDashboard();
 		RobotMap.rangefinder.setAverageBits(6);
 		RobotMap.rangefinder.setOversampleBits(4);
@@ -114,12 +105,11 @@ public class Robot extends IterativeRobot {
 	
 	public void autonomousInit() {
 		//RobotMap.ahrs.reset();
-		RobotMap.turnController.enable();
-		//RobotMap.moveController.enable();
-		//RobotMap.turnController.setSetpoint(180);
 		autonomousCommand = (Command) autoChooser.getSelected();
 		if (autonomousCommand != null)
 			autonomousCommand.start();
+		autoChooser.addDefault("Default Auto", null);
+		autoChooser.addObject("Move Square", new Move(1000));
 	}
 
 	/**
@@ -128,16 +118,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		RobotMap.turnController.setSetpoint(180);
-		//RobotMap.moveController.setSetpoint(1000);
 		System.out.println(RobotMap.turnController.getError());
-		//System.out.println(RobotMap.moveController.getError());
 	}
-
 	@Override
 
 	public void teleopInit() {
-		teleopCommand = new Drive();
+		//teleopCommand = new Drive();
 		System.out.println("talon 8 position: "+RobotMap.talon8.getEncPosition());
 		if (autonomousCommand != null){
 			autonomousCommand.cancel();
@@ -153,12 +139,25 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		System.out.println("get: "+RobotMap.moveController.get());
+		System.out.println("error: "+RobotMap.moveController.getAvgError());
+		System.out.println("setpoint: "+RobotMap.moveController.getSetpoint());
+		if(RobotMap.moveController.getAvgError()<0)
+		{
+			RobotMap.moveController.disable();
+			teleopCommand.start();
+		}
+		
+		//if(Robot.oi.getxboxController().getRawButton(1)){
+			//RobotMap.moveController.setSetpoint(1000);
+		//}
+		//RobotMap.moveController.enable();
 		/*SmartDashboard.putNumber("teleop encoder position", RobotMap.talon8.getEncPosition()); 
 		SmartDashboard.putNumber("move controller P", RobotMap.moveController.getP());
 		SmartDashboard.putNumber("Range", Robot.rangefinder.getDistance());
 		RobotMap.talon4.set(SmartDashboard.getNumber("shooter speed", 0.0));
 		RobotMap.talon7.set(SmartDashboard.getNumber("intake speed", 0.0));*/
-		Robot.chassis.drive(Robot.oi.getxboxController());
+		//Robot.chassis.drive(Robot.oi.getxboxController());
 	}
 
 	/**
@@ -167,6 +166,5 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
-	
 	}
 }

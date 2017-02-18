@@ -16,17 +16,14 @@ public class Move extends Command
 	}
 	protected void initialize(){
 		System.out.println("init error: "+RobotMap.moveController.getError());
-		//if (distance > 0){
-			RobotMap.moveController.enable();
-			RobotMap.moveController.setSetpoint(distance);
-		//} else {
-			//RobotMap.moveController.disable();
-		//}
-		System.out.println("is move enabled: "+RobotMap.moveController.isEnable());
+		//RobotMap.turnController.setSetpoint(distance);
+		RobotMap.moveController.setSetpoint(distance);
+		RobotMap.moveController.enable();
 	}
 	protected void execute()
 	{
-		if(RobotMap.moveController.getError()<70)
+
+		if(RobotMap.moveController.getError()<50)
 		{
 			RobotMap.moveController.disable();
 			finished = true;

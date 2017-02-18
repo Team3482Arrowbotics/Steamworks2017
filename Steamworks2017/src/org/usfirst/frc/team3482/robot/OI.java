@@ -20,8 +20,8 @@ public class OI {
 	
 		JoystickButton moveme = new JoystickButton(xboxController,3);
 		moveme.whenPressed(new Move(3000));
-		JoystickButton rotate90 = new JoystickButton(xboxController,1);
-		rotate90.whenPressed(new Rotate(90));
+		/*JoystickButton rotate90 = new JoystickButton(xboxController,1);
+		rotate90.whenPressed(new Rotate(90));*/
 		
 		JoystickButton moveSquare = new JoystickButton(xboxController,5);
 		moveSquare.whenPressed(new moveSquare());

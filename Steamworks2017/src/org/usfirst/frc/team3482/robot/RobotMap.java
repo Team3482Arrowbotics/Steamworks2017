@@ -36,6 +36,7 @@ public class RobotMap {
 	public static PIDController moveController;
 
 	public static AnalogInput rangefinder;
+	public static AnalogInput test;
 
 	public static AHRS ahrs;
 	public static RobotDrive driveRobot;
@@ -55,7 +56,7 @@ public class RobotMap {
 		talon7 = new CANTalon(7);
 		talon0 = new CANTalon(0);
 
-		rangefinder = new AnalogInput(1);
+		rangefinder = new AnalogInput(0);
 		driveRobot = new RobotDrive(talon0, talon8, talon2, talon3);
 		driveRobot.setSafetyEnabled(false);
 		driveRobot.setMaxOutput(0.5);
@@ -81,7 +82,6 @@ public class RobotMap {
 		moveController.setContinuous(true);
 
 		LiveWindow.addActuator("Move Controller", "Hello", moveController);
-		LiveWindow.addActuator("Move Controller", "Talon", talon8);
 		LiveWindow.addActuator("Turn Controller", "Test", turnController);
 		LiveWindow.addSensor("Turn Controller", "Gyro", ahrs);
 		LiveWindow.addSensor("Range Finder", "sensor", rangefinder);

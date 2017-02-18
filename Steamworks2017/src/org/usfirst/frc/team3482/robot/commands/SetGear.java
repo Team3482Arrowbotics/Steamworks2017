@@ -39,6 +39,4 @@ public class SetGear extends Command{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-
 }
