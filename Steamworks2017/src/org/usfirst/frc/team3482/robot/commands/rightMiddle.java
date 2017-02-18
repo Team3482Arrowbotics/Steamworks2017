@@ -14,7 +14,7 @@ public class rightMiddle extends CommandGroup {
 		addSequential (new SetGear(-25));
 		
 		//move back, get moving to baseline
-		addSequential (new Move(-2435));
+		addSequential (new Move(-2435)); //number is halfway
 		addSequential (new Rotate(-90));
 		addSequential (new Move(2852));
 		addSequential (new Rotate(90));

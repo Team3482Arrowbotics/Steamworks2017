@@ -5,7 +5,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class leftMiddle extends CommandGroup {
 	
 	public leftMiddle(){
+		//Start Position as stated in class name
+		
 		//deposit gear
+		
 		addSequential (new Move(4000));
 		addSequential (new SetGear(-20));
 		addSequential (new Move(695));

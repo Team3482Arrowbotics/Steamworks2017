@@ -1,13 +1,11 @@
 package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Move;
-import org.usfirst.frc.team3482.robot.commands.moveSquare;
-import org.usfirst.frc.team3482.robot.subsystems.Camera;
+//import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
-import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
+//import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -34,9 +32,10 @@ public class Robot extends IterativeRobot {
 	double rotateToAngleRate;
 	int autoLoop;
 	public static Chassis chassis;
-	public static Camera camera;
+	//Not Resolved apparently (camera, navXChip)
+	//public static Camera camera;
 	public static Rangefinder rangefinder;
-	public static NavXChip nav;
+	//public static NavXChip nav;
 	public static OI oi;
 	double initialPosition;
 	public Command teleopCommand;
@@ -54,8 +53,8 @@ public class Robot extends IterativeRobot {
 		teleopchooser = new SendableChooser<>();
 		autoChooser = new SendableChooser<>();
 		rangefinder = new Rangefinder();
-		nav = new NavXChip(RobotMap.ahrs);
-		camera = new Camera();
+		//nav = new NavXChip(RobotMap.ahrs);
+		//camera = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
 		teleopchooser.addDefault("Default Auto", new Drive());
@@ -67,7 +66,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Auto mode", teleopchooser);
 		SmartDashboard.putData("Auto mode", autoChooser);
 		
-		nav.putValuesToDashboard();
+		//nav.putValuesToDashboard();
 		RobotMap.rangefinder.setAverageBits(6);
 		RobotMap.rangefinder.setOversampleBits(4);
 		RobotMap.ahrs.reset();
