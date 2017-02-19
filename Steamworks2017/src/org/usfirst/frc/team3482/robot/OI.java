@@ -3,7 +3,7 @@ package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Move;
 import org.usfirst.frc.team3482.robot.commands.Rotate;
 import org.usfirst.frc.team3482.robot.commands.SetGear;
-import org.usfirst.frc.team3482.robot.commands.moveSquare;
+import org.usfirst.frc.team3482.robot.commands.MoveSquare;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -24,7 +24,7 @@ public class OI {
 		rotate90.whenPressed(new Rotate(90));*/
 		
 		JoystickButton moveSquare = new JoystickButton(xboxController,5);
-		moveSquare.whenPressed(new moveSquare());
+		moveSquare.whenPressed(new MoveSquare());
 	
 		JoystickButton testSetGear = new JoystickButton(xboxController,2);
 		testSetGear.whenPressed(new SetGear(20));

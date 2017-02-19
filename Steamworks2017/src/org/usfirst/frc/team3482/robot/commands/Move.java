@@ -26,6 +26,7 @@ public class Move extends Command
 		if(RobotMap.moveController.getError()<50)
 		{
 			RobotMap.moveController.disable();
+			RobotMap.moveController.reset();
 			finished = true;
 		}
 	}
@@ -37,5 +38,6 @@ public class Move extends Command
 	{
 		System.out.println("Move end");
 		RobotMap.moveController.disable();
+		System.out.println("Current Setpoint: " + RobotMap.moveController.getSetpoint());
 	}
 }

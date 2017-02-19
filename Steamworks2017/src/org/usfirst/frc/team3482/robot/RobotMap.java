@@ -33,8 +33,8 @@ public class RobotMap {
 	public static CANTalon talon5;
 	public static CANTalon talon7;
 	public static PIDController turnController;
-	public static PIDController moveController;
 
+	public static PIDController moveController;
 	public static AnalogInput rangefinder;
 	public static AnalogInput test;
 

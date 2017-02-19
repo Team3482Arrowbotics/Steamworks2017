@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Move;
+import org.usfirst.frc.team3482.robot.commands.MoveSquare;
 //import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 //import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
@@ -60,6 +61,8 @@ public class Robot extends IterativeRobot {
 		teleopchooser.addDefault("Default Auto", new Drive());
 		teleopchooser.addObject("move 2000", new Move(2000));
 		
+		autoChooser.addDefault("Move Square", new MoveSquare());
+		
 		RobotMap.talon8.setEncPosition(0);
 		RobotMap.talon2.setEncPosition(0);
 	
@@ -104,11 +107,12 @@ public class Robot extends IterativeRobot {
 	
 	public void autonomousInit() {
 		//RobotMap.ahrs.reset();
+		SmartDashboard.putData("Auto mode", autoChooser);
+		SmartDashboard.putData("Auto mode", teleopchooser);
+		SmartDashboard.putData("Auto mode", autoChooser);
 		autonomousCommand = (Command) autoChooser.getSelected();
 		if (autonomousCommand != null)
 			autonomousCommand.start();
-		autoChooser.addDefault("Default Auto", null);
-		autoChooser.addObject("Move Square", new Move(1000));
 	}
 
 	/**
