@@ -37,7 +37,8 @@ public class Robot extends IterativeRobot {
 	private VisionThread visionThread;
 	public static final double CIR = 23.0;
 	public static boolean isPID = true;
-	private double centerX = 0.0;
+	public static double degrees = 0;
+	public static double centerX = 0.0;
 	private final Object imgLock = new Object();
 //	wheel radius: 3.66056 inches
 //  wheel circumference: 23	inches
@@ -46,7 +47,7 @@ public class Robot extends IterativeRobot {
 	//private RobotDrive drive;
 	public static Chassis chassis;
 	public static Camera cameraSubsystem;
-	private int nContours = 0;
+	public static int nContours = 0;
 	public static Rangefinder rangefinder;
 	private Rect r = new Rect();
 	public static OI oi;
@@ -195,9 +196,11 @@ public class Robot extends IterativeRobot {
 		double turnPixels = centerX - (640 / 2);
 		System.out.println("TURN IS :                                                  " + turnPixels);
 		System.out.println("TESTVISIONTHREAD IS :                                        " + testVisionThread);
+		
 		//RobotMap.driveRobot.arcadeDrive(0.0, turn * 0.005); 
 		//RobotMap.driveRobot.arcadeDrive(0.0, 0.4);
-		double degrees = turnPixels / 7;
+		degrees = (turnPixels * 60) / 640;
+		//RobotMap.talon3.set(0.05 * (int)degrees);
 		int seconds = (int)(1.361 * degrees);
 		System.out.println("NUMBER OF CONTOURS :                                             " + nContours);
 		//System.out.println("COUNTER :                      " + counter);
@@ -236,4 +239,3 @@ public class Robot extends IterativeRobot {
 		LiveWindow.run();
 	}
 }
- 

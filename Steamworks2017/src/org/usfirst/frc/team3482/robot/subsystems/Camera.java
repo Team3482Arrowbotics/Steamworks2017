@@ -44,8 +44,8 @@ public class Camera extends Subsystem implements VisionPipeline {
 	public void process(Mat source0) {
 		// Step HSV_Threshold0:
 		Mat hsvThresholdInput = source0;
-		double[] hsvThresholdHue = {32.37410071942446, 81.70648464163823};
-		double[] hsvThresholdSaturation = {0.0, 46.12627986348124};
+		double[] hsvThresholdHue = {27.37410071942446, 97.70648464163823};
+		double[] hsvThresholdSaturation = {0.0, 60.12627986348124};
 		double[] hsvThresholdValue = {252.24820143884892, 255.0};
 		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
@@ -82,9 +82,9 @@ public class Camera extends Subsystem implements VisionPipeline {
 		double filterContoursMaxHeight = 1000;
 		double[] filterContoursSolidity = {0, 100};
 		double filterContoursMaxVertices = 150.0;
-		double filterContoursMinVertices = 25.0;
+		double filterContoursMinVertices = 5.0;
 		double filterContoursMinRatio = 2.0;
-		double filterContoursMaxRatio = 5.0;
+		double filterContoursMaxRatio = 10.0;
 		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, filterContoursOutput);
 
 	}

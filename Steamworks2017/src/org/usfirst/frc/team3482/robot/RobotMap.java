@@ -61,11 +61,11 @@ public class RobotMap {
 		driveRobot.setMaxOutput(0.5);
 		
 		ahrs = new AHRS(SPI.Port.kMXP);
-		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
+		turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.5), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
 		
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
-		turnController.setAbsoluteTolerance(0.5f);
+		turnController.setAbsoluteTolerance(5.0f);
 		turnController.setContinuous(true);
 		
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
