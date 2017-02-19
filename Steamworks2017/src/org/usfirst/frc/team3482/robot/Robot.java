@@ -2,6 +2,7 @@ package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Move;
 import org.usfirst.frc.team3482.robot.commands.MoveSquare;
+import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
 //import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 //import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
@@ -40,7 +41,7 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	double initialPosition;
 	public Command teleopCommand;
-	Command autonomousCommand;
+	public Command autonomousCommand;
 	SendableChooser<Command> teleopchooser;
 	SendableChooser<Command> autoChooser;
 	/**
@@ -61,13 +62,15 @@ public class Robot extends IterativeRobot {
 		teleopchooser.addDefault("Default Auto", new Drive());
 		teleopchooser.addObject("move 2000", new Move(2000));
 		
-		autoChooser.addDefault("Move Square", new MoveSquare());
+		autoChooser.addDefault("Default Auto", null);
+		autoChooser.addObject("move test", new Move(2000));
+		autoChooser.addObject("move square test", new MoveSquare());
 		
 		RobotMap.talon8.setEncPosition(0);
 		RobotMap.talon2.setEncPosition(0);
 	
 		SmartDashboard.putData("Auto mode", teleopchooser);
-		SmartDashboard.putData("Auto mode", autoChooser);
+		//SmartDashboard.putData("Auto mode", autoChooser);
 		
 		//nav.putValuesToDashboard();
 		RobotMap.rangefinder.setAverageBits(6);
@@ -108,11 +111,15 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		//RobotMap.ahrs.reset();
 		SmartDashboard.putData("Auto mode", autoChooser);
-		SmartDashboard.putData("Auto mode", teleopchooser);
-		SmartDashboard.putData("Auto mode", autoChooser);
-		autonomousCommand = (Command) autoChooser.getSelected();
+		//SmartDashboard.putData("Auto mode", teleopchooser);
+		//SmartDashboard.putData("Auto mode", autoChooser);
+		//autonomousCommand = (Command) autoChooser.getSelected();
+		autonomousCommand = new MoveSquare();
 		if (autonomousCommand != null)
 			autonomousCommand.start();
+		//RobotMap.moveController.setSetpoint(2000);
+		//RobotMap.moveController.enable();
+		
 	}
 
 	/**
@@ -122,6 +129,11 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 		System.out.println(RobotMap.turnController.getError());
+		if(RobotMap.moveController.getAvgError()<0)
+		{
+			RobotMap.moveController.disable();
+			teleopCommand.start();
+		}
 	}
 	@Override
 
@@ -132,6 +144,8 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.cancel();
 		}
 		teleopCommand.start();
+		RobotMap.moveController.setSetpoint(2000);
+		RobotMap.moveController.enable();
 	}
 
 	/**

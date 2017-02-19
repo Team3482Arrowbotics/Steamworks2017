@@ -12,14 +12,14 @@ public class MoveSquare extends CommandGroup {
 		
 		addSequential (new Move(1500));
 		addSequential (new Rotate(86));
-		addSequential (new Move(3000));
+		addSequential (new Move(1500));
 		System.out.println("CurrentSetpoint" + RobotMap.moveController.getSetpoint());
-		/*
+		
 		addSequential (new Rotate(86));
-		addSequential (new Move(1500));
-		addSequential (new Rotate(86));
-		addSequential (new Move(1500));
-		addSequential (new Rotate(86));
-		*/
+		//addSequential (new Move(1500));
+		//addSequential (new Rotate(86));
+		//addSequential (new Move(1500));
+		//addSequential (new Rotate(86));
+		
 	}
 }

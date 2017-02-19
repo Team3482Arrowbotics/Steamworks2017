@@ -16,7 +16,7 @@ public class Rotate extends Command
 		//System.out.println("init rotate error: "+RobotMap.turnController.getError());
 		//RobotMap.turnController.enable();
 		//System.out.println("is rotate enabled: "+RobotMap.turnController.isEnabled());
-		
+		RobotMap.turnController.reset();
 		RobotMap.turnController.setSetpoint(angle);
 		RobotMap.turnController.enable();
 	}
@@ -25,7 +25,9 @@ public class Rotate extends Command
 	protected void execute()
 	{
 		//RobotMap.turnController.setSetpoint(angle);
-		if(RobotMap.turnController.getError() < 0.5){
+		System.out.println(RobotMap.turnController.getError());
+		System.out.println(finished);
+		if(RobotMap.turnController.getError() < 10 && RobotMap.turnController.getError()>-10){
 			RobotMap.turnController.disable();
 			RobotMap.turnController.reset();
 			finished = true;
