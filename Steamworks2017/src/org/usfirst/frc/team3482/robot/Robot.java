@@ -60,6 +60,7 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 		teleopchooser.addDefault("Default Auto", new Drive());
 		teleopchooser.addObject("move 2000", new Move(2000));
+		SmartDashboard.putNumber("gear Wheels Speed", 0.0);
 		
 		RobotMap.talon8.setEncPosition(0);
 		RobotMap.talon2.setEncPosition(0);
@@ -139,14 +140,15 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		System.out.println("get: "+RobotMap.moveController.get());
-		System.out.println("error: "+RobotMap.moveController.getAvgError());
-		System.out.println("setpoint: "+RobotMap.moveController.getSetpoint());
-		if(RobotMap.moveController.getAvgError()<0)
+	
+		//System.out.println("get: "+RobotMap.moveController.get());
+		//System.out.println("error: "+RobotMap.moveController.getAvgError());
+		//System.out.println("setpoint: "+RobotMap.moveController.getSetpoint());
+	/*	if(RobotMap.moveController.getAvgError()<0)
 		{
 			RobotMap.moveController.disable();
 			teleopCommand.start();
-		}
+		}*/
 		
 		//if(Robot.oi.getxboxController().getRawButton(1)){
 			//RobotMap.moveController.setSetpoint(1000);
