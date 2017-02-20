@@ -8,6 +8,7 @@ import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
 import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -97,14 +98,14 @@ public class Robot extends IterativeRobot {
 	         cvSink.grabFrame(source);
 	         Robot.cameraSubsystem.process(source);
 	         loop ++;
-	         outputStream.putFrame(Robot.cameraSubsystem.cvErodeOutput());
+	         outputStream.putFrame(Robot.cameraSubsystem.hsvThresholdOutput());
 	        }
         }).start();*/
         
          /*new Thread(() -> {
         	 while(true) {
         		 outputStream.putFrame(Robot.camera.cvErodeOutput());
-        	 }
+        	 } 
          }).start();*/
         
         visionThread = new VisionThread(camera, Robot.cameraSubsystem, pipeline -> {
