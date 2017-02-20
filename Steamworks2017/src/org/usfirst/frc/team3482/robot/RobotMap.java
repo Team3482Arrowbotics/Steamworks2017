@@ -38,7 +38,7 @@ public class RobotMap {
 	public static AnalogInput rangefinder;
 	public static AnalogInput test;
 
-	public static AHRS ahrs;
+	//public static AHRS ahrs;
 	public static RobotDrive driveRobot;
 
 	public static Counter counter;
@@ -61,29 +61,31 @@ public class RobotMap {
 		driveRobot.setSafetyEnabled(false);
 		driveRobot.setMaxOutput(0.5);
 		
-		ahrs = new AHRS(SPI.Port.kMXP);
+		//ahrs = new AHRS(SPI.Port.kMXP);
 		
 		//P=0.15,I=0,D=0,F=0
 		
-		turnController = new PIDController(0.15, 0.0, 0.0, 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
+		/*****
+		 * turnController = new PIDController(0.15, 0.0, 0.0, 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(0.5f);
 		turnController.setContinuous(true);
+		******/
 		
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		talon8.setEncPosition(10);
 		//cant change the PID value from smartdashboard because the object is created in robot map
 		//moveController = new PIDController(SmartDashboard.getNumber("MoveP", 0.0), SmartDashboard.getNumber("MoveI", 0), SmartDashboard.getNumber("MoveD", 0), SmartDashboard.getNumber("MoveF",0), new EncoderInput(talon8), new TalonDrive(driveRobot));
-		moveController = new PIDController(0.0015,0.000001,0,850,new EncoderInput(talon8),new TalonDrive(driveRobot));
+		moveController = new PIDController(0.0025,0.00001,0,500,new EncoderInput(talon8),new TalonDrive(driveRobot));
 		moveController.setInputRange(-20000, 20000);
 		moveController.setOutputRange(-1,1);
 		moveController.setAbsoluteTolerance(4);
 		moveController.setContinuous(true);
 
 		LiveWindow.addActuator("Move Controller", "Hello", moveController);
-		LiveWindow.addActuator("Turn Controller", "Test", turnController);
-		LiveWindow.addSensor("Turn Controller", "Gyro", ahrs);
+		//LiveWindow.addActuator("Turn Controller", "Test", turnController);
+		//LiveWindow.addSensor("Turn Controller", "Gyro", ahrs);
 		LiveWindow.addSensor("Range Finder", "sensor", rangefinder);
 		limitSwitch = new DigitalInput(1);
 		counter = new Counter(limitSwitch);

@@ -22,13 +22,14 @@ public class Move extends Command
 	}
 	protected void execute()
 	{
-
-		if(RobotMap.moveController.getError()<50)
+		System.out.println("execute error: "+RobotMap.moveController.getError());
+		if(RobotMap.moveController.getError()<30&& RobotMap.moveController.getError()>-30)
 		{
 			RobotMap.moveController.disable();
 			RobotMap.moveController.reset();
 			finished = true;
 		}
+		System.out.println(finished);
 	}
 	protected boolean isFinished(){
 		return finished;

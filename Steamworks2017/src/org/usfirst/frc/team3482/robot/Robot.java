@@ -2,12 +2,13 @@ package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Move;
 import org.usfirst.frc.team3482.robot.commands.MoveSquare;
-import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
 //import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 //import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -52,6 +53,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 
 		RobotMap.init();
+		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
 		teleopchooser = new SendableChooser<>();
 		autoChooser = new SendableChooser<>();
 		rangefinder = new Rangefinder();
@@ -75,7 +77,7 @@ public class Robot extends IterativeRobot {
 		//nav.putValuesToDashboard();
 		RobotMap.rangefinder.setAverageBits(6);
 		RobotMap.rangefinder.setOversampleBits(4);
-		RobotMap.ahrs.reset();
+	//	RobotMap.ahrs.reset();
 	}
 
 	/**
@@ -128,24 +130,22 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		System.out.println(RobotMap.turnController.getError());
-		if(RobotMap.moveController.getAvgError()<0)
+		System.out.println("mover controller  error: "+RobotMap.moveController.getError());
+		/*if(RobotMap.moveController.getAvgError()<0)
 		{
 			RobotMap.moveController.disable();
 			teleopCommand.start();
-		}
+		}*/
 	}
 	@Override
 
 	public void teleopInit() {
-		//teleopCommand = new Drive();
+		teleopCommand = new Drive();
 		System.out.println("talon 8 position: "+RobotMap.talon8.getEncPosition());
 		if (autonomousCommand != null){
 			autonomousCommand.cancel();
 		}
 		teleopCommand.start();
-		RobotMap.moveController.setSetpoint(2000);
-		RobotMap.moveController.enable();
 	}
 
 	/**
@@ -156,19 +156,13 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		// test tank drive
+		//RobotMap.talon2.set(0.5);
+		RobotMap.talon5.set(-0.5);
+		
 		System.out.println("get: "+RobotMap.moveController.get());
 		System.out.println("error: "+RobotMap.moveController.getAvgError());
 		System.out.println("setpoint: "+RobotMap.moveController.getSetpoint());
-		if(RobotMap.moveController.getAvgError()<0)
-		{
-			RobotMap.moveController.disable();
-			teleopCommand.start();
-		}
-		
-		//if(Robot.oi.getxboxController().getRawButton(1)){
-			//RobotMap.moveController.setSetpoint(1000);
-		//}
-		//RobotMap.moveController.enable();
 		/*SmartDashboard.putNumber("teleop encoder position", RobotMap.talon8.getEncPosition()); 
 		SmartDashboard.putNumber("move controller P", RobotMap.moveController.getP());
 		SmartDashboard.putNumber("Range", Robot.rangefinder.getDistance());
@@ -183,5 +177,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
+		System.out.println("mover controller  error: "+RobotMap.moveController.getError());
 	}
 }
