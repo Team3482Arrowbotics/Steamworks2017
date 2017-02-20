@@ -54,6 +54,10 @@ public class Robot extends IterativeRobot {
 
 		RobotMap.init();
 		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+		cam.setBrightness(30);
+		cam.setExposureHoldCurrent();
+		cam.setExposureManual(5);
+		cam.setResolution(640, 480);
 		teleopchooser = new SendableChooser<>();
 		autoChooser = new SendableChooser<>();
 		rangefinder = new Rangefinder();
