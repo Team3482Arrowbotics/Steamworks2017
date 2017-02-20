@@ -59,13 +59,14 @@ public class Robot extends IterativeRobot {
 		chassis = new Chassis();
 		oi = new OI();
 		teleopchooser.addDefault("Default Auto", new Drive());
-		teleopchooser.addObject("move 2000", new Move(2000));
+		autoChooser.addDefault("Default Auto",null);
+		autoChooser.addObject("move 2000", new Move(2000));
 		SmartDashboard.putNumber("gear Wheels Speed", 0.0);
 		
 		RobotMap.talon8.setEncPosition(0);
 		RobotMap.talon2.setEncPosition(0);
 	
-		SmartDashboard.putData("Auto mode", teleopchooser);
+		SmartDashboard.putData("Teleop mode", teleopchooser);
 		SmartDashboard.putData("Auto mode", autoChooser);
 		
 		nav.putValuesToDashboard();
