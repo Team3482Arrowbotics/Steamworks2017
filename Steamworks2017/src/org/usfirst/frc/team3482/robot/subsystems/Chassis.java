@@ -61,6 +61,7 @@ public class Chassis extends Subsystem {
 	public void stopFeeder() {
 		RobotMap.feeder.set(0.0);
 	}
+<<<<<<< HEAD
 
 	public void startIntake() {
 		RobotMap.intake.set(-0.6);
@@ -69,9 +70,17 @@ public class Chassis extends Subsystem {
 	public void stopIntake() {
 		RobotMap.intake.set(0.0);
 	}
+=======
+	// public double getChassisAngle() {
+	// return RobotMap.gyro.getAngle();
+	// }
+
+	// public double getChassisTurnRate(){
+	// return RobotMap.gyro.getRate();
+	// }
+>>>>>>> branch 'master' of https://github.com/Team3482Arrowbotics/Steamworks2017
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub
-
 	}
 }
