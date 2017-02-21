@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class Move extends Command 
 {
+	
 	private double distance;
 	private boolean finished = false;
 	public Move(double a)

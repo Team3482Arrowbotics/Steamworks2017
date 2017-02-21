@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Move;
+import org.usfirst.frc.team3482.robot.commands.Rotate;
 import org.usfirst.frc.team3482.robot.commands.moveSquare;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
@@ -75,6 +76,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.rangefinder.setAverageBits(6);
 		RobotMap.rangefinder.setOversampleBits(4);
 		RobotMap.ahrs.reset();
+		System.out.println(RobotMap.talon8.getEncPosition());
 	}
 
 	/**
@@ -109,7 +111,9 @@ public class Robot extends IterativeRobot {
 	
 	public void autonomousInit() {
 		SmartDashboard.putData("Auto mode", autoChooser);
-		autonomousCommand = (Command) autoChooser.getSelected();
+		//autonomousCommand = (Command) autoChooser.getSelected();
+		autonomousCommand = new moveSquare();
+		//autonomousCommand = new Rotate(-90);
 		if (autonomousCommand != null){
 			autonomousCommand.start();
 		}
@@ -121,7 +125,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		System.out.println("test");
+		System.out.println("move error: "+RobotMap.moveController.getError());
+		System.out.println("turn error: "+RobotMap.turnController.getError());
 		Scheduler.getInstance().run();
 	}
 	@Override
@@ -144,7 +149,6 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		RobotMap.talon8.set(0.5);
-		System.out.println("test");
 		//System.out.println("get: "+RobotMap.moveController.get());
 		//System.out.println("error: "+RobotMap.moveController.getAvgError());
 		//System.out.println("setpoint: "+RobotMap.moveController.getSetpoint());
@@ -172,6 +176,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
-		System.out.println(RobotMap.moveController.getError());
+		//System.out.println(RobotMap.moveController.getError());
+		System.out.println(RobotMap.turnController.getError());
 	}
 }
