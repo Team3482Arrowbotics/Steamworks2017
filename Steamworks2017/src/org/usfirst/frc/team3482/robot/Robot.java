@@ -7,7 +7,6 @@ import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -58,16 +57,19 @@ public class Robot extends IterativeRobot {
 		camera = new Camera();
 		chassis = new Chassis();
 		oi = new OI();
+		
 		teleopchooser.addDefault("Default Auto", new Drive());
+		
 		autoChooser.addDefault("Default Auto",null);
 		autoChooser.addObject("move 2000", new Move(2000));
+		autoChooser.addObject("Test autonomous", new moveSquare());
+		
 		SmartDashboard.putNumber("gear Wheels Speed", 0.0);
 		
 		RobotMap.talon8.setEncPosition(0);
 		RobotMap.talon2.setEncPosition(0);
 	
 		SmartDashboard.putData("Teleop mode", teleopchooser);
-		SmartDashboard.putData("Auto mode", autoChooser);
 		
 		nav.putValuesToDashboard();
 		RobotMap.rangefinder.setAverageBits(6);
@@ -106,12 +108,12 @@ public class Robot extends IterativeRobot {
 	//PID actuator not working smoothly in autonomous mode, smooth in test mode
 	
 	public void autonomousInit() {
-		//RobotMap.ahrs.reset();
+		SmartDashboard.putData("Auto mode", autoChooser);
 		autonomousCommand = (Command) autoChooser.getSelected();
-		if (autonomousCommand != null)
+		if (autonomousCommand != null){
 			autonomousCommand.start();
-		autoChooser.addDefault("Default Auto", null);
-		autoChooser.addObject("Move Square", new Move(1000));
+		}
+		
 	}
 
 	/**
@@ -119,13 +121,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		System.out.println("test");
 		Scheduler.getInstance().run();
-		System.out.println(RobotMap.turnController.getError());
 	}
 	@Override
 
 	public void teleopInit() {
-		//teleopCommand = new Drive();
+		teleopCommand = new Drive();
 		System.out.println("talon 8 position: "+RobotMap.talon8.getEncPosition());
 		if (autonomousCommand != null){
 			autonomousCommand.cancel();
@@ -141,7 +143,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-	
+		RobotMap.talon8.set(0.5);
+		System.out.println("test");
 		//System.out.println("get: "+RobotMap.moveController.get());
 		//System.out.println("error: "+RobotMap.moveController.getAvgError());
 		//System.out.println("setpoint: "+RobotMap.moveController.getSetpoint());
@@ -169,5 +172,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
+		System.out.println(RobotMap.moveController.getError());
 	}
 }

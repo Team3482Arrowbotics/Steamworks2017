@@ -15,22 +15,20 @@ public class Move extends Command
 		distance=a;
 	}
 	protected void initialize(){
+		RobotMap.moveController.reset();
 		System.out.println("init error: "+RobotMap.moveController.getError());
 		//RobotMap.turnController.setSetpoint(distance);
-		RobotMap.moveController.setSetpoint(distance);
+		RobotMap.moveController.setSetpoint(RobotMap.moveController.getSetpoint() + distance);
 		RobotMap.moveController.enable();
 	}
 	protected void execute()
 	{
-
-		if(RobotMap.moveController.getError()<50)
-		{
-			RobotMap.moveController.disable();
-			finished = true;
-		}
+		System.out.println("error: "+RobotMap.moveController.getError());
+		System.out.println(RobotMap.moveController.onTarget());
+		
 	}
 	protected boolean isFinished(){
-		return finished;
+		return RobotMap.moveController.onTarget();
 	}
 	@Override
 	protected void end()

@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDController.PercentageTolerance;
+import edu.wpi.first.wpilibj.PIDController.Tolerance;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -70,16 +72,18 @@ public class RobotMap {
 		turnController.setOutputRange(-1.0, 1.0);
 		turnController.setAbsoluteTolerance(0.5f);
 		turnController.setContinuous(true);
+		turnController.setAbsoluteTolerance(1.0);
 		
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		talon8.setEncPosition(10);
 		//cant change the PID value from smartdashboard because the object is created in robot map
 		//moveController = new PIDController(SmartDashboard.getNumber("MoveP", 0.0), SmartDashboard.getNumber("MoveI", 0), SmartDashboard.getNumber("MoveD", 0), SmartDashboard.getNumber("MoveF",0), new EncoderInput(talon8), new TalonDrive(driveRobot));
-		moveController = new PIDController(0.0015,0.000001,0,850,new EncoderInput(talon8),new TalonDrive(driveRobot));
+		moveController = new PIDController(0.0025,0.00001,0,500,new EncoderInput(talon8),new TalonDrive(driveRobot));
 		moveController.setInputRange(-20000, 20000);
 		moveController.setOutputRange(-1,1);
 		moveController.setAbsoluteTolerance(4);
 		moveController.setContinuous(true);
+		moveController.setAbsoluteTolerance(50);
 
 		LiveWindow.addActuator("Move Controller", "Hello", moveController);
 		LiveWindow.addActuator("Turn Controller", "Test", turnController);
