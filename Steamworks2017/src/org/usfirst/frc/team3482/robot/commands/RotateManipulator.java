@@ -8,29 +8,44 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class RotateManipulator extends InstantCommand
+public class RotateManipulator extends Command
 {
-	CANTalon manipulatorTalon = RobotMap.talon2;
-	int pos;
-	
-	public RotateManipulator(int pos){
-		super("Rotate");
-		this.pos = pos;
+	private boolean objectiveRotation;	//true = ground; false = peg
+	public RotateManipulator(boolean objectiveRot) {
+		objectiveRotation = objectiveRot;
 	}
 	
-	protected void initialize(){
-		manipulatorTalon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		manipulatorTalon.changeControlMode(TalonControlMode.Position);
+	protected void initialize() {
+		if(objectiveRotation) {
+			Robot.gearManipulator.moveGearManipGround();
+		} else {
+			Robot.gearManipulator.moveGearManipPegPos();
+		}
 	}
 	
-	protected void execute(){
-		manipulatorTalon.set(GearManipulator.startPos - pos);
+	protected void execute() {
+		if(objectiveRotation) {
+			Robot.gearManipulator.spinGearManipWheels();
+		} else {
+			//Robot.gearManip.spinGearManipWheels();  //delete comment if you want wheels to run while at peg position
+		}
+		
+	}
+	
+	protected boolean isFinished() {
+		return false;
 	}
 	
 	protected void end() {
-		
+		Robot.gearManipulator.stopGearManipWheels();
+		Robot.gearManipulator.moveGearManipStartPos();
+	}
+	
+	protected void interrupted() {
+		end();
 	}
 
 }

@@ -1,17 +1,13 @@
 package org.usfirst.frc.team3482.robot;
 
-import org.usfirst.frc.team3482.robot.subsystems.TwoTalon;
-
+import org.usfirst.frc.team3482.robot.subsystems.TurnPID;
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The RobotMap is a mapping from the ports. Sensors and actuators are wired
@@ -20,50 +16,62 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * numbers floating around.
  */
 public class RobotMap {
-	public static DigitalInput limitSwitch;
-	public static CANTalon talon0;
-	public static CANTalon talon4;
-	public static CANTalon talon3;
-	public static CANTalon talon8;
-	public static CANTalon talon2;
-	public static CANTalon talon5;
-	public static CANTalon talon7;
-	public static PIDController turnController;
-
-	public static AnalogInput rangefinder;
-
+	//public static DigitalInput limitSwitch;
+	public static CANTalon rearLeft;
+	public static CANTalon frontLeft;
+	public static CANTalon rearRight;
+	public static CANTalon frontRight;
 	public static AHRS ahrs;
+	public static CANTalon shooter;
+	public static PIDController turnController;
 	public static RobotDrive driveRobot;
-
 	public static Counter counter;
+	public static CANTalon gearManipulator;
+	public static CANTalon gearManipulatorWheels;
+	public static AnalogInput rangeFinderFront;
+	public static AnalogInput rangeFinderBack;
+	public static CANTalon feeder;
+	public static CANTalon intake;
+	public static CANTalon climber;
+	public static CANTalon polycord1; //only polycord that goes outside bot
+	public static CANTalon polycord2; 
+	
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
-	// public static int leftMotor = 1;
-	// public static int rightMotor = 2;
+
 	public static void init() {
-		talon4 = new CANTalon(4);
-		talon3 = new CANTalon(3);
-		talon2 = new CANTalon(2);
-		talon8 = new CANTalon(8);
-		talon5 = new CANTalon(5);
-		talon7 = new CANTalon(7);
-		talon0 = new CANTalon(0);
-
-		rangefinder = new AnalogInput(0);
-
-		//ahrs = new AHRS(SPI.Port.kMXP);
-		/*turnController = new PIDController(SmartDashboard.getNumber("TurnP", 0.01), SmartDashboard.getNumber("TurnI", 0), SmartDashboard.getNumber("TurnD", 0), 0.00, ahrs, new TwoTalon(talon8, talon3));
+		rearLeft = new CANTalon(5);
+		frontLeft = new CANTalon(6);
+		rearRight = new CANTalon(7);
+		frontRight = new CANTalon(4);
+		driveRobot = new RobotDrive(rearLeft, frontLeft, rearRight, frontRight);
+		driveRobot.setSafetyEnabled(true);
 		
-		turnController.setInputRange(-180.0f, 180.0f);
-		turnController.setOutputRange(-1.0, 1.0);
+		ahrs = new AHRS(SPI.Port.kMXP);
+		turnController = new PIDController(0.3, 0.0, 0.0, 0.0, ahrs, new TurnPID(driveRobot));
+		turnController.setInputRange(-180f, 180f);
+		turnController.setOutputRange(-1, 1);
 		turnController.setAbsoluteTolerance(0.5f);
-		turnController.setContinuous(true);*/
-
-		limitSwitch = new DigitalInput(1);
-		counter = new Counter(limitSwitch);
-
-		driveRobot = null;//new RobotDrive(talon0, talon8, talon2, talon3);
+		turnController.setContinuous(true);
+		
+		intake = new CANTalon(8);
+		
+		climber = new CANTalon(9);
+		
+		feeder = new CANTalon(3);
+		shooter = new CANTalon(12);
+		polycord1 = new CANTalon(1);
+		polycord2 = new CANTalon(10);
+		
+		gearManipulator = new CANTalon(11);
+		gearManipulatorWheels = new CANTalon(2);
+		
+		rangeFinderFront = new AnalogInput(4);
+		rangeFinderBack = new AnalogInput(5);
+		
+		//limitSwitch = new DigitalInput(1);
+		//counter = new Counter(limitSwitch);
 
 	}
 	// If you are using multiple modules, make sure to define both the port

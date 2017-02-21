@@ -1,25 +1,16 @@
-
 package org.usfirst.frc.team3482.robot;
 
-import org.usfirst.frc.team3482.robot.commands.Drive;
-import org.usfirst.frc.team3482.robot.commands.ProtoIntake;
-import org.usfirst.frc.team3482.robot.commands.Rotate;
-import org.usfirst.frc.team3482.robot.commands.Rotate90Then70;
-//import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
-import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
-import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
+import org.usfirst.frc.team3482.robot.subsystems.RangeFinder;
 
 import com.ctre.CANTalon.FeedbackDevice;
-import com.ctre.CANTalon.TalonControlMode;
-
+import com.ctre.CANTalon.FeedbackDeviceStatus;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -30,65 +21,29 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
-	NetworkTable cameraTable;
-
-	double rotateToAngleRate;
-	int autoLoop;
-	boolean PIDOne = false;
-	boolean PIDTwo = false;
+	public static FeedbackDeviceStatus status;
 	public static Chassis chassis;
 	public static GearManipulator gearManipulator;
-//	public static Camera camera;
-	public static Rangefinder rangefinder;
-	public static NavXChip nav;
-	SendableChooser<Command> teleopChooser = new SendableChooser<>();;
+	public static RangeFinder rangeFinder;
 	public static OI oi;
-	Command teleopCommand;
-	Command autonomousCommand;
-	SendableChooser<Command> chooser = new SendableChooser<>();
-	double startPos;
-
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-
 		RobotMap.init();
-
-		rangefinder = new Rangefinder();
+		status = RobotMap.gearManipulator.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
 		gearManipulator = new GearManipulator();
-		//nav = new NavXChip(RobotMap.ahrs);
-	//	camera = new Camera();
+		rangeFinder = new RangeFinder();
 		chassis = new Chassis();
 		oi = new OI();
-		//// disabled
-		chooser.addDefault("Default Auto", new Drive());
-		teleopChooser.addDefault("None", new ProtoIntake(0.0));
-
-		SmartDashboard.putData("Teleop mode", teleopChooser);
-		SmartDashboard.putData("Auto mode", chooser);
-
-		SmartDashboard.putNumber("TurnP", .01);
-		SmartDashboard.putNumber("TurnI", 0);
-		SmartDashboard.putNumber("TurnD", 0);
-		SmartDashboard.putNumber("shooter speed", 0.0);
-		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon5.get());
-
-		//SmartDashboard.putNumber("Intake Spin Speed", 0.0);
 		
-		chooser.addObject("Rotate 90", new Rotate(90));
-		chooser.addObject("Rotate 90 then to 70", new Rotate90Then70());
-
-		//nav.putValuesToDashboard();
-		
-		RobotMap.rangefinder.setAverageBits(6);
-		RobotMap.rangefinder.setOversampleBits(4);
-
-		//RobotMap.ahrs.reset();
-
+		UsbCamera shootCam = CameraServer.getInstance().startAutomaticCapture();
+		shootCam.setBrightness(30);
+		shootCam.setExposureManual(5);
+		shootCam.setExposureHoldCurrent();
+		shootCam.setResolution(640, 480);
 	}
 
 	/**
@@ -119,18 +74,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = chooser.getSelected();
-		autoLoop = 0;
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
+		//autonomousCommand = chooser.getSelected();
 
 		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+		//if (autonomousCommand != null)
+			//autonomousCommand.start();
 	}
 
 	/**
@@ -139,37 +87,18 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-//		autoLoop ++;
-//		SmartDashboard.putNumber("AutoLoop: ", autoLoop);
-//		//Robot.intake.middleIntake();
-//		if (autoLoop < 500) {
-//			
-//			RobotMap.talon0.set(-0.2); 
-//			SmartDashboard.putNumber("Talon 0 spode", RobotMap.talon0.get());
-//			RobotMap.talon3.set(0.2);
-//			RobotMap.talon2.set(-0.2);
-//			RobotMap.talon8.set(0.2);
-//		}
-//		else if (autoLoop >= 500){
-//			RobotMap.talon0.set(0.0);
-//			RobotMap.talon3.set(0.0);
-//			RobotMap.talon2.set(0.0);
-//			RobotMap.talon8.set(0.0);
-//		}
 	}
 
 	@Override
 
 	public void teleopInit() {
-		teleopCommand = new Drive();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
 		
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
-		teleopCommand.start();
+		//if (autonomousCommand != null)
+			//autonomousCommand.cancel();
 	}
 
 	/**
@@ -180,18 +109,21 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		Robot.chassis.drive(Robot.oi.getxboxController());
 		
-		/*
-		if ( Robot.oi.getxboxController().getRawButton(1)) {
-			RobotMap.talon2.changeControlMode(TalonControlMode.Position);
-			RobotMap.talon2.set(startPos - 20);
-		} else if ( Robot.oi.getxboxController().getRawButton(2)) {
-			RobotMap.talon2.set(startPos);
-		}
-		*/
-		SmartDashboard.putNumber("EncoderPosValue: ", RobotMap.talon2.get());
-	   
-    }
+		//Encoder health check
+		System.out.println("Encoder health check: " + status);
+		
+		//SmartDasboard declarations
+		SmartDashboard.putNumber("Shooter Speed: ", RobotMap.shooter.getSpeed());
+		SmartDashboard.putNumber("Front RangeFinder value: ", Robot.rangeFinder.getRange(RobotMap.rangeFinderFront));
+		SmartDashboard.putNumber("Back RangeFinder value: ", Robot.rangeFinder.getRange(RobotMap.rangeFinderBack));
+		SmartDashboard.putNumber("Gear Manipulator Position: ", Robot.gearManipulator.getGearManipPosition());
+		//SmartDashboard.putNumber("Gear Manipulator peg position: ", GearManipulator.pegPosition);
+		//SmartDashboard.putNumber("Gear Manipulator ground position: ", GearManipulator.groundPosition);
+		//SmartDashboard.putNumber("Gear Manipulator start position: ", GearManipulator.startPosition);
+		SmartDashboard.putNumber("Feeder Speed: ", RobotMap.feeder.get());
+	}
 
 	/**
 	 * This function is called periodically during test mode

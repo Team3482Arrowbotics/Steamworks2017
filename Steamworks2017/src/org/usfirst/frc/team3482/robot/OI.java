@@ -1,11 +1,11 @@
 package org.usfirst.frc.team3482.robot;
 
-import org.usfirst.frc.team3482.robot.commands.ProtoIntake;
-import org.usfirst.frc.team3482.robot.commands.Protoshooter;
+import org.usfirst.frc.team3482.robot.commands.FeedBalls;
+import org.usfirst.frc.team3482.robot.commands.IntakeBalls;
+import org.usfirst.frc.team3482.robot.commands.ManualMoveGearManipulator;
 import org.usfirst.frc.team3482.robot.commands.Rotate;
 import org.usfirst.frc.team3482.robot.commands.RotateManipulator;
-import org.usfirst.frc.team3482.robot.commands.niWoTnipS;
-
+import org.usfirst.frc.team3482.robot.commands.Shoot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
@@ -15,30 +15,39 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class OI {
 	public Joystick xboxController;
-	public JoystickButton shootButton;
-	public JoystickButton ballIntakeButton;
-	public JoystickButton hehehehHeheheheh;
-	public JoystickButton manipulatorUpButton;
-	public JoystickButton manipulatorDownButton;
+	private static Joystick flightStick;
+	private static JoystickButton intakeGearButton;
+	private static JoystickButton rotateBotButton;
+	private static JoystickButton shootSequenceButton;
+	private static JoystickButton feedButton;
+	private static JoystickButton intakeBallsButton;
+	private static JoystickButton placeGearButton;
+	private static JoystickButton manualGearManipMoveButton;
+
 	public OI () {
-		xboxController = new Joystick ( 0 );
-		JoystickButton rotate90 = new JoystickButton(xboxController,3);
-		rotate90.whenPressed(new Rotate(90.0f));
+		xboxController = new Joystick(0);
+		flightStick = new Joystick(1);
 		
-		shootButton = new JoystickButton(xboxController, 3);
-		shootButton.whileHeld(new Protoshooter(1.0));
+		intakeGearButton = new JoystickButton(flightStick, 2);
+		intakeGearButton.whileHeld(new RotateManipulator(true)); //true = move intake to ground; false = move to peg position
+	
+		placeGearButton = new JoystickButton(flightStick, 1);
+		placeGearButton.whileHeld(new RotateManipulator(false));
 		
-		ballIntakeButton = new JoystickButton(xboxController, 4);
-		ballIntakeButton.whileHeld(new ProtoIntake(1.0));
+		rotateBotButton = new JoystickButton(xboxController, 4); 
+		rotateBotButton.whenPressed(new Rotate(90)); //parameter is the degrees to turn
 		
-		hehehehHeheheheh = new JoystickButton(xboxController, 10);
-		hehehehHeheheheh.whenPressed(new niWoTnipS());
+		shootSequenceButton = new JoystickButton(xboxController, 6);
+		shootSequenceButton.whileHeld(new Shoot());
 		
-		manipulatorUpButton = new JoystickButton(xboxController, 1);
-		manipulatorUpButton.whenPressed(new RotateManipulator(20));
+		feedButton = new JoystickButton(xboxController, 1);
+		feedButton.whileHeld(new FeedBalls());
 		
-		manipulatorDownButton = new JoystickButton(xboxController, 2);
-		manipulatorDownButton.whenPressed(new RotateManipulator(0));
+		intakeBallsButton = new JoystickButton(xboxController, 5);
+		intakeBallsButton.whileHeld(new IntakeBalls());
+		
+		manualGearManipMoveButton = new JoystickButton(flightStick, 4);
+		manualGearManipMoveButton.whileHeld(new ManualMoveGearManipulator());
 	}
 	
 	//// CREATING BUTTONS
@@ -68,7 +77,11 @@ public class OI {
 	// Start the command when the button is released and let it run the command
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
-	public Joystick getxboxController () {
+	public Joystick getxboxController() {
 		return xboxController;
+	}
+	
+	public Joystick getflightStick() {
+		return flightStick;
 	}
 }

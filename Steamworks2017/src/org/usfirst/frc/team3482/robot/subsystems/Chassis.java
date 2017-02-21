@@ -6,6 +6,7 @@ import org.usfirst.frc.team3482.robot.RobotMap;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -16,14 +17,6 @@ public class Chassis extends Subsystem {
 
 	private final RobotDrive robotDrive = RobotMap.driveRobot;
 	double turnSpeed = -0.75;
-
-	public void drive3() {
-		RobotMap.talon3.set(0.5);
-	}
-
-	public void stop3() {
-		RobotMap.talon3.set(0.0);
-	}
 
 	public void drive(Joystick s) {
 		double deadZone = 0.1;
@@ -38,34 +31,44 @@ public class Chassis extends Subsystem {
 			rightX = 0;
 		}
 
-		if (leftY == 0 && rightX == 0) {
-			return;
-		}
 		if (Robot.oi.xboxController.getRawAxis(2) != 0) {
-			robotDrive.arcadeDrive(-(leftY) * 0.5, rightX * turnSpeed * 0.75);
+			robotDrive.arcadeDrive(leftY * 0.5, rightX * turnSpeed * 0.75);
 		} else {
-			robotDrive.arcadeDrive(-(leftY), rightX * turnSpeed);
+			robotDrive.arcadeDrive(leftY, rightX * turnSpeed);
 		}
 	}
 
-	public void stop() {
+	public void stopDrive() {
 		robotDrive.stopMotor();
 	}
-
-	public boolean getLimitSwitch() {
-		boolean isOn = RobotMap.limitSwitch.get();
-		return isOn;
+	
+	public void prepareShoot(Joystick s) {
+		RobotMap.polycord1.set(-0.4);
+		RobotMap.polycord2.set(-0.25);
+		RobotMap.shooter.set(-((s.getRawAxis(3) + 1)/2));
+	}
+	
+	public void stopPrepareShoot() {
+		RobotMap.polycord1.set(0.0);
+		RobotMap.polycord2.set(0.0);
+		RobotMap.shooter.set(0.0);
+	}
+	
+	public void startFeeder() {
+		RobotMap.feeder.set(-0.5);
+	}
+	
+	public void stopFeeder() {
+		RobotMap.feeder.set(0.0);
 	}
 
-
-
-	// public double getChassisAngle() {
-	// return RobotMap.gyro.getAngle();
-	// }
-
-	// public double getChassisTurnRate(){
-	// return RobotMap.gyro.getRate();
-	// }
+	public void startIntake() {
+		RobotMap.intake.set(-0.6);
+	}
+	
+	public void stopIntake() {
+		RobotMap.intake.set(0.0);
+	}
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub

@@ -1,47 +1,73 @@
 package org.usfirst.frc.team3482.robot.subsystems;
 
 import org.usfirst.frc.team3482.robot.RobotMap;
-
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
-
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class GearManipulator extends Subsystem {
-	public static CANTalon manipTalon = RobotMap.talon2;
-	public static boolean isPID = false;
-	public static double startPos;
+	private double targetPositionRotations;
+	public static double groundPosition = 11;
+	public static double pegPosition = 3;
+	public static double startPosition;
+	private CANTalon manipulatorTalon = RobotMap.gearManipulator;
+	private CANTalon manipulatorTalonWheels = RobotMap.gearManipulatorWheels;
 	public GearManipulator() {
-		manipTalon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		int absolutePosition = RobotMap.talon2.getPulseWidthPosition() & 0xFFF;
-		RobotMap.talon2.setEncPosition(absolutePosition);
-        RobotMap.talon2.reverseSensor(false);
-        RobotMap.talon2.setP(0.1);
-        RobotMap.talon2.setI(0.0);
-        RobotMap.talon2.setD(0.0);
-        RobotMap.talon2.setF(0.0);
-		RobotMap.talon2.changeControlMode(TalonControlMode.Position);
-		RobotMap.talon2.setAllowableClosedLoopErr(0);
-		RobotMap.talon2.configNominalOutputVoltage(0, 0);
-		RobotMap.talon2.configPeakOutputVoltage(12, -12);
-		RobotMap.talon2.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		startPos  = RobotMap.talon2.get();
+		int absolutePosition = manipulatorTalon.getPulseWidthPosition() &0xFFF;
+		manipulatorTalon.setEncPosition(absolutePosition);
+		manipulatorTalon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		manipulatorTalon.reverseSensor(false);
+		manipulatorTalon.configNominalOutputVoltage(+0f, -0f);
+		manipulatorTalon.configPeakOutputVoltage(+12f, -12f);
+		manipulatorTalon.setAllowableClosedLoopErr(0);
+		manipulatorTalon.setProfile(0);
+		manipulatorTalon.setF(0.0);
+		manipulatorTalon.setP(0.1);
+		manipulatorTalon.setI(0.0);
+		manipulatorTalon.setD(0.0);
+		
+		//manipulatorTalon.changeControlMode(TalonControlMode.Position);
+		//startPosition = manipulatorTalon.get();
 	}
 	
-	public void maintainPosition() {
-		if (isPID) {
-			manipTalon.changeControlMode(TalonControlMode.Position);
-			manipTalon.set(manipTalon.get());
-		}
-	}
-
-	public void startPID() {
-		isPID = true;
+	public void moveGearManipGround() {
+		manipulatorTalon.changeControlMode(TalonControlMode.Position);
+		targetPositionRotations = startPosition - groundPosition;
+		manipulatorTalon.set(targetPositionRotations);
 	}
 	
-	public void stopPID() {
-		isPID = false;
+	public void moveGearManipStartPos() {
+		manipulatorTalon.changeControlMode(TalonControlMode.Position);
+		targetPositionRotations = startPosition;
+		manipulatorTalon.set(targetPositionRotations);
+	}
+	
+	public void moveGearManipPegPos() {
+		manipulatorTalon.changeControlMode(TalonControlMode.Position);
+		targetPositionRotations = startPosition - pegPosition;
+		manipulatorTalon.set(targetPositionRotations);
+	}
+	
+	public void spinGearManipWheels() {
+		manipulatorTalonWheels.set(0.4);
+	}
+	
+	public void stopGearManipWheels() {
+		manipulatorTalonWheels.set(0.0);
+	}
+	
+	public double getGearManipPosition() {
+		manipulatorTalon.changeControlMode(TalonControlMode.Position);
+		return manipulatorTalon.get();
+	}
+	
+	public void moveGearManip(Joystick s) {
+		double flightStickAxisValue = s.getRawAxis(1);
+		manipulatorTalon.changeControlMode(TalonControlMode.Position);
+		double currentPosition = manipulatorTalon.get();
+		manipulatorTalon.set(currentPosition - flightStickAxisValue);
 	}
 	@Override
 	protected void initDefaultCommand() {
