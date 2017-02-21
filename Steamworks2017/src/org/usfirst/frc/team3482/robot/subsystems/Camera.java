@@ -199,9 +199,4 @@ public class Camera extends Subsystem implements VisionPipeline {
 		// TODO Auto-generated method stub
 		
 	}
-
-
-
-
 }
-

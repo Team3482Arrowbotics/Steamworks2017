@@ -17,14 +17,6 @@ public class Chassis extends Subsystem {
 	private final RobotDrive robotDrive = RobotMap.driveRobot;
 	double turnSpeed = -0.75;
 
-	public void drive3() {
-		RobotMap.talon3.set(0.5);
-	}
-
-	public void stop3() {
-		RobotMap.talon3.set(0.0);
-	}
-
 	public void drive(Joystick s) {
 		double deadZone = 0.1;
 		double leftY = s.getRawAxis(1);
@@ -38,9 +30,6 @@ public class Chassis extends Subsystem {
 			rightX = 0;
 		}
 
-		if (leftY == 0 && rightX == 0) {
-			return;
-		}
 		if (Robot.oi.xboxController.getRawAxis(2) != 0) {
 			robotDrive.arcadeDrive(-(leftY) * 0.5, rightX * turnSpeed * 0.75);
 		} else {
@@ -56,9 +45,6 @@ public class Chassis extends Subsystem {
 		boolean isOn = RobotMap.limitSwitch.get();
 		return isOn;
 	}
-
-
-
 	// public double getChassisAngle() {
 	// return RobotMap.gyro.getAngle();
 	// }
@@ -69,6 +55,5 @@ public class Chassis extends Subsystem {
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub
-
 	}
 }
