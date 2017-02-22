@@ -15,25 +15,25 @@ public class GearManipulator extends Command {
 	}
 	
 	protected void initialize() {
-		int absolutePosition = RobotMap.gearManip.getPulseWidthPosition() & 0xFFF;
-		RobotMap.gearManip.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		RobotMap.gearManip.changeControlMode(TalonControlMode.Position);
-		RobotMap.gearManip.set(absolutePosition);
-		RobotMap.gearManip.set(absolutePosition - angle);
+		int absolutePosition = RobotMap.gearManipulator.getPulseWidthPosition() & 0xFFF;
+		RobotMap.gearManipulator.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.gearManipulator.changeControlMode(TalonControlMode.Position);
+		RobotMap.gearManipulator.set(absolutePosition);
+		RobotMap.gearManipulator.set(absolutePosition - angle);
 		System.out.println("initialized");
 	}
 	
 	protected void execute() {
-		System.out.println("Current Position: " + RobotMap.gearManip.getPosition());
-		RobotMap.gearManipWheels.set(0.4);
+		System.out.println("Current Position: " + RobotMap.gearManipulator.getPosition());
+		RobotMap.gearManipulatorWheels.set(0.4);
 	}
 	
 	protected void interrupted()
 	{
-		RobotMap.gearManipWheels.set(0.0);
-		RobotMap.gearManip.changeControlMode(TalonControlMode.Position);
-		RobotMap.gearManip.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-		RobotMap.gearManip.set(absolutePosition);
+		RobotMap.gearManipulatorWheels.set(0.0);
+		RobotMap.gearManipulator.changeControlMode(TalonControlMode.Position);
+		RobotMap.gearManipulator.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		RobotMap.gearManipulator.set(absolutePosition);
 		System.out.println("interrupted");
 	}
 	

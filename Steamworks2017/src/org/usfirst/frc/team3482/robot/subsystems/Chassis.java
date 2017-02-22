@@ -2,11 +2,9 @@ package org.usfirst.frc.team3482.robot.subsystems;
 
 import org.usfirst.frc.team3482.robot.Robot;
 import org.usfirst.frc.team3482.robot.RobotMap;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -45,7 +43,7 @@ public class Chassis extends Subsystem {
 	public void prepareShoot(Joystick s) {
 		RobotMap.polycord1.set(-0.4);
 		RobotMap.polycord2.set(-0.25);
-		RobotMap.shooter.set(-((s.getRawAxis(3) + 1)/2));
+		RobotMap.shooter.set((-(s.getRawAxis(3)) + 1)/2);
 	}
 	
 	public void stopPrepareShoot() {
@@ -61,7 +59,6 @@ public class Chassis extends Subsystem {
 	public void stopFeeder() {
 		RobotMap.feeder.set(0.0);
 	}
-<<<<<<< HEAD
 
 	public void startIntake() {
 		RobotMap.intake.set(-0.6);
@@ -70,15 +67,7 @@ public class Chassis extends Subsystem {
 	public void stopIntake() {
 		RobotMap.intake.set(0.0);
 	}
-=======
-	// public double getChassisAngle() {
-	// return RobotMap.gyro.getAngle();
-	// }
 
-	// public double getChassisTurnRate(){
-	// return RobotMap.gyro.getRate();
-	// }
->>>>>>> branch 'master' of https://github.com/Team3482Arrowbotics/Steamworks2017
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub
