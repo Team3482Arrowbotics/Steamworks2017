@@ -13,6 +13,7 @@ public class Rotate extends Command
 		angle=a;
 	}
 	protected void initialize(){
+		RobotMap.ahrs.reset();
 		System.out.println("init rotate error: "+RobotMap.turnController.getError());
 		RobotMap.turnController.enable();
 		System.out.println("is rotate enabled: "+RobotMap.turnController.isEnabled());

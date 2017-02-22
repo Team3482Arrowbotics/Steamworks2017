@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class moveSquare extends CommandGroup {
 
 	public moveSquare() {
-		addSequential (new Move(1000));
+		//addSequential (new Move(19000));
 		//addSequential (new Rotate(90));
-		addSequential (new Move(-1000));
+		addSequential (new Move(-2000));
+		addSequential (new Rotate(-90));
+		addSequential (new Move(2000));
 		//addSequential (new Rotate(90));
-		//addSequential (new Move(1000));
-		//addSequential (new Rotate(90));
-		//addSequential (new Move(1000));
+		//addSequential (new Move(-2000));
 		//addSequential (new Rotate(90));
 		//addSequential (new Rotate(-90));
 		//addSequential (new Move(-500));

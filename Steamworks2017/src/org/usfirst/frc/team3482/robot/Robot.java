@@ -1,7 +1,7 @@
 package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Move;
-import org.usfirst.frc.team3482.robot.commands.Rotate;
+import org.usfirst.frc.team3482.robot.commands.leftMiddle;
 import org.usfirst.frc.team3482.robot.commands.moveSquare;
 import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
@@ -111,8 +111,10 @@ public class Robot extends IterativeRobot {
 	
 	public void autonomousInit() {
 		SmartDashboard.putData("Auto mode", autoChooser);
+		//RobotMap.talon8.setEncPosition(0);
 		//autonomousCommand = (Command) autoChooser.getSelected();
 		autonomousCommand = new moveSquare();
+		//autonomousCommand = new leftMiddle();
 		//autonomousCommand = new Rotate(-90);
 		if (autonomousCommand != null){
 			autonomousCommand.start();
@@ -132,12 +134,12 @@ public class Robot extends IterativeRobot {
 	@Override
 
 	public void teleopInit() {
-		teleopCommand = new Drive();
+		//teleopCommand = new Drive();
 		System.out.println("talon 8 position: "+RobotMap.talon8.getEncPosition());
 		if (autonomousCommand != null){
 			autonomousCommand.cancel();
 		}
-		teleopCommand.start();
+		//teleopCommand.start();
 	}
 
 	/**
@@ -148,7 +150,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		RobotMap.talon8.set(0.5);
+		//RobotMap.talon8.set(0.5);
 		//System.out.println("get: "+RobotMap.moveController.get());
 		//System.out.println("error: "+RobotMap.moveController.getAvgError());
 		//System.out.println("setpoint: "+RobotMap.moveController.getSetpoint());

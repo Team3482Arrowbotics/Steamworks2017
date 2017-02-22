@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class RobotMap {
 	public static DigitalInput limitSwitch;
-	public static CANTalon talon0;
+	public static CANTalon talon6;
 	public static CANTalon talon1;
 	public static CANTalon talon4;
 	public static CANTalon talon3;
@@ -57,10 +57,10 @@ public class RobotMap {
 		talon8 = new CANTalon(8);
 		talon5 = new CANTalon(5);
 		talon7 = new CANTalon(7);
-		talon0 = new CANTalon(0);
+		talon6 = new CANTalon(6);
 		talon1 = new CANTalon(1);
 		rangefinder = new AnalogInput(0);
-		driveRobot = new RobotDrive(talon1, talon8, talon2, talon3);
+		driveRobot = new RobotDrive(talon4, talon5, talon6, talon7);
 		driveRobot.setSafetyEnabled(false);
 		driveRobot.setMaxOutput(0.5);
 		
@@ -68,10 +68,10 @@ public class RobotMap {
 		
 		//P=0.15,I=0,D=0,F=0
 		//turn:  P = 0.025, I=0.002, D=0.01
-		turnController = new PIDController(0.025, 0.002, 0.01, 0.00, ahrs, new TalonDriveTurnCW(driveRobot));
+		turnController = new PIDController(0.045, 0.00022, 0.052, 0, ahrs, new TalonDriveTurnCW(driveRobot));
 		turnController.setInputRange(-180.0f, 180.0f);
 		turnController.setOutputRange(-1.0, 1.0);
-		turnController.setAbsoluteTolerance(0.5f);
+		//turnController.setAbsoluteTolerance(0.5f);
 		turnController.setContinuous(true);
 		turnController.setAbsoluteTolerance(1.0);
 		
@@ -79,10 +79,10 @@ public class RobotMap {
 		talon8.setEncPosition(10);
 		//cant change the PID value from smartdashboard because the object is created in robot map
 		//moveController = new PIDController(SmartDashboard.getNumber("MoveP", 0.0), SmartDashboard.getNumber("MoveI", 0), SmartDashboard.getNumber("MoveD", 0), SmartDashboard.getNumber("MoveF",0), new EncoderInput(talon8), new TalonDrive(driveRobot));
-		moveController = new PIDController(0.005,0,0,500,new EncoderInput(talon8),new TalonDrive(driveRobot));
+		moveController = new PIDController(0.004,0.0001,0,0,new EncoderInput(talon5),new TalonDrive(driveRobot));
 		moveController.setInputRange(-20000, 20000);
 		moveController.setOutputRange(-1,1);
-		moveController.setAbsoluteTolerance(4);
+		//moveController.setAbsoluteTolerance(4);
 		moveController.setContinuous(true);
 		moveController.setAbsoluteTolerance(50);
 

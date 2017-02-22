@@ -7,9 +7,9 @@ public class leftMiddle extends CommandGroup {
 	public leftMiddle(){
 		//deposit gear
 		addSequential (new Move(4000));
-		addSequential (new SetGear(-20));
+		//addSequential (new SetGear(-20));
 		addSequential (new Move(695));
-		addSequential (new SetGear(-25));
+		//addSequential (new SetGear(-25));
 		
 		//move back, get moving to baseline
 		addSequential (new Move(-2435));
