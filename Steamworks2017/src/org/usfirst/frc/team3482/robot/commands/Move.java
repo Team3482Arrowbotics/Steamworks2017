@@ -15,6 +15,8 @@ public class Move extends Command
 		distance=a;
 	}
 	protected void initialize(){
+		RobotMap.encoder1.reset();
+		RobotMap.encoder2.reset();
 		System.out.println("init error: "+RobotMap.moveController.getError());
 		//RobotMap.turnController.setSetpoint(distance);
 		RobotMap.moveController.setSetpoint(distance);

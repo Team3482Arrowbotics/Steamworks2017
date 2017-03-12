@@ -63,11 +63,13 @@ public class Robot extends IterativeRobot {
 		teleopchooser.addObject("move 2000", new Move(2000));
 		
 		autoChooser.addDefault("Default Auto", null);
-		autoChooser.addObject("move test", new Move(2000));
+		autoChooser.addObject("move test", new Move(100));
 		autoChooser.addObject("move square test", new MoveSquare());
 		
 		RobotMap.talon8.setEncPosition(0);
 		RobotMap.talon2.setEncPosition(0);
+		
+		LiveWindow.addSensor("encoder", "1", RobotMap.encoder1);
 	
 		RobotMap.ahrs.reset();
 	}
@@ -103,17 +105,13 @@ public class Robot extends IterativeRobot {
 	//PID actuator not working smoothly in autonomous mode, smooth in test mode
 	
 	public void autonomousInit() {
-		//RobotMap.ahrs.reset();
+		RobotMap.ahrs.reset();
 		SmartDashboard.putData("Auto mode", autoChooser);
-		//SmartDashboard.putData("Auto mode", teleopchooser);
-		//SmartDashboard.putData("Auto mode", autoChooser);
-		//autonomousCommand = (Command) autoChooser.getSelected();
-		autonomousCommand = new MoveSquare();
-		if (autonomousCommand != null)
+		autonomousCommand = (Command) autoChooser.getSelected();
+		//autonomousCommand = new MoveSquare();
+		if (autonomousCommand != null){
 			autonomousCommand.start();
-		//RobotMap.moveController.setSetpoint(2000);
-		//RobotMap.moveController.enable();
-		
+		}
 	}
 
 	/**
@@ -122,18 +120,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		System.out.println("mover controller  error: "+RobotMap.moveController.getError());
-		/*if(RobotMap.moveController.getAvgError()<0)
-		{
-			RobotMap.moveController.disable();
-			teleopCommand.start();
-		}*/
 	}
 	@Override
 
 	public void teleopInit() {
 		teleopCommand = new Drive();
-		System.out.println("talon 8 position: "+RobotMap.talon8.getEncPosition());
 		if (autonomousCommand != null){
 			autonomousCommand.cancel();
 		}
@@ -150,7 +141,8 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		// test tank drive
 		//RobotMap.talon2.set(0.5);
-		RobotMap.talon5.set(-0.5);
+		//RobotMap.talon5.set(-0.5);
+		SmartDashboard.putNumber("analog encoder value", RobotMap.encoder1.getDistance());
 		
 		System.out.println("get: "+RobotMap.moveController.get());
 		System.out.println("error: "+RobotMap.moveController.getAvgError());

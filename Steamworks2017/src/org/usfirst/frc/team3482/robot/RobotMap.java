@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3482.robot;
 
 import org.usfirst.frc.team3482.robot.subsystems.TalonDrive;
+import org.usfirst.frc.team3482.robot.subsystems.TwoEncoderInput;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
@@ -26,6 +27,7 @@ public class RobotMap {
 	public static CANTalon talon5;
 	public static CANTalon talon7;
 	public static Encoder encoder1;
+	public static Encoder encoder2;
 	public static PIDController turnController;
 	public static PIDController moveController;
 	public static AHRS ahrs;
@@ -44,10 +46,13 @@ public class RobotMap {
 		talon5 = new CANTalon(5);
 		talon7 = new CANTalon(7);
 		talon0 = new CANTalon(0);
+		
+		encoder1 = new Encoder(0,1);
+		encoder2 = new Encoder(2,3);
 
 		driveRobot = new RobotDrive(talon0, talon8, talon2, talon3);
 		driveRobot.setSafetyEnabled(false);
-		driveRobot.setMaxOutput(0.5);
+		driveRobot.setMaxOutput(1.0);
 		
 		ahrs = new AHRS(SPI.Port.kMXP);
 		
@@ -64,7 +69,7 @@ public class RobotMap {
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		talon8.setEncPosition(10);
 
-		moveController = new PIDController(0.0025,0.00001,0,500,new Encoder(0,1),new TalonDrive(driveRobot));
+		moveController = new PIDController(0.0025,0.00001,0,500, new TwoEncoderInput(encoder1, encoder2), new TalonDrive(driveRobot));
 		moveController.setInputRange(-20000, 20000);
 		moveController.setOutputRange(-1,1);
 		moveController.setAbsoluteTolerance(4);
