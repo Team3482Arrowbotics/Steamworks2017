@@ -6,11 +6,15 @@ public class MoveSquare extends CommandGroup {
 	
 	public MoveSquare() {
 		
-		addSequential (new Move(1500));
-		addSequential (new Move(0));
-		addSequential (new Move(1500));
-		addSequential (new Move (0));
-		addSequential (new Rotate(86));
+		addSequential (new Move(600), 5);
+		addSequential (new Move(-600), 5);
+		addSequential (new Move(600), 5);
+		addSequential (new Move(-600), 5);
+
+		
+		//addSequential (new Move(1500));
+		//addSequential (new Move (0));
+		//addSequential (new Rotate(86));
 		//addSequential (new Move(1500));
 		//addSequential (new Rotate(86));
 		//addSequential (new Move(1500));

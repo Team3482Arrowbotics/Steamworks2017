@@ -63,7 +63,7 @@ public class Robot extends IterativeRobot {
 		teleopchooser.addObject("move 2000", new Move(2000));
 		
 		autoChooser.addDefault("Default Auto", null);
-		autoChooser.addObject("move test", new Move(100));
+		autoChooser.addObject("move test", new Move(600));
 		autoChooser.addObject("move square test", new MoveSquare());
 		
 		RobotMap.talon8.setEncPosition(0);

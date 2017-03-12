@@ -69,7 +69,7 @@ public class RobotMap {
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		talon8.setEncPosition(10);
 
-		moveController = new PIDController(0.0025,0.00001,0,500, new TwoEncoderInput(encoder1, encoder2), new TalonDrive(driveRobot));
+		moveController = new PIDController(0.005,0.00001,0,500, /*new TwoEncoderInput(encoder1, encoder2)*/encoder1, new TalonDrive(driveRobot));
 		moveController.setInputRange(-20000, 20000);
 		moveController.setOutputRange(-1,1);
 		moveController.setAbsoluteTolerance(4);

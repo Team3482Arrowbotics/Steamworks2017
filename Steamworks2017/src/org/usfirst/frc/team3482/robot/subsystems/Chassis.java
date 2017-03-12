@@ -30,10 +30,6 @@ public class Chassis extends Subsystem {
 		double deadZone = 0.1;
 		double leftY = s.getRawAxis(1);
 		double rightX = s.getRawAxis(4);
-		double distance = 1;
-		while (distance < 4.0 && leftY < 0) {
-			leftY = .7;
-		} 
 
 		if (leftY < deadZone && leftY > -deadZone) {
 			leftY = 0;
