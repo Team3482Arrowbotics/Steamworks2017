@@ -2,10 +2,8 @@ package org.usfirst.frc.team3482.robot;
 import org.usfirst.frc.team3482.robot.commands.Drive;
 import org.usfirst.frc.team3482.robot.commands.Move;
 import org.usfirst.frc.team3482.robot.commands.MoveSquare;
-//import org.usfirst.frc.team3482.robot.subsystems.Camera;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
-//import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
-import org.usfirst.frc.team3482.robot.subsystems.Rangefinder;
+import org.usfirst.frc.team3482.robot.subsystems.NavXChip;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
@@ -35,10 +33,7 @@ public class Robot extends IterativeRobot {
 	double rotateToAngleRate;
 	int autoLoop;
 	public static Chassis chassis;
-	//Not Resolved apparently (camera, navXChip)
-	//public static Camera camera;
-	public static Rangefinder rangefinder;
-	//public static NavXChip nav;
+	public static NavXChip nav;
 	public static OI oi;
 	double initialPosition;
 	public Command teleopCommand;
@@ -60,9 +55,8 @@ public class Robot extends IterativeRobot {
 		cam.setResolution(640, 480);
 		teleopchooser = new SendableChooser<>();
 		autoChooser = new SendableChooser<>();
-		rangefinder = new Rangefinder();
-		//nav = new NavXChip(RobotMap.ahrs);
-		//camera = new Camera();
+	
+		nav = new NavXChip(RobotMap.ahrs);
 		chassis = new Chassis();
 		oi = new OI();
 		teleopchooser.addDefault("Default Auto", new Drive());
@@ -75,13 +69,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.talon8.setEncPosition(0);
 		RobotMap.talon2.setEncPosition(0);
 	
-		SmartDashboard.putData("Auto mode", teleopchooser);
-		//SmartDashboard.putData("Auto mode", autoChooser);
-		
-		//nav.putValuesToDashboard();
-		RobotMap.rangefinder.setAverageBits(6);
-		RobotMap.rangefinder.setOversampleBits(4);
-	//	RobotMap.ahrs.reset();
+		RobotMap.ahrs.reset();
 	}
 
 	/**
@@ -181,6 +169,5 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		LiveWindow.run();
-		System.out.println("mover controller  error: "+RobotMap.moveController.getError());
 	}
 }

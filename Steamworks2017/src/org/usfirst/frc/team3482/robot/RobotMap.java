@@ -1,21 +1,15 @@
 package org.usfirst.frc.team3482.robot;
 
-import org.usfirst.frc.team3482.robot.subsystems.EncoderInput;
 import org.usfirst.frc.team3482.robot.subsystems.TalonDrive;
-import org.usfirst.frc.team3482.robot.subsystems.TalonDriveTurnCW;
 
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The RobotMap is a mapping from the ports. Sensors and actuators are wired
@@ -24,7 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * numbers floating around.
  */
 public class RobotMap {
-	public static DigitalInput limitSwitch;
 	public static CANTalon talon0;
 	public static CANTalon talon4;
 	public static CANTalon talon3;
@@ -32,16 +25,12 @@ public class RobotMap {
 	public static CANTalon talon2;
 	public static CANTalon talon5;
 	public static CANTalon talon7;
+	public static Encoder encoder1;
 	public static PIDController turnController;
-
 	public static PIDController moveController;
-	public static AnalogInput rangefinder;
-	public static AnalogInput test;
-
-	//public static AHRS ahrs;
+	public static AHRS ahrs;
 	public static RobotDrive driveRobot;
 
-	public static Counter counter;
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -56,12 +45,11 @@ public class RobotMap {
 		talon7 = new CANTalon(7);
 		talon0 = new CANTalon(0);
 
-		rangefinder = new AnalogInput(0);
 		driveRobot = new RobotDrive(talon0, talon8, talon2, talon3);
 		driveRobot.setSafetyEnabled(false);
 		driveRobot.setMaxOutput(0.5);
 		
-		//ahrs = new AHRS(SPI.Port.kMXP);
+		ahrs = new AHRS(SPI.Port.kMXP);
 		
 		//P=0.15,I=0,D=0,F=0
 		
@@ -75,20 +63,12 @@ public class RobotMap {
 		
 		talon8.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Absolute);
 		talon8.setEncPosition(10);
-		//cant change the PID value from smartdashboard because the object is created in robot map
-		//moveController = new PIDController(SmartDashboard.getNumber("MoveP", 0.0), SmartDashboard.getNumber("MoveI", 0), SmartDashboard.getNumber("MoveD", 0), SmartDashboard.getNumber("MoveF",0), new EncoderInput(talon8), new TalonDrive(driveRobot));
-		moveController = new PIDController(0.0025,0.00001,0,500,new EncoderInput(talon8),new TalonDrive(driveRobot));
+
+		moveController = new PIDController(0.0025,0.00001,0,500,new Encoder(0,1),new TalonDrive(driveRobot));
 		moveController.setInputRange(-20000, 20000);
 		moveController.setOutputRange(-1,1);
 		moveController.setAbsoluteTolerance(4);
 		moveController.setContinuous(true);
-
-		LiveWindow.addActuator("Move Controller", "Hello", moveController);
-		//LiveWindow.addActuator("Turn Controller", "Test", turnController);
-		//LiveWindow.addSensor("Turn Controller", "Gyro", ahrs);
-		LiveWindow.addSensor("Range Finder", "sensor", rangefinder);
-		limitSwitch = new DigitalInput(1);
-		counter = new Counter(limitSwitch);
 	}
 	// If you are using multiple modules, make sure to define both the port
 	// number and the module. For example you with a rangefinder:

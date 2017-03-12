@@ -30,8 +30,7 @@ public class Chassis extends Subsystem {
 		double deadZone = 0.1;
 		double leftY = s.getRawAxis(1);
 		double rightX = s.getRawAxis(4);
-		double distance = Robot.rangefinder.getDistance();
-
+		double distance = 1;
 		while (distance < 4.0 && leftY < 0) {
 			leftY = .7;
 		} 
@@ -56,8 +55,7 @@ public class Chassis extends Subsystem {
 	}
 
 	public boolean getLimitSwitch() {
-		boolean isOn = RobotMap.limitSwitch.get();
-		return isOn;
+		return false;
 	}
 
 	// public double getChassisAngle() {
