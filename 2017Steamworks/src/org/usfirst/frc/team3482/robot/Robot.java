@@ -45,6 +45,12 @@ public class Robot extends IterativeRobot {
 		cam.setExposureManual(5);
 		cam.setResolution(640, 480);
 		
+		UsbCamera cam2 = CameraServer.getInstance().startAutomaticCapture("peg", "/dev/video1");
+		cam2.setBrightness(30);
+		cam2.setExposureHoldCurrent();
+		cam2.setExposureManual(5);
+		cam2.setResolution(640, 480);
+		
 		RobotMap.init();
 		status = RobotMap.gearManipulator.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
 		
