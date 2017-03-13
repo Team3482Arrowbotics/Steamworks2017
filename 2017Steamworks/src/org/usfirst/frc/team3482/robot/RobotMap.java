@@ -1,10 +1,14 @@
 package org.usfirst.frc.team3482.robot;
 
+import org.usfirst.frc.team3482.robot.subsystems.TalonDrive;
 import org.usfirst.frc.team3482.robot.subsystems.TurnPID;
+
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
@@ -25,6 +29,7 @@ public class RobotMap {
 	public static AHRS ahrs;
 	public static CANTalon shooter;
 	public static PIDController turnController;
+	public static PIDController moveController;
 	public static RobotDrive driveRobot;
 	public static Counter counter;
 	public static CANTalon gearManipulator;
@@ -36,7 +41,8 @@ public class RobotMap {
 	public static CANTalon climber;
 	public static CANTalon polycord1; //only polycord that goes outside bot
 	public static CANTalon polycord2; 
-	
+	public static Encoder encoder1;
+	public static Encoder encoder2;
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
@@ -48,6 +54,9 @@ public class RobotMap {
 		frontRight = new CANTalon(4);
 		driveRobot = new RobotDrive(rearLeft, frontLeft, rearRight, frontRight);
 		driveRobot.setSafetyEnabled(true);
+
+		encoder1 = new Encoder(0,1);
+		encoder2 = new Encoder(2,3);
 		
 		ahrs = new AHRS(SPI.Port.kMXP);
 		turnController = new PIDController(0.3, 0.0, 0.0, 0.0, ahrs, new TurnPID(driveRobot));
@@ -55,6 +64,12 @@ public class RobotMap {
 		turnController.setOutputRange(-1, 1);
 		turnController.setAbsoluteTolerance(5f);
 		turnController.setContinuous(true);
+		
+		moveController = new PIDController(0.005,0.00001,0,500, encoder1, new TalonDrive(driveRobot));
+		moveController.setInputRange(-20000, 20000);
+		moveController.setOutputRange(-1,1);
+		moveController.setAbsoluteTolerance(4);
+		moveController.setContinuous(true);
 		
 		intake = new CANTalon(8);
 		
@@ -71,16 +86,10 @@ public class RobotMap {
 				
 		rangeFinderFront = new AnalogInput(6);
 		rangeFinderBack = new AnalogInput(7);
-		//LiveWindow rangefinder test
+	
 		LiveWindow.addSensor("Robot", "RangeFinderFront", rangeFinderFront);
 		LiveWindow.addSensor("Robot", "RangeFinderBack", rangeFinderBack);
 		
-		//PID tuning
-		LiveWindow.addActuator("Test rotate", "1", RobotMap.turnController);
-		LiveWindow.addActuator("Gear manipulator", "1", RobotMap.gearManipulator);
-		
-		//limitSwitch = new DigitalInput(1);
-		//counter = new Counter(limitSwitch);
 
 	}
 	// If you are using multiple modules, make sure to define both the port

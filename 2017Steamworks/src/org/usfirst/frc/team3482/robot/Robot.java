@@ -1,5 +1,8 @@
 package org.usfirst.frc.team3482.robot;
 
+import org.usfirst.frc.team3482.robot.commands.Drive;
+import org.usfirst.frc.team3482.robot.commands.Move;
+import org.usfirst.frc.team3482.robot.commands.MoveSquare;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
 import org.usfirst.frc.team3482.robot.subsystems.RangeFinder;
@@ -11,9 +14,11 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -33,6 +38,9 @@ public class Robot extends IterativeRobot {
 	public static GearManipulator gearManipulator;
 	public static RangeFinder rangeFinder;
 	public static OI oi;
+	SendableChooser<Command> teleopchooser;
+	SendableChooser<Command> autoChooser;
+	public Command autonomousCommand;
 	
 	 /* This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -63,6 +71,18 @@ public class Robot extends IterativeRobot {
 		
 		GearManipulator.toggleWheelsButton = new JoystickButton(Robot.oi.getflightStick(), 10);
 		
+		teleopchooser = new SendableChooser<>();
+		autoChooser = new SendableChooser<>();
+		
+		teleopchooser.addDefault("Default Auto", new Drive());
+		teleopchooser.addObject("move 2000", new Move(2000));
+		
+		autoChooser.addDefault("Default Auto", null);
+		autoChooser.addObject("move test", new Move(600));
+		autoChooser.addObject("move square test", new MoveSquare());
+		
+		RobotMap.ahrs.reset();
+		
 	}
 
 	/**
@@ -88,17 +108,12 @@ public class Robot extends IterativeRobot {
 	 * to the switch structure below with additional strings & commands.
 	 */
 	public void autonomousInit() {
-		//autonomousCommand = chooser.getSelected();
-
-		 /* String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-		
-		// schedule the autonomous command (example)
-		//if (autonomousCommand != null)
-			//autonomousCommand.start();
+		RobotMap.ahrs.reset();
+		SmartDashboard.putData("Auto mode", autoChooser);
+		autonomousCommand = (Command) autoChooser.getSelected();
+		if (autonomousCommand != null){
+			autonomousCommand.start();
+		}
 	}
 
 	/**
