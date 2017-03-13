@@ -66,7 +66,7 @@ public class RobotMap {
 		polycord1 = new CANTalon(1);
 		polycord2 = new CANTalon(10);
 		
-		gearManipulator = new CANTalon(11);//11  //0 on test board
+		gearManipulator = new CANTalon(0);//11  //0 on test board
 		gearManipulatorWheels = new CANTalon(2);//2
 				
 		rangeFinderFront = new AnalogInput(6);

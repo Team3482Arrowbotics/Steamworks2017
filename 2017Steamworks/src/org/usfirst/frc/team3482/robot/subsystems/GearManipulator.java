@@ -12,17 +12,15 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class GearManipulator extends Subsystem {
 	
-	public static double groundPositionDelta = 1;
-	public static double pegPositionDelta = 3;
 	public static double startPosition;
-	CANTalon manipulatorTalon = RobotMap.gearManipulator;
-	CANTalon manipulatorTalonWheels = RobotMap.gearManipulatorWheels;
+	public CANTalon manipulatorTalon = RobotMap.gearManipulator;
+	public CANTalon manipulatorTalonWheels = RobotMap.gearManipulatorWheels;
 	public static Button toggleWheelsButton;
 
 	public GearManipulator() {
-		int absolutePosition = manipulatorTalon.getPulseWidthPosition() & 0xFFF;
+//		int absolutePosition = manipulatorTalon.getPulseWidthPosition() & 0xFFF;
 		manipulatorTalon.changeControlMode(TalonControlMode.Position);
-		manipulatorTalon.setEncPosition(absolutePosition);
+//		manipulatorTalon.setEncPosition(absolutePosition);
 		manipulatorTalon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		manipulatorTalon.reverseSensor(false);
 		manipulatorTalon.configNominalOutputVoltage(+0f, -0f);

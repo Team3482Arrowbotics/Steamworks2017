@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3482.robot.commands;
 
 import org.usfirst.frc.team3482.robot.Robot;
+import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
 import org.usfirst.frc.team3482.robot.subsystems.ManipulatorPosition;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -14,6 +15,7 @@ public class RotateManipulator extends Command
 	
 	protected void initialize() {
 		Robot.gearManipulator.moveGearManip(angle);
+		System.out.println(Robot.gearManipulator.manipulatorTalon.getSetpoint());
 	}
 	
 	protected void execute() {
