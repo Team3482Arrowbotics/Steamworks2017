@@ -4,11 +4,11 @@ import org.usfirst.frc.team3482.robot.Robot;
 
 public class Climb {
 	protected void initialize() {
-		
+		Robot.chassis.startClimb();
 	}
 	
 	protected void execute() {
-		Robot.chassis.startClimb(Robot.oi.getxboxController());
+		
 	}
 	
 	protected boolean isFinished() {

@@ -1,7 +1,6 @@
 package org.usfirst.frc.team3482.robot.commands;
 
 import org.usfirst.frc.team3482.robot.Robot;
-import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
 import org.usfirst.frc.team3482.robot.subsystems.ManipulatorPosition;
 
 import edu.wpi.first.wpilibj.command.Command;

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class RangeFinder extends Subsystem {
 	AnalogInput frontRangeFinder = RobotMap.rangeFinderFront;
-	AnalogInput backRangeFinder = RobotMap.rangeFinderBack;
+	//AnalogInput backRangeFinder = RobotMap.rangeFinderBack;
 	
 	public double getRange(AnalogInput rangeFinder) {
 		return rangeFinder.getAverageVoltage();

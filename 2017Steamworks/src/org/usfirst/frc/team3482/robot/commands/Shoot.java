@@ -18,7 +18,7 @@ public class Shoot extends Command {
 	protected void execute() {
 		Robot.chassis.prepareShoot(Robot.oi.getflightStick());
 		waitLoop ++;
-		if((shooterMotor.getSpeed() < speedThreshold) && (waitLoop > 1000)) {
+		if((shooterMotor.getSpeed() < speedThreshold) && (waitLoop > 100)) {
 			Robot.chassis.startFeeder();
 		}
 	}

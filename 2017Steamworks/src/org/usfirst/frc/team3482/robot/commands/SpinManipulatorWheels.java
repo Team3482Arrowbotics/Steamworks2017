@@ -8,21 +8,27 @@ import edu.wpi.first.wpilibj.command.Command;
 public class SpinManipulatorWheels extends Command {
 	private WheelDirection dir;
 	private double speed;
+
 	public SpinManipulatorWheels(WheelDirection dir, double speed) {
 		this.dir = dir;
 		this.speed = speed;
 	}
-	protected void initialize(){
-		Robot.gearManipulator.spinGearManipWheels();
+
+	protected void initialize() {
+		if (dir == WheelDirection.kForwards) {
+			Robot.gearManipulator.spinGearManipWheels(1);
+		} else{
+			Robot.gearManipulator.spinGearManipWheels(-1);
+		}
 	}
-	
+
 	@Override
 	protected boolean isFinished() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	protected void end(){
+
+	protected void end() {
 		Robot.gearManipulator.stopGearManipWheels();
 	}
 

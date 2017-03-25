@@ -15,12 +15,11 @@ public class GearManipulator extends Subsystem {
 	public static double startPosition;
 	public CANTalon manipulatorTalon = RobotMap.gearManipulator;
 	public CANTalon manipulatorTalonWheels = RobotMap.gearManipulatorWheels;
+	public CANTalon manipDoors = RobotMap.gearManipDoors;
 	public static Button toggleWheelsButton;
 
 	public GearManipulator() {
-//		int absolutePosition = manipulatorTalon.getPulseWidthPosition() & 0xFFF;
 		manipulatorTalon.changeControlMode(TalonControlMode.Position);
-//		manipulatorTalon.setEncPosition(absolutePosition);
 		manipulatorTalon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
 		manipulatorTalon.reverseSensor(false);
 		manipulatorTalon.configNominalOutputVoltage(+0f, -0f);
@@ -33,9 +32,30 @@ public class GearManipulator extends Subsystem {
 		manipulatorTalon.setD(0.0);
 		startPosition = manipulatorTalon.getPosition();
 		
-		
+		manipDoors.changeControlMode(TalonControlMode.Position);
+		manipDoors.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+		manipDoors.reverseSensor(false);
+		manipDoors.configNominalOutputVoltage(+0f, -0f);
+		manipDoors.configPeakOutputVoltage(+12f, -12f);
+		manipDoors.setAllowableClosedLoopErr(0);
+		manipDoors.setProfile(0);
+		manipDoors.setF(0.0);
+		manipDoors.setP(0.3);
+		manipDoors.setI(0.0);
+		manipDoors.setD(0.0);
+		startPosition = manipDoors.getPosition();
 	}
-
+	
+	public void openGearManipDoors() {
+		manipDoors.changeControlMode(TalonControlMode.Position);
+		manipDoors.set(15); // random value for testing
+							// don't know actual open position
+	}
+	
+	public void closeGearManipDoors() {
+		manipDoors.changeControlMode(TalonControlMode.Position);
+		manipDoors.set(startPosition);
+	}
 	public void moveGearManipStartPos() {
 		manipulatorTalon.changeControlMode(TalonControlMode.Position);
 		manipulatorTalon.set(startPosition);
@@ -46,8 +66,8 @@ public class GearManipulator extends Subsystem {
 		manipulatorTalon.set(startPosition - pos.angle());
 	}
 
-	public void spinGearManipWheels() {
-		manipulatorTalonWheels.set(0.4);
+	public void spinGearManipWheels(int direction) {
+		manipulatorTalonWheels.set(0.4 * direction);
 	}
 
 	public void stopGearManipWheels() {

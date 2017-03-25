@@ -1,23 +1,18 @@
 package org.usfirst.frc.team3482.robot;
 
-import org.usfirst.frc.team3482.robot.commands.Drive;
-import org.usfirst.frc.team3482.robot.commands.Move;
-import org.usfirst.frc.team3482.robot.commands.MoveSquare;
+import org.usfirst.frc.team3482.robot.commands.AutoGear;
+import org.usfirst.frc.team3482.robot.commands.AutoSanic;
+import org.usfirst.frc.team3482.robot.commands.AutoSpecialSurprise;
 import org.usfirst.frc.team3482.robot.subsystems.Chassis;
 import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
 import org.usfirst.frc.team3482.robot.subsystems.RangeFinder;
-
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.FeedbackDeviceStatus;
-
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -29,39 +24,48 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	public static double shooterSpeed = 0.0;
 	public static boolean isDrive = true;
-	public static double turnDegrees;
-	public static boolean isCentered;
-	public static NetworkTable vision;
 	public static FeedbackDeviceStatus status;
 	public static Chassis chassis;
 	public static GearManipulator gearManipulator;
 	public static RangeFinder rangeFinder;
 	public static OI oi;
-	SendableChooser<Command> teleopchooser;
 	SendableChooser<Command> autoChooser;
 	public Command autonomousCommand;
-	
-	 /* This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
+
 	public void robotInit() {
-		vision = NetworkTable.getTable("Vision");
-		UsbCamera cam = CameraServer.getInstance().startAutomaticCapture("shooter", "/dev/video0");
-		cam.setBrightness(30);
-		cam.setExposureHoldCurrent();
-		cam.setExposureManual(5);
-		cam.setResolution(640, 480);
-		
-		UsbCamera cam2 = CameraServer.getInstance().startAutomaticCapture("peg", "/dev/video1");
+		//NetworkTable.shutdown();
+		//vision = NetworkTable.getTable("Vision");
+
+		/*new Thread(() -> {
+			UsbCamera cam = CameraServer.getInstance().startAutomaticCapture("shooter", "/dev/video0");
+			cam.setBrightness(30);
+			cam.setExposureHoldCurrent();
+			cam.setExposureManual(5);
+			cam.setResolution(640, 480);
+			
+			CvSink cvSink = CameraServer.getInstance().getVideo();
+			CvSource outputStream = CameraServer.getInstance().putVideo("CrossHair", 640, 480);
+			
+			Mat source = new Mat();
+			//Mat output = new Mat();
+			
+			while(!Thread.interrupted()) {
+				cvSink.grabFrame(source);
+				Imgproc.line(source, new Point(320, 0), new Point(320, 480), new Scalar(0, 255, 0), 6);
+				Imgproc.line(source, new Point(0, 240), new Point(640, 240), new Scalar(0, 255, 0), 6);
+				outputStream.putFrame(source);
+			}		
+		}).start();*/
+		/*UsbCamera cam2 = CameraServer.getInstance().startAutomaticCapture("peg", "/dev/video1");
 		cam2.setBrightness(30);
 		cam2.setExposureHoldCurrent();
 		cam2.setExposureManual(5);
-		cam2.setResolution(640, 480);
+		cam2.setResolution(640, 480);*/
 		
 		RobotMap.init();
 		status = RobotMap.gearManipulator.isSensorPresent(FeedbackDevice.CtreMagEncoder_Relative);
-		
 		
 		gearManipulator = new GearManipulator();
 		rangeFinder = new RangeFinder();
@@ -71,18 +75,18 @@ public class Robot extends IterativeRobot {
 		
 		GearManipulator.toggleWheelsButton = new JoystickButton(Robot.oi.getflightStick(), 10);
 		
-		teleopchooser = new SendableChooser<>();
 		autoChooser = new SendableChooser<>();
-		
-		teleopchooser.addDefault("Default Auto", new Drive());
-		teleopchooser.addObject("move 2000", new Move(2000));
-		
 		autoChooser.addDefault("Default Auto", null);
-		autoChooser.addObject("move test", new Move(600));
-		autoChooser.addObject("move square test", new MoveSquare());
+		autoChooser.addObject("Go forward(80%)", new AutoSanic(2, 0.8));
+		autoChooser.addObject("Place Gear", new AutoGear());
+		autoChooser.addObject("Spartan NoBotics", new AutoSpecialSurprise());
 		
 		RobotMap.ahrs.reset();
 		
+		LiveWindow.addActuator("Navx", "1", RobotMap.ahrs);
+		LiveWindow.addActuator("Turn", "1", RobotMap.turnController);
+		
+		SmartDashboard.putData("Auto mode", autoChooser);
 	}
 
 	/**
@@ -91,7 +95,7 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
 	 */
 	public void disabledInit() {
-
+		
 	}
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
@@ -109,7 +113,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public void autonomousInit() {
 		RobotMap.ahrs.reset();
-		SmartDashboard.putData("Auto mode", autoChooser);
+		//SmartDashboard.putData("Auto mode", autoChooser);
 		autonomousCommand = (Command) autoChooser.getSelected();
 		if (autonomousCommand != null){
 			autonomousCommand.start();
@@ -124,20 +128,27 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		//if (autonomousCommand != null)
-			//autonomousCommand.cancel();
+		
+		
+		if (autonomousCommand != null)
+			autonomousCommand.cancel();
 	}
 	
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 		
+		shooterSpeed = -0.075*(2 - (Robot.oi.getflightStick().getRawAxis(3) + 1)) - 0.6;
+		SmartDashboard.putNumber("Current Shooter Percentage: ", shooterSpeed);
+		
 		Robot.chassis.drive(Robot.oi.getxboxController());
-		Robot.chassis.startClimb(Robot.oi.getxboxController());
-		
-		
+		if(Robot.oi.getxboxController().getRawAxis(3) > 0) {
+			Robot.chassis.startClimb();
+		} else {
+			Robot.chassis.stopClimb();
+		}
 		//Get degrees from networktables
-		turnDegrees = vision.getNumber("degrees", 0.0);
-		isCentered = vision.getBoolean("centered", false);
+		//turnDegrees = vision.getNumber("degrees", 0.0);
+		//isCentered = vision.getBoolean("centered", false);
 		
 		//Encoder health check
 		//System.out.println("Encoder health check: " + status);

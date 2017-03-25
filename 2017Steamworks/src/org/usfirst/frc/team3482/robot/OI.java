@@ -2,24 +2,21 @@ package org.usfirst.frc.team3482.robot;
 
 import org.usfirst.frc.team3482.robot.commands.FeedBalls;
 import org.usfirst.frc.team3482.robot.commands.IntakeBalls;
-import org.usfirst.frc.team3482.robot.commands.ManualMoveGearManipulator;
+import org.usfirst.frc.team3482.robot.commands.MoveGearManipDoors;
 import org.usfirst.frc.team3482.robot.commands.ReversePolycord;
-import org.usfirst.frc.team3482.robot.commands.Rotate;
-import org.usfirst.frc.team3482.robot.commands.RotateManipulator;
-import org.usfirst.frc.team3482.robot.commands.RotateVision;
+import org.usfirst.frc.team3482.robot.commands.RunGearManipWheels;
 import org.usfirst.frc.team3482.robot.commands.Shoot;
-import org.usfirst.frc.team3482.robot.subsystems.ManipulatorPosition;
+import org.usfirst.frc.team3482.robot.subsystems.WheelDirection;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
+	public static boolean doorsOpen = false;
 	public Joystick xboxController;
 	private static Joystick flightStick;
 	private static JoystickButton intakeGearButton;
@@ -37,20 +34,16 @@ public class OI {
 	private static JoystickButton climberButton;
 	private static JoystickButton reversePolyButton;
 	private static JoystickButton rotateVisionButton;
-	public static JoystickButton toggleGearWheelsButton;
+	public static JoystickButton forwardGearWheelsButton;
+//	public static JoystickButton backwardGearWheelsButton;
+	public static JoystickButton controlGearManipDoors;
 	
 	public OI () {
 		xboxController = new Joystick(0);
 		flightStick = new Joystick(1);
 		
-		intakeGearButton = new JoystickButton(flightStick, 2);
-		intakeGearButton.whileHeld(new RotateManipulator(ManipulatorPosition.GROUND)); //true = move intake to ground; false = move to peg position
-	
-		placeGearButton = new JoystickButton(flightStick, 1);
-		placeGearButton.whileHeld(new RotateManipulator(ManipulatorPosition.PEG));
-		
-		rotateBotButton = new JoystickButton(xboxController, 4); 
-		rotateBotButton.whenPressed(new Rotate(0)); //parameter is the degrees to turn
+//		rotateBotButton = new JoystickButton(xboxController, 4); 
+//		rotateBotButton.whenPressed(new Rotate(90)); //parameter is the degrees to turn
 		
 		shootSequenceButton = new JoystickButton(xboxController, 6);
 		shootSequenceButton.whileHeld(new Shoot());
@@ -61,17 +54,21 @@ public class OI {
 		intakeBallsButton = new JoystickButton(xboxController, 5);
 		intakeBallsButton.whileHeld(new IntakeBalls());
 		
-		manualGearManipMoveButton = new JoystickButton(flightStick, 4);
-		manualGearManipMoveButton.whileHeld(new ManualMoveGearManipulator());
-		
+//		manualGearManipMoveButton = new JoystickButton(flightStick, 4);
+//		manualGearManipMoveButton.whileHeld(new ManualMoveGearManipulator());
 		
 		reversePolyButton = new JoystickButton(xboxController, 8);
 		reversePolyButton.whileHeld(new ReversePolycord());
 		
-		rotateVisionButton = new JoystickButton(flightStick, 5);
-		rotateVisionButton.whenPressed(new RotateVision());
+		forwardGearWheelsButton = new JoystickButton(xboxController, 7);
+		forwardGearWheelsButton.whileHeld(new RunGearManipWheels(WheelDirection.kForwards));
 		
-		toggleGearWheelsButton = new JoystickButton(flightStick, 10);
+//		backwardGearWheelsButton = new JoystickButton(flightStick, 11);
+//		backwardGearWheelsButton.whileHeld(new RunGearManipWheels(WheelDirection.kBackwards));
+		
+		controlGearManipDoors = new JoystickButton(xboxController, 4);
+		controlGearManipDoors.whenPressed(new MoveGearManipDoors(doorsOpen));
+
 	}
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a

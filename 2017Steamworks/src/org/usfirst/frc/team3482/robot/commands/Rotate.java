@@ -1,42 +1,40 @@
 package org.usfirst.frc.team3482.robot.commands;
 
-import org.usfirst.frc.team3482.robot.Robot;
 import org.usfirst.frc.team3482.robot.RobotMap;
-import edu.wpi.first.wpilibj.PIDController;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 public class Rotate extends Command 
 {
-	private double angle;
 	private boolean finished = false;
-	private double presentAngle;
-	public double presentPosition;
-	private PIDController rotateController = RobotMap.turnController;
+	private double angle;
 	public Rotate(double a)
 	{
-		angle = a;
+		angle=a;
 	}
-	
 	protected void initialize(){
-		RobotMap.driveRobot.stopMotor();
-		Robot.isDrive = false;
-		presentAngle = RobotMap.ahrs.getAngle();
-		//rotateController.setSetpoint(presentAngle + angle);
-		rotateController.setSetpoint(angle);
-		rotateController.enable();
+		RobotMap.turnController.reset();
+		RobotMap.ahrs.reset();
+		RobotMap.turnController.setSetpoint(angle);
+		RobotMap.turnController.enable();
 	}
 	
 	@Override
-	protected void execute()
-	{
-		if(rotateController.onTarget()) {
-			rotateController.disable();
-			Robot.isDrive = true;
+	protected void execute(){
+		System.out.println(RobotMap.turnController.getError());
+		System.out.println(finished);
+		if(RobotMap.turnController.getError() < 5 && RobotMap.turnController.getError()>-5){
+			RobotMap.turnController.disable();
+			RobotMap.turnController.reset();
 			finished = true;
 		}
 	}
-	
-	protected boolean isFinished() {
+	protected boolean isFinished(){
 		return finished;
+	}
+	protected void end()
+	{
+		System.out.println("rotate finished");
+		RobotMap.turnController.disable();
 	}
 }

@@ -19,7 +19,7 @@ public class RotateVision extends Command {
 	@Override
 	protected void execute()
 	{
-		centered = Robot.isCentered;
+		//centered = Robot.isCentered;
 		if(centered) {
 			RobotMap.driveRobot.stopMotor();
 			Robot.isDrive = true;

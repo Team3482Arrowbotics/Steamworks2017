@@ -42,8 +42,8 @@ public class Chassis extends Subsystem {
 	}
 	
 	public void prepareShoot(Joystick s) {
-		RobotMap.shooter.set(-((((s.getRawAxis(3)) + 1)/2) + 0.6));
-		SmartDashboard.putNumber("Shooter percentage: ", -((((s.getRawAxis(3)) + 1)/2) + 0.6));
+		RobotMap.shooter.set(-0.075*(2 - (Robot.oi.getflightStick().getRawAxis(3) + 1)) - 0.6);
+		//RobotMap.shooter.set(-0.65);
 	}
 	
 	public void stopPrepareShoot() {
@@ -82,8 +82,8 @@ public class Chassis extends Subsystem {
 		RobotMap.intake.set(0.0);
 	}
 	
-	public void startClimb(Joystick s) {
-		RobotMap.climber.set(-s.getRawAxis(3));
+	public void startClimb() {
+		RobotMap.climber.set(-1.0);
 	}
 	
 	public void stopClimb() {

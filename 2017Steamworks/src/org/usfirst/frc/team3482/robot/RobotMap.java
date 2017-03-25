@@ -41,22 +41,27 @@ public class RobotMap {
 	public static CANTalon climber;
 	public static CANTalon polycord1; //only polycord that goes outside bot
 	public static CANTalon polycord2; 
-	public static Encoder encoder1;
-	public static Encoder encoder2;
+	public static Encoder driveEncoder1;
+	public static Encoder driveEncoder2;
+	public static CANTalon gearManipDoors;
 
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
 
 	public static void init() {
-		rearLeft = new CANTalon(5);
-		frontLeft = new CANTalon(6);
-		rearRight = new CANTalon(7);
-		frontRight = new CANTalon(4);
+		gearManipDoors = new CANTalon(12); //unknown port number right now
+		
+		rearLeft = new CANTalon(5); //5
+		frontLeft = new CANTalon(6); //6
+		rearRight = new CANTalon(7); //7
+		frontRight = new CANTalon(4); //4
 		driveRobot = new RobotDrive(rearLeft, frontLeft, rearRight, frontRight);
-		driveRobot.setSafetyEnabled(true);
+		driveRobot.setSafetyEnabled(false);
 
-		encoder1 = new Encoder(0,1);
-		encoder2 = new Encoder(2,3);
+		driveEncoder1 = new Encoder(0,1);
+		driveEncoder1.reset();
+		driveEncoder2 = new Encoder(2,3);
+		driveEncoder2.reset();
 		
 		ahrs = new AHRS(SPI.Port.kMXP);
 		turnController = new PIDController(0.3, 0.0, 0.0, 0.0, ahrs, new TurnPID(driveRobot));
@@ -65,7 +70,7 @@ public class RobotMap {
 		turnController.setAbsoluteTolerance(5f);
 		turnController.setContinuous(true);
 		
-		moveController = new PIDController(0.005,0.00001,0,500, encoder1, new TalonDrive(driveRobot));
+		moveController = new PIDController(0.005,0.00001,0,500, driveEncoder2, new TalonDrive(driveRobot));
 		moveController.setInputRange(-20000, 20000);
 		moveController.setOutputRange(-1,1);
 		moveController.setAbsoluteTolerance(4);
@@ -75,16 +80,17 @@ public class RobotMap {
 		
 		climber = new CANTalon(9);
 		climber.enableBrakeMode(true);
+		climber.setCurrentLimit(39);
 		
 		feeder = new CANTalon(3);
 		shooter = new CANTalon(12);
 		polycord1 = new CANTalon(1);
 		polycord2 = new CANTalon(10);
 		
-		gearManipulator = new CANTalon(0);//11  //0 on test board
-		gearManipulatorWheels = new CANTalon(2);//2
+		gearManipulator = new CANTalon(2);//11  //0 on test board
+		gearManipulatorWheels = new CANTalon(11);//2?
 				
-		rangeFinderFront = new AnalogInput(6);
+		rangeFinderFront = new AnalogInput(0);
 		rangeFinderBack = new AnalogInput(7);
 	
 		LiveWindow.addSensor("Robot", "RangeFinderFront", rangeFinderFront);

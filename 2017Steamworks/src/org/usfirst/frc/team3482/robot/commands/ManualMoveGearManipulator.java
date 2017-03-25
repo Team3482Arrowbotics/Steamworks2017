@@ -2,6 +2,7 @@ package org.usfirst.frc.team3482.robot.commands;
 
 import org.usfirst.frc.team3482.robot.OI;
 import org.usfirst.frc.team3482.robot.Robot;
+import org.usfirst.frc.team3482.robot.RobotMap;
 import org.usfirst.frc.team3482.robot.subsystems.GearManipulator;
 
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -36,7 +37,7 @@ public class ManualMoveGearManipulator extends Command {
 //			System.out.println(wheels);
 //		}
 		if(wheels) {
-			Robot.gearManipulator.spinGearManipWheels();
+			RobotMap.gearManipulatorWheels.set(0.6);
 		} else if(!wheels) {
 			Robot.gearManipulator.stopGearManipWheels();
 		}
